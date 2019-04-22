@@ -20,7 +20,7 @@ export default class Main extends Component {
                 </Text>
                 <Text style={{color: '#858484', fontSize: 15}}>
                 Phasellus ac augue sed tellus malesuada maximus at mollis nisl. Proin rutrum ipsum vitae
-                Phasellus ac augue sed tellus malesuada maximus at mollis nisl. no test
+                Phasellus ac augue sed tellus malesuada maximus at mollis nisl.
                 Dui euismod pretium. Nunc sed eros nec ligula ultrices pulvinar. Vestibulum tristique erat quis augue.
                 </Text>
               </View>
