@@ -3,7 +3,19 @@ import {View,  TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import { Icon, Image, Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 export default class Login extends Component {
+    state = {
+        isLoading: false,
+    };
+    _handleLogin = () => {
+        this.setState({isLoading: true})
+        setTimeout( () => {
+            this.changeLoadingState();
+        },2000);
+    }
 
+    changeLoadingState = () => {
+        this.props.navigation.navigate('Home');
+    };
     render() {
         return(
             <ScrollView >
@@ -19,15 +31,16 @@ export default class Login extends Component {
                         <TextInput style={styles.input} placeholder='password' placeholderTextColor= '#ddd' secureTextEntry={true}></TextInput>
                     </View>    
                     <View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={this._handleLogin}>
                             <Icon   reverse
-                                    name='done'
+                                    name= {this.state.isLoading ? 'done' : 'wb-sunny'}
                                     type='material'
                                     color='#FF6B6C'
                                     underlayColor='white'
                                     >
                             </Icon>
                         </TouchableOpacity>
+                        {this.state.isLoading && <Text>Loading..</Text>}
                     </View>
                     <TouchableOpacity style={{marginTop:20}}>
                         <Text>CREAR NUEVA CUENTA</Text>

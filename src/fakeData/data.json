@@ -1,0 +1,48 @@
+{
+    "people": 
+       [{
+            "name" :"juan",
+            "location" : {
+                "latitude": "-34.570158",
+                "longitude": "-58.448418"
+            },
+            "date": "",
+            "active": "true",
+            "description": "test 1",
+            "reporter": "1"
+        },
+        {
+            "name" :"juan",
+            "location" : {
+                "latitude": "-34.574893",
+                "longitude": "-58.450522"
+            },
+            "date": "",
+            "active": "true",
+            "description": "test 1",
+            "reporter": "1"
+        },
+        {
+            "name" :"juan",
+            "location" : {
+                "latitude": "",
+                "longitude": ""
+            },
+            "date": "",
+            "active": "true",
+            "description": "test 1",
+            "reporter": "1"
+        },
+        {
+            "name" :"juan",
+            "location" : {
+                "latitude": "-34.574070",
+                "longitude": "-58.440047"
+            },
+            "date": "",
+            "active": "false",
+            "description": "test 1",
+            "reporter": "1"
+        }
+    ]    
+}

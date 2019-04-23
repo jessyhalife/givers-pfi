@@ -12,7 +12,10 @@ export default class Main extends Component {
         return(
             <View style={styles.container}>
               <View style={styles.header}>
-                  <Image style={{height: 300}} source={require('../../assets/img/helpmain.png')} ></Image>
+                  <Image style={{  flex: 1,
+                    width: null,
+                    height: null,
+                    resizeMode: 'stretch'}} source={require('../../assets/img/helpmain.png')} ></Image>
               </View>
               <View style={styles.content}>
                 <Text style={{color: '#424242', fontSize:20, fontWeight: 'bold', marginBottom: 30}}>
