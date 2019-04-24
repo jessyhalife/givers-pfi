@@ -12,7 +12,7 @@
             "reporter": "1"
         },
         {
-            "name" :"juan",
+            "name" :"carlos",
             "location" : {
                 "latitude": "-34.574893",
                 "longitude": "-58.450522"
@@ -23,10 +23,10 @@
             "reporter": "1"
         },
         {
-            "name" :"juan",
+            "name" :"marta",
             "location" : {
-                "latitude": "",
-                "longitude": ""
+                "latitude": "-34.575247",
+                "longitude": "-58.444169"
             },
             "date": "",
             "active": "true",
@@ -34,7 +34,7 @@
             "reporter": "1"
         },
         {
-            "name" :"juan",
+            "name" :"silvia",
             "location" : {
                 "latitude": "-34.574070",
                 "longitude": "-58.440047"

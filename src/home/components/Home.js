@@ -6,25 +6,32 @@ import MapGiver from '../../map/components/MapGiver';
 import * as data from '../../fakeData/data.json';
 
 export default class Home extends Component {
+  constructor(){
+    super();
+    this.state= {people: [],}
+    this._fetchLocation = this._fetchLocation.bind(this);
+  }  
   static navigationOptions = ({ navigation }) => ({
+    headerBackTitle: null,
+    headerLeft: null,
+    headerTransparent: true,
     title: `givvvers`,
-     headerTitleStyle : {textAlign: 'center',alignSelf:'center', color: 'white'},
-        headerStyle:{
-            backgroundColor:'#FF6B6C',
-        },
+    headerTitleStyle : {textAlign: 'center',alignSelf:'center'},
+
     });
 
     _fetchLocation(){
-      console.log(data.length)
+     this.setState({people: data.people});
     }
-    componentDidMount(){
-      this._fetchLocation();
-    }
+
+   componentDidMount(){
+     this._fetchLocation();
+   }
     render(){
       return(
         <View style={styles.container} KeyboardAvoidingView={true}>
           <View style={styles.map} >
-            <MapGiver /> 
+            <MapGiver people={this.state.people}/> 
           </View>
           <View style={styles.text} >
             <Text h4 >Options</Text>

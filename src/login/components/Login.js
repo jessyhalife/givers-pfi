@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {View,  TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import { Icon, Image, Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
+import {THEMECOLOR} from '../../const';
+
 export default class Login extends Component {
     state = {
         isLoading: false,
@@ -21,7 +23,8 @@ export default class Login extends Component {
             <ScrollView >
                 <View style={styles.container}>
                     <View style={styles.header}>
-                   <Icon name='gitlab' type='feather' color='#B8B8D1' size={40} reverse raised npm ></Icon>
+                   {/* <Icon name='gitlab' type='feather' color='#B8B8D1' size={40} reverse raised npm ></Icon> */}
+                        <Image style={{width: 180, height: 180}} source={require('../../assets/img/login.png')}></Image>
                    </View>
                 <View style={styles.content}>
                     <View>
@@ -30,19 +33,21 @@ export default class Login extends Component {
                         <Text style={styles.inputTitle}>CONTRASEÑA</Text>
                         <TextInput style={styles.input} placeholder='password' placeholderTextColor= '#ddd' secureTextEntry={true}></TextInput>
                     </View>    
-                    <View>
-                        <TouchableOpacity onPress={this._handleLogin}>
-                            <Icon   reverse
+                    <View style={{alignItems: 'center'}}>
+                        <TouchableOpacity style={styles.login} onPress={this._handleLogin}>
+                            <Text style={{color:'white'}}>Entrar</Text>
+                            {/* <Icon   
                                     name= {this.state.isLoading ? 'done' : 'wb-sunny'}
                                     type='material'
-                                    color='#FF6B6C'
+                                    color='black'
                                     underlayColor='white'
                                     >
-                            </Icon>
+                            </Icon> */}
                         </TouchableOpacity>
                         {this.state.isLoading && <Text>Loading..</Text>}
                     </View>
-                    <TouchableOpacity style={{marginTop:20}}>
+                    <TouchableOpacity style={{marginTop:20, borderBottomWidth: 1, borderColor: '#eee'}}
+                        onPress={()=>{this.props.navigation.navigate('Register')}}>
                         <Text>CREAR NUEVA CUENTA</Text>
                     </TouchableOpacity>
                 </View>
@@ -54,6 +59,23 @@ export default class Login extends Component {
 
 const styles = StyleSheet.create(
     {
+        login:{
+            backgroundColor: THEMECOLOR,
+            borderRadius: 40,
+            padding: 15,
+            width: 200,
+            alignItems: 'center',
+            marginBottom: 10,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 1,
+            },
+            shadowOpacity: 0.18,
+            shadowRadius: 1.00,
+        
+            elevation: 1, 
+          },
         container: {
             flex: 1,
             flexDirection: 'column',
@@ -68,17 +90,17 @@ const styles = StyleSheet.create(
         },
         header:{
             padding: 40,
-            flex: 6,
+            flex: 5,
             alignItems: 'center',
         },
         input: {
             padding: 10,
             borderRadius: 20,
             borderBottomWidth: 1,
-            borderColor: '#FF6B6C',
+            borderColor: THEMECOLOR,
             marginBottom: 30,
             width: 300,
-            color: '#FF6B6C',
+            color: THEMECOLOR,
             fontSize: 17,
         },
         inputTitle:{
@@ -107,7 +129,6 @@ const styles = StyleSheet.create(
             justifyContent:'center',
             width:80,
             height:80,
-            backgroundColor:'#FF6B6C',
             borderRadius:50,
         }
     }

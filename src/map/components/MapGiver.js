@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
 import {View, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 import MapView, { Marker} from 'react-native-maps';
+import PropTypes from 'prop-types';
 
 export default class MapGiver extends Component {
-    
-    state = {
+    constructor(props){
+      super(props);
+      this.state={
+        markers: [],
         latitude: 37.421,
         longitude:-122.083,
         locationPermission: true
-      };
-
+      }
+      this.mapRef = null;
+    }
+      componentWillReceiveProps(props) {
+        this.setState({
+          markers: this.props.people.map((x, i) => (
+          
+            <Marker key={i} coordinate={{latitude: Number(x.location.latitude), longitude: Number(x.location.longitude) }}></Marker>
+          ))
+        });
+      }
       componentDidMount() {
+        this.mapRef.fitToSuppliedMarkers(this.state.markers, true);
         if (this.state.locationPermission){
         this.watchID = navigator.geolocation.watchPosition(
           position => {
@@ -39,13 +52,16 @@ export default class MapGiver extends Component {
         return (
             <View style={styles.container}>
               <MapView
+                ref={(ref) => { this.mapRef = ref }}
                 showsUserLocation={true}
                 style={styles.map}
                 showUserLocation
                 followUserLocation
+                zoomEnabled
                 loadingEnabled
                 region={this.getMapRegion()}
               >
+                {this.state.markers}
               </MapView>
             </View>
           );
