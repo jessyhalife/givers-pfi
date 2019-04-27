@@ -27,17 +27,18 @@ export default class Register extends Component {
   };
 
   _handleRegister = () => {
-    this.setState({loading:true});
-    let {email, password} = this.state;
-   firebaseApp.auth().createUserWithEmailAndPassword(email,password)
-    .then((data) => {
-      this.setState({error:false, loading:false})
-    })
-    .catch((error)=>{
-      console.log(error);
-      this.setState({error:true, loading:false})
-    });
-    
+    this.setState({ loading: true });
+    let { email, password } = this.state;
+    firebaseApp
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(data => {
+        this.setState({ error: false, loading: false });
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({ error: true, loading: false });
+      });
   };
 
   componentWillUnmount() {
@@ -46,54 +47,55 @@ export default class Register extends Component {
   render() {
     return (
       <View style={styles.container}>
-          <Text
-            h3
-            style={{ paddingLeft: 20, paddingBottom: 20, color: "black" }}
+        <Text h3 style={{ paddingLeft: 20, paddingBottom: 20, color: "black" }}>
+          Bienvenidx!{" "}
+        </Text>
+        <View style={styles.form}>
+          <Text style={styles.inputTitle}>EMAIL</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="example@mail.com"
+            placeholderTextColor="#ddd"
+            onChange={e => {
+              console.log(e);
+              this.setState({ email: e.nativeEvent.text });
+            }}
+          />
+          <Text style={styles.inputTitle}>CONTRASEÑA</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="password"
+            placeholderTextColor="#ddd"
+            secureTextEntry={true}
+            onChange={e => {
+              console.log(e);
+              this.setState({ password: e.nativeEvent.text });
+            }}
+          />
+          <Text style={styles.inputTitle}>REPETIR CONTRASEÑA</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="repeat password"
+            placeholderTextColor="#ddd"
+            secureTextEntry={true}
+          />
+          <TouchableOpacity
+            style={styles.register}
+            onPress={this._handleRegister}
           >
-            Bienvenidx!{" "}
-          </Text>
-          <View style={styles.form}>
-            <Text style={styles.inputTitle}>EMAIL</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="example@mail.com"
-              placeholderTextColor="#ddd"
-              onChange={e => {
-                console.log(e);
-                this.setState({ email: e.nativeEvent.text });
-              }}
-            />
-            <Text style={styles.inputTitle}>CONTRASEÑA</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="password"
-              placeholderTextColor="#ddd"
-              secureTextEntry={true}
-              onChange={e => {
-                console.log(e);
-                this.setState({ password: e.nativeEvent.text });
-              }}
-            />
-            <Text style={styles.inputTitle}>REPETIR CONTRASEÑA</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="repeat password"
-              placeholderTextColor="#ddd"
-              secureTextEntry={true}
-            />
-            <TouchableOpacity
-              style={styles.register}
-              onPress={this._handleRegister}
-            >
-              {this.state.loading ? <ActivityIndicator size="small" color="white"></ActivityIndicator> :<Text style={{ color: "white" }}>Crear cuenta</Text> }
-            </TouchableOpacity>
-          </View>
-          {/* <View
+            {this.state.loading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text style={{ color: "white" }}>Crear cuenta</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+        {/* <View
             style={{ flex: 1, flexDirection: "column", alignItems: "center" }}
           >
           
           </View> */}
-        
+
         {/* <Image
             style={{ flex: 4, width: "100%", height: "100%", padding: 10 }}
             resizeMode="contain"
@@ -106,15 +108,15 @@ export default class Register extends Component {
           width="auto"
           height="auto"
         >
-        <View>
-          <Text h3>Ya podes empezar a colaborar!</Text>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate("Home");
-            }}
-          >
-            <Text>Bye</Text>
-          </TouchableOpacity>
+          <View>
+            <Text h3>Ya podes empezar a colaborar!</Text>
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate("Home");
+              }}
+            >
+              <Text>Bye</Text>
+            </TouchableOpacity>
           </View>
         </Overlay>
       </View>

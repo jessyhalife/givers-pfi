@@ -4,7 +4,6 @@ import db from '../../db';
 import firebaseApp from '../../config';
 
 let pplRef = db.ref('/people');
-const uid = firebaseApp.auth().currentUser.uid;
 
 export default class NewPlace extends Component {
     state = { 
@@ -13,6 +12,7 @@ export default class NewPlace extends Component {
         longitude: '',
     }
     _registerNew(){
+        const uid = firebaseApp.auth().currentUser.uid; // ?  firebaseApp.auth().currentUser.uid : null;
         let {name, latitude, longitude} = this.state;
         pplRef.push({
             name: name,
