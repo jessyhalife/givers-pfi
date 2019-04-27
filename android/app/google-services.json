@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1070274682388",
+    "firebase_url": "https://givers-229af.firebaseio.com",
+    "project_id": "givers-229af",
+    "storage_bucket": "givers-229af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070274682388:android:a6e4e92b83f3c7ea",
+        "android_client_info": {
+          "package_name": "com.givers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070274682388-p00l40mms25tufc0muavnhd796dvkpo7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzOx_nARYJW68tQKsdnirAeMCtd8B1_Fc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070274682388-p00l40mms25tufc0muavnhd796dvkpo7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

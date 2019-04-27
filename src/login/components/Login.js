@@ -1,23 +1,29 @@
 import React, {Component} from 'react';
-import {View,  TextInput, TouchableOpacity, StyleSheet} from 'react-native';
-import { Icon, Image, Text } from 'react-native-elements';
+import {View,  TextInput, TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native';
+import { Input, Image, Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import {THEMECOLOR} from '../../const';
+import firebaseApp from '../../config';
 
 export default class Login extends Component {
     state = {
-        isLoading: false,
+        loading: false,
+        error: false, 
+        email: null,
+        password: null
     };
     _handleLogin = () => {
-        this.setState({isLoading: true})
-        setTimeout( () => {
-            this.changeLoadingState();
-        },2000);
+        let {email, password} = this.state;
+        this.setState({loading:true});
+        firebaseApp.auth().signInWithEmailAndPassword(email,password)
+            .then(()=>{
+                this.props.navigation.navigate('Home');
+            })
+            .catch((error)=>{
+                console.log(error);
+                this.setState({loading:false});
+            });
     }
-
-    changeLoadingState = () => {
-        this.props.navigation.navigate('Home');
-    };
     render() {
         return(
             <ScrollView >
@@ -29,13 +35,14 @@ export default class Login extends Component {
                 <View style={styles.content}>
                     <View>
                         <Text style={styles.inputTitle}>EMAIL</Text>
-                        <TextInput style={styles.input} placeholder='example@mail.com' placeholderTextColor= '#ddd'></TextInput>
+                        <TextInput style={styles.input} onChange={(e)=> {this.setState({email: e.nativeEvent.text })}} placeholder='example@mail.com' placeholderTextColor= '#ddd'></TextInput>
                         <Text style={styles.inputTitle}>CONTRASEÑA</Text>
-                        <TextInput style={styles.input} placeholder='password' placeholderTextColor= '#ddd' secureTextEntry={true}></TextInput>
+                        <TextInput  shake={true} style={styles.input} onChange={(e)=> {this.setState({password: e.nativeEvent.text })}} placeholder='password' placeholderTextColor= '#ddd' secureTextEntry={true}></TextInput>
                     </View>    
                     <View style={{alignItems: 'center'}}>
                         <TouchableOpacity style={styles.login} onPress={this._handleLogin}>
-                            <Text style={{color:'white'}}>Entrar</Text>
+                       {this.state.loading ? <ActivityIndicator size="small" color="white"></ActivityIndicator>
+                        : <Text style={{color:'white'}}>Entrar</Text>}
                             {/* <Icon   
                                     name= {this.state.isLoading ? 'done' : 'wb-sunny'}
                                     type='material'
@@ -43,8 +50,9 @@ export default class Login extends Component {
                                     underlayColor='white'
                                     >
                             </Icon> */}
+                        
                         </TouchableOpacity>
-                        {this.state.isLoading && <Text>Loading..</Text>}
+                       
                     </View>
                     <TouchableOpacity style={{marginTop:20, borderBottomWidth: 1, borderColor: '#eee'}}
                         onPress={()=>{this.props.navigation.navigate('Register')}}>

@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import {
   View,
-  ScrollView,
   TouchableOpacity,
   TextInput,
   StyleSheet,
   Image,
-  ImageBackground
+  ActivityIndicator
 } from "react-native";
 import { Text, Overlay } from "react-native-elements";
 import { THEMECOLOR } from "../../const";
+import firebaseApp from "../../config";
 
 export default class Register extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -18,20 +18,34 @@ export default class Register extends Component {
     headerTransparent: true
   });
   state = {
-    registerOk: false
+    error: false,
+    email: null,
+    password: null,
+    rePassword: null,
+    formOK: false,
+    loading: false
   };
+
   _handleRegister = () => {
-    setTimeout(() => {
-      this.setState({ registerOk: true });
-    }, 2000);
+    this.setState({loading:true});
+    let {email, password} = this.state;
+   firebaseApp.auth().createUserWithEmailAndPassword(email,password)
+    .then((data) => {
+      this.setState({error:false, loading:false})
+    })
+    .catch((error)=>{
+      console.log(error);
+      this.setState({error:true, loading:false})
+    });
+    
   };
+
   componentWillUnmount() {
-    this.setState({ registerOk: false });
+    console.log(this.state.formOK);
   }
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView>
           <Text
             h3
             style={{ paddingLeft: 20, paddingBottom: 20, color: "black" }}
@@ -44,6 +58,10 @@ export default class Register extends Component {
               style={styles.input}
               placeholder="example@mail.com"
               placeholderTextColor="#ddd"
+              onChange={e => {
+                console.log(e);
+                this.setState({ email: e.nativeEvent.text });
+              }}
             />
             <Text style={styles.inputTitle}>CONTRASEÑA</Text>
             <TextInput
@@ -51,6 +69,10 @@ export default class Register extends Component {
               placeholder="password"
               placeholderTextColor="#ddd"
               secureTextEntry={true}
+              onChange={e => {
+                console.log(e);
+                this.setState({ password: e.nativeEvent.text });
+              }}
             />
             <Text style={styles.inputTitle}>REPETIR CONTRASEÑA</Text>
             <TextInput
@@ -59,39 +81,41 @@ export default class Register extends Component {
               placeholderTextColor="#ddd"
               secureTextEntry={true}
             />
-          </View>
-          <View
-            style={{ flex: 1, flexDirection: "column", alignItems: "center" }}
-          >
             <TouchableOpacity
               style={styles.register}
               onPress={this._handleRegister}
             >
-              <Text style={{ color: "white" }}>Crear cuenta</Text>
+              {this.state.loading ? <ActivityIndicator size="small" color="white"></ActivityIndicator> :<Text style={{ color: "white" }}>Crear cuenta</Text> }
             </TouchableOpacity>
           </View>
-        </ScrollView>
-        <Image
-          style={{ flex: 4, width: "100%", height: "100%", padding: 10 }}
-          resizeMode="contain"
-          source={require("../../assets/img/register.png")}
-        />
+          {/* <View
+            style={{ flex: 1, flexDirection: "column", alignItems: "center" }}
+          >
+          
+          </View> */}
+        
+        {/* <Image
+            style={{ flex: 4, width: "100%", height: "100%", padding: 10 }}
+            resizeMode="contain"
+            source={require("../../assets/img/register.png")}
+          /> */}
         <Overlay
-          isVisible={this.state.registerOk}
+          isVisible={false}
           windowBackgroundColor="rgba(255, 255, 255, .8)"
           overlayBackgroundColor="#ddd"
           width="auto"
           height="auto"
         >
+        <View>
           <Text h3>Ya podes empezar a colaborar!</Text>
           <TouchableOpacity
             onPress={() => {
-              this.setState({ registerOk: false });
               this.props.navigation.navigate("Home");
             }}
           >
             <Text>Bye</Text>
           </TouchableOpacity>
+          </View>
         </Overlay>
       </View>
     );
@@ -102,7 +126,8 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 20,
     flex: 1,
-    flexDirection: "column"
+    flexDirection: "column",
+    marginTop: 40
   },
   form: {
     marginTop: 10,
