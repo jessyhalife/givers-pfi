@@ -3,8 +3,8 @@ import {View, TextInput, Text, TouchableOpacity} from 'react-native';
 import db from '../../db';
 import firebaseApp from '../../config';
 
-let pplRef = db.ref('/people');
-
+let pplRef = []; //db.collection('people');
+console.log(db);
 export default class NewPlace extends Component {
     state = { 
         name: '',

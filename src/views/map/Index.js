@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import { View, StyleSheet } from "react-native";
-import MapGiver from "../../map/components/MapGiver";
+import MapGiver from "../../components/Map";
 import db from "../../db";
 import ToolBar from "../../components/ToolBar";
 import firebaseApp from "../../config/config";
 import { THEMECOLOR } from "../../const";
 let pplRef = firebaseApp.firestore().collection("people");
-
-//let pplRef = db.ref("/people/");
 
 export default class Home extends Component {
   constructor(props) {
@@ -18,6 +16,8 @@ export default class Home extends Component {
     title: `GIVERS`,
     headerTitleStyle: { textAlign: "center", alignSelf: "center" }
   });
+
+
   componentDidMount() {
     let gente = [];
     pplRef.onSnapshot(snapshots => {
@@ -33,10 +33,10 @@ export default class Home extends Component {
     return (
       <View style={styles.container} KeyboardAvoidingView={true}>
         <View style={styles.map}>
-            <MapGiver  people={this.state.people} />
+            <MapGiver people={this.state.people} navigation={this.props.navigation}/>
         </View>
         <View>
-          <ToolBar navigation={this.props.navigation} />
+          <ToolBar />
         </View>
       </View>
     );

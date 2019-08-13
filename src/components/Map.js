@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { View, StyleSheet, Text, Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { THEMECOLOR } from "../../const";
+import { THEMECOLOR } from "../const";
 import { Dimensions } from "react-native";
 const { height, width } = Dimensions.get("window");
 const LATITUDE_DELTA = 0.01;
@@ -67,10 +67,10 @@ export default class MapGiver extends PureComponent {
           onPress={() => this.setState({ active: !this.state.active })}
         >
           <Icon name="add" />
-          <Button style={{ backgroundColor: "#34A34F" }}>
+          <Button style={{ backgroundColor: "#34A34F" }} onPress={() => this.props.navigation.navigate("NewPeople")}>
             <Icon name="person-add" />
           </Button>
-          <Button style={{ backgroundColor: "#3B5998" }}>
+          <Button style={{ backgroundColor: "#3B5998"}} >
             <Icon name="hand" />
           </Button>
         </Fab>

@@ -61,6 +61,8 @@
 		F21FB1FF4315444DB67943D7 /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8917C16672184BA29EDDB933 /* libAirMaps.a */; };
 		885C1A5124F14611AB5D81D1 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D899210D39534847A6334A7E /* libReactNativePermissions.a */; };
 		9831AB5EA9D546AFB5443749 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF87E509634E47C2906A6AFF /* libRNFirebase.a */; };
+		8A3DD2E6768B4BDF806BEB43 /* Dephiana (DEMO).otf in Resources */ = {isa = PBXBuildFile; fileRef = C5C4B8205C9A4B428577AD2E /* Dephiana (DEMO).otf */; };
+		8907496E4E8142AEAD64AB7E /* Dephiana (DEMO).ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A8EDE3905B94AE2A68C4D4E /* Dephiana (DEMO).ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -396,6 +398,8 @@
 		D899210D39534847A6334A7E /* libReactNativePermissions.a */ = {isa = PBXFileReference; name = "libReactNativePermissions.a"; path = "libReactNativePermissions.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		C1019EAB005941C6891D150D /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; name = "RNFirebase.xcodeproj"; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		AF87E509634E47C2906A6AFF /* libRNFirebase.a */ = {isa = PBXFileReference; name = "libRNFirebase.a"; path = "libRNFirebase.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		C5C4B8205C9A4B428577AD2E /* Dephiana (DEMO).otf */ = {isa = PBXFileReference; name = "Dephiana (DEMO).otf"; path = "../src/assets/fonts/dephiana/Dephiana (DEMO).otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1A8EDE3905B94AE2A68C4D4E /* Dephiana (DEMO).ttf */ = {isa = PBXFileReference; name = "Dephiana (DEMO).ttf"; path = "../src/assets/fonts/dephiana/Dephiana (DEMO).ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -693,6 +697,8 @@
 				6F32196A95AF4840A0F5B919 /* Zocial.ttf */,
 				94AE62BA16AF482881951513 /* MaterialIcons.ttf */,
 				599DC93F92E24B3D9A24AC6B /* MaterialIcons.ttf */,
+				C5C4B8205C9A4B428577AD2E /* Dephiana (DEMO).otf */,
+				1A8EDE3905B94AE2A68C4D4E /* Dephiana (DEMO).ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1160,6 +1166,8 @@
 				0E8C771692D444B089E95662 /* Zocial.ttf in Resources */,
 				92120E26D3004F5EA898780D /* MaterialIcons.ttf in Resources */,
 				2DEE5BC6208B45578E9676A6 /* MaterialIcons.ttf in Resources */,
+				8A3DD2E6768B4BDF806BEB43 /* Dephiana (DEMO).otf in Resources */,
+				8907496E4E8142AEAD64AB7E /* Dephiana (DEMO).ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -3,16 +3,10 @@ import { View, Text , StyleSheet, TouchableOpacity, Image, Button} from 'react-n
 import {THEMECOLOR} from '../../const';
 
 export default class Main extends Component {
-    static navigationOptions = ({ navigation }) => ({
-      headerBackTitle: null,
-      headerLeft: null,
-      headerTransparent: true
-    });
     _navigateLogin = () => {
         console.log('entro acá');
         this.props.navigation.navigate('Login');
     };
-    
     render(){
         return(
             <View style={styles.container}>
@@ -25,7 +19,7 @@ export default class Main extends Component {
               </View>
               <View style={styles.content}>
                 <Text style={{color: '#424242', fontSize:20, fontWeight: 'bold', marginBottom: 30}}>
-                  Lorem Impsum
+                  ¡Ayudándote a ayudar!
                 </Text>
                 <Text style={{color: '#858484', fontSize: 15}}>
                 Phasellus ac augue sed tellus malesuada maximus at mollis nisl. Proin rutrum ipsum vitae
@@ -33,20 +27,7 @@ export default class Main extends Component {
                 Dui euismod pretium. Nunc sed eros nec ligula ultrices pulvinar. Vestibulum tristique erat quis augue.
                 </Text>
               </View>
-              <View style={styles.footer}>
-                {/* <TouchableOpacity onPress={this._navigateLogin}
-                >
-                 
-                  {/* <Icon   reverse
-                          raised
-                          name='arrow-forward'
-                          type='material'
-                          color= 'black'
-                          underlayColor='white'
-                          >
-                  </Icon> 
-                </TouchableOpacity> */}
-                
+              <View style={styles.footer}>                
                 <TouchableOpacity style={styles.register}
                 onPress={()=>{this.props.navigation.navigate('Register')}}>
                   <Text style={{color: 'white'}}>Crear cuenta</Text>
