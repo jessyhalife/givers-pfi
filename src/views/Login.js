@@ -9,7 +9,6 @@ import {
   Input,
   Label,
   H1,
-  Footer,
   Text,
   Content,
   Button
@@ -31,7 +30,7 @@ export default class Main extends Component {
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         console.log("test");
-        this.props.navigation.navigate("Home");
+        this.props.navigation.navigate("Map");
       })
       .catch(error => {
         console.log(error);

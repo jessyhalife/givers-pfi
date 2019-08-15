@@ -24,11 +24,6 @@ import {
   Body
 } from "native-base";
 export default class Register extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    headerBackTitle: null,
-    headerLeft: null,
-    headerTransparent: true
-  });
   state = {
     error: false,
     email: null,
@@ -131,7 +126,13 @@ export default class Register extends Component {
                   <Text>Crear cuenta</Text>
                 )}
               </Button>
-              <Button enable={this.state.terms} transparent onPress={() => {this.props.navigation.navigate('Login')}}>
+              <Button
+                enable={this.state.terms}
+                transparent
+                onPress={() => {
+                  this.props.navigation.navigate("Login");
+                }}
+              >
                 <Text>Iniciar sesión</Text>
               </Button>
             </View>

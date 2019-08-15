@@ -15,7 +15,7 @@ export default class Welcome extends Component {
   _checkAuth = () =>{
     firebaseApp.auth().onAuthStateChanged((user) => {
         console.log(user);
-        this.props.navigation.navigate(user ? 'Home' : 'Main');
+        this.props.navigation.navigate(user ? 'Map' : 'Main');
     });
   }
   render() {

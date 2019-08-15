@@ -67,11 +67,14 @@ export default class MapGiver extends PureComponent {
           onPress={() => this.setState({ active: !this.state.active })}
         >
           <Icon name="add" />
-          <Button style={{ backgroundColor: "#34A34F" }} onPress={() => this.props.navigation.navigate("NewPeople")}>
-            <Icon name="person-add" />
+          <Button
+            style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+            onPress={() => this.props.navigation.navigate("NewPeopleScreen")}
+          >
+            <Icon name="person-add" style={{ color: "#000" }} />
           </Button>
-          <Button style={{ backgroundColor: "#3B5998"}} >
-            <Icon name="hand" />
+          <Button style={{ backgroundColor: "#fff", borderColor: "#eee" }}>
+            <Icon name="pin" style={{ color: "#000" }} />
           </Button>
         </Fab>
         <MapView
@@ -116,6 +119,6 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
-    zIndex: -1,
+    zIndex: -1
   }
 });

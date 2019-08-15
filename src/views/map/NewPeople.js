@@ -8,6 +8,10 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import firebaseApp from "../../config";
+import { THEMECOLOR, THEMECOLORLIGHT } from "../../const";
+import Principal from "../new.people/Principal.js";
+import Needs from "../new.people/Needs.js";
+import Details from "../new.people/Details.js";
 import {
   Container,
   Form,
@@ -23,153 +27,79 @@ import {
   Badge,
   Textarea
 } from "native-base";
-export default class Register extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: `GIVERS`,
-    headerTitleStyle: { textAlign: "center", alignSelf: "center" }
-  });
+import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 
+export default class NewPeople extends Component {
   state = {
     error: false,
     formOK: false,
-    loading: false
+    loading: false,
+    screenState: 1
   };
 
-  _handleSave = () => {};
+  _handleForward = () => {
+    this.setState({ screenState: this.state.screenState + 1 });
+  };
+  _handleBackward = () => {
+    this.setState({ screenState: this.state.screenState - 1 });
+  };
+  handleSave = () => {};
 
   componentWillUnmount() {}
+
   render() {
+    const progressStepsStyle = {
+      activeStepIconBorderColor: THEMECOLORLIGHT,
+      activeLabelColor: THEMECOLORLIGHT,
+      activeStepNumColor: "white",
+      activeStepIconColor: THEMECOLORLIGHT,
+      completedStepIconColor: THEMECOLOR,
+      completedProgressBarColor: THEMECOLOR,
+      completedCheckColor: "white",
+      borderWidth: 2
+    };
+
     return (
-      <ScrollView>
-        <Container>
-          <Content>
-            <View style={{ margin: 10, marginBottom: 30 }}>
-              <H1>Registrar persona/s</H1>
+      <View style={{ flex: 1 }}>
+        <ProgressSteps {...progressStepsStyle}>
+          <ProgressStep
+            label=""
+            nextBtnStyle={styles.nextBtnStyle}
+            nextBtnIcon="arrow-forward"
+          >
+            <View>
+              <Principal />
             </View>
-            <Text style={styles.labels}>¿Dónde?</Text>
-            <View style={styles.inputs}>
-              <Input />
-              <Icon
-                name="navigate"
-                onPress={() => alert("current location!")}
-              />
+          </ProgressStep>
+          <ProgressStep
+            label=""
+            nextBtnIcon="arrow-forward"
+            nextBtnStyle={styles.nextBtnStyle}
+          >
+            <View>
+              <Needs />
             </View>
-            <Text style={styles.labels}>¿Cuántos son?</Text>
-            <View style={styles.inputs}>
-              <Input />
-              <Badge success style={{ marginRight: 5 }}>
-                <Icon name="add" />
-              </Badge>
-              <Badge info>
-                <Icon name="remove" />
-              </Badge>
+          </ProgressStep>
+          <ProgressStep label="">
+            <View>
+              <Details />
             </View>
-            <Text style={styles.labels}>¿Edades?</Text>
-            <View style={styles.inputs}>
-              <Button rounded success style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded success style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded success style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded success style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-            </View>
-            <Text style={styles.labels}>¿Necesidades?</Text>
-            <View style={styles.inputs}>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-              <Button rounded primary style={styles.bullets}>
-                <Icon name="add" />
-              </Button>
-            </View>
-            <Text style={styles.labels}>Tenés más info?</Text>
-            <View style={{ marginLeft: 20, marginRight: 20 }}>
-              <Textarea rowSpan={4} bordered placeholder="Textarea" />
-            </View>
-            <View style={styles.buttons}>
-              <Button
-                rounded
-                danger
-                onPress={this._handleLogin}
-                style={{ padding: 20 }}
-              >
-                <Text>Guardar</Text>
-              </Button>
-              <Button transparent onPress={() => {}}>
-                <Text>Cancelar</Text>
-              </Button>
-            </View>
-          </Content>
-        </Container>
-      </ScrollView>
+          </ProgressStep>
+        </ProgressSteps>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  inputs: {
-    marginRight: 20,
-    marginLeft: 20,
-    flexDirection: "row",
-    flexWrap: 'wrap'
-  },
-  labels: {
-    marginLeft: 20
-  },
-  bullets: {
-    margin: 10,
-    padding: 5,
-  },
-  buttons: {
+  nextBtnStyle: {
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.2)",
     alignItems: "center",
-    marginTop: 50
+    justifyContent: "center",
+    backgroundColor: THEMECOLOR,
+    borderRadius: 50,
+    width: 50,
+    height: 50
   }
 });

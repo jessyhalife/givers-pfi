@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { View, StyleSheet } from "react-native";
 import MapGiver from "../../components/Map";
 import db from "../../db";
-import ToolBar from "../../components/ToolBar";
 import firebaseApp from "../../config/config";
 import { THEMECOLOR } from "../../const";
 let pplRef = firebaseApp.firestore().collection("people");
@@ -12,11 +11,6 @@ export default class Home extends Component {
     super(props);
     this.state = { people: [], active: false };
   }
-  static navigationOptions = ({ navigation }) => ({
-    title: `GIVERS`,
-    headerTitleStyle: { textAlign: "center", alignSelf: "center" }
-  });
-
 
   componentDidMount() {
     let gente = [];
@@ -34,9 +28,6 @@ export default class Home extends Component {
       <View style={styles.container} KeyboardAvoidingView={true}>
         <View style={styles.map}>
             <MapGiver people={this.state.people} navigation={this.props.navigation}/>
-        </View>
-        <View>
-          <ToolBar />
         </View>
       </View>
     );

@@ -26,7 +26,14 @@ export default class MapGiver extends PureComponent {
     });
   }
   componentDidMount() {
-    if (this.state.locationPermission) {
+    console.log("test");
+    const granted = await PermissionsAndroid.check( PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION )
+    .then(() => {
+      console.log("test");
+      console.log(granted);
+    });
+
+    if (grandted || this.state.locationPermission) {
       this.watchID = navigator.geolocation.watchPosition(
         position => {
           this.setState(
@@ -67,11 +74,11 @@ export default class MapGiver extends PureComponent {
           onPress={() => this.setState({ active: !this.state.active })}
         >
           <Icon name="add" />
-          <Button style={{ backgroundColor: "#34A34F" }}>
-            <Icon name="person-add" />
+          <Button style={{ backgroundColor: "#fff", borderColor: '#eee' }}>
+            <Icon name="person-add" style={{color: '#000'}}/>
           </Button>
-          <Button style={{ backgroundColor: "#3B5998" }}>
-            <Icon name="hand" />
+          <Button style={{ backgroundColor: "#fff", borderColor: '#eee' }}>
+            <Icon name="pin" style={{color: '#000'}}/>
           </Button>
         </Fab>
         <MapView
