@@ -11,41 +11,62 @@ import {
   H1,
   Text,
   Content,
-  Button
+  Button,
+  Badge
 } from "native-base";
 
 export default class Main extends Component {
   state = {
     loading: false,
     error: false,
+    errorMessage: "",
     email: null,
     password: null
   };
   _handleLogin = () => {
     let { email, password } = this.state;
-    console.log(email, password);
-    this.setState({ loading: true });
-    firebaseApp
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        console.log("test");
-        this.props.navigation.navigate("Map");
-      })
-      .catch(error => {
-        console.log(error);
-        this.setState({ loading: false });
+    if (email && password) {
+      this.setState({ loading: true });
+      firebaseApp
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => {
+          console.log("test");
+          this.props.navigation.navigate("Map");
+        })
+        .catch(error => {
+          this.setState({
+            loading: false,
+            error: true,
+            errorMessage: JSON.stringify(error)
+          });
+        });
+    } else {
+      this.setState({
+        loading: false,
+        error: true,
+        errorMessage: "Debe completar todos los campos"
       });
+    }
   };
   render() {
     return (
       <Container>
         <ScrollView>
           <Content>
-            <View style={{ padding: 30 }}>
-              <H1>Iniciar sesión</H1>
+            <View style={{ padding: 30, marginTop: 100 }}>
+              <H1 style={{ fontFamily: "cabifycircularweb_book" }}>
+                Iniciar sesión
+              </H1>
             </View>
             <View style={styles.content}>
+              {this.state.error ? (
+                <Badge>
+                  <Text>{this.state.errorMessage.Error}</Text>
+                </Badge>
+              ) : (
+                <View />
+              )}
               <Form>
                 <Item>
                   <Label>Email</Label>
@@ -74,7 +95,6 @@ export default class Main extends Component {
             <View style={styles.buttons}>
               <Button
                 rounded
-                danger
                 onPress={this._handleLogin}
                 style={{ padding: 20 }}
               >

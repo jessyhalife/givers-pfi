@@ -72,6 +72,12 @@
 		<string>MaterialIcons.ttf</string>
 		<string>Dephiana (DEMO).otf</string>
 		<string>Dephiana (DEMO).ttf</string>
+		<string>CabifyCircularWeb-Bold.otf</string>
+		<string>CabifyCircularWeb-Book.otf</string>
+		<string>CabifyCircularWeb-Light.otf</string>
+		<string>CabifyCircularWeb-Bold.ttf</string>
+		<string>CabifyCircularWeb-Book.ttf</string>
+		<string>CabifyCircularWeb-Light.ttf</string>
 	</array>
 </dict>
 </plist>

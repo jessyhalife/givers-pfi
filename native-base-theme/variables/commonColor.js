@@ -57,7 +57,7 @@ export default {
   badgePadding: platform === PLATFORM.IOS ? 3 : 0,
 
   // Button
-  buttonFontFamily: platform === PLATFORM.IOS ? "System" : "Roboto_medium",
+  buttonFontFamily: platform === PLATFORM.IOS ? "System" : "cabifycircularweb_book",
   buttonDisabledBg: "#b5b5b5",
   buttonPadding: 6,
   get buttonPrimaryBg() {
@@ -130,7 +130,7 @@ export default {
   checkboxTickColor: "#fff",
 
   // Color
-  brandPrimary: platform === PLATFORM.IOS ? "#007aff" : "#3F51B5",
+  brandPrimary: platform === PLATFORM.IOS ? "#007aff" : "#ff6347",
   brandInfo: "#62B1F6",
   brandSuccess: "#5cb85c",
   brandDanger: "#ff6347",
@@ -150,7 +150,7 @@ export default {
 
   // Font
   DefaultFontSize: 16,
-  fontFamily: platform === PLATFORM.IOS ? "System" : "Roboto",
+  fontFamily: platform === PLATFORM.IOS ? "System" : "cabifycircularweb_book",
   fontSizeBase: 15,
   get fontSizeH1() {
     return this.fontSizeBase * 1.8;
@@ -164,7 +164,7 @@ export default {
 
   // Footer
   footerHeight: 55,
-  footerDefaultBg: platform === PLATFORM.IOS ? "#F8F8F8" : "#3F51B5",
+  footerDefaultBg: platform === PLATFORM.IOS ? "#F8F8F8" : "#ff6347",
   footerPaddingBottom: 0,
 
   // FooterTab
@@ -173,11 +173,11 @@ export default {
   activeTab: platform === PLATFORM.IOS ? "#007aff" : "#fff",
   sTabBarActiveTextColor: "#007aff",
   tabBarActiveTextColor: platform === PLATFORM.IOS ? "#2874F0" : "#fff",
-  tabActiveBgColor: platform === PLATFORM.IOS ? "#cde1f9" : "#3F51B5",
+  tabActiveBgColor: platform === PLATFORM.IOS ? "#cde1f9" : "#ff6347",
 
   // Header
   toolbarBtnColor: platform === PLATFORM.IOS ? "#007aff" : "#fff",
-  toolbarDefaultBg: platform === PLATFORM.IOS ? "#F8F8F8" : "#3F51B5",
+  toolbarDefaultBg: platform === PLATFORM.IOS ? "#F8F8F8" : "#ff6347",
   toolbarHeight: platform === PLATFORM.IOS ? 64 : 56,
   toolbarSearchIconSize: platform === PLATFORM.IOS ? 20 : 23,
   toolbarInputColor: platform === PLATFORM.IOS ? "#CECDD2" : "#fff",
@@ -185,7 +185,7 @@ export default {
   searchBarInputHeight: platform === PLATFORM.IOS ? 30 : 50,
   toolbarBtnTextColor: platform === PLATFORM.IOS ? "#007aff" : "#fff",
   iosStatusbar: "dark-content",
-  toolbarDefaultBorder: platform === PLATFORM.IOS ? "#a7a6ab" : "#3F51B5",
+  toolbarDefaultBorder: platform === PLATFORM.IOS ? "#a7a6ab" : "#ff6347",
   get statusBarColor() {
     return color(this.toolbarDefaultBg)
       .darken(0.2)
@@ -230,7 +230,7 @@ export default {
   listItemPadding: platform === PLATFORM.IOS ? 10 : 12,
   listNoteColor: "#808080",
   listNoteSize: 13,
-  listItemSelected: platform === PLATFORM.IOS ? "#007aff" : "#3F51B5",
+  listItemSelected: platform === PLATFORM.IOS ? "#007aff" : "#ff6347",
 
   // Progress Bar
   defaultProgressColor: "#E4202D",
@@ -238,26 +238,26 @@ export default {
 
   // Radio Button
   radioBtnSize: platform === PLATFORM.IOS ? 25 : 23,
-  radioSelectedColorAndroid: "#3F51B5",
+  radioSelectedColorAndroid: "#ff6347",
   radioBtnLineHeight: platform === PLATFORM.IOS ? 29 : 24,
   get radioColor() {
     return this.brandPrimary;
   },
 
   // Segment
-  segmentBackgroundColor: platform === PLATFORM.IOS ? "#F8F8F8" : "#3F51B5",
+  segmentBackgroundColor: platform === PLATFORM.IOS ? "#F8F8F8" : "#ff6347",
   segmentActiveBackgroundColor: platform === PLATFORM.IOS ? "#007aff" : "#fff",
   segmentTextColor: platform === PLATFORM.IOS ? "#007aff" : "#fff",
-  segmentActiveTextColor: platform === PLATFORM.IOS ? "#fff" : "#3F51B5",
+  segmentActiveTextColor: platform === PLATFORM.IOS ? "#fff" : "#ff6347",
   segmentBorderColor: platform === PLATFORM.IOS ? "#007aff" : "#fff",
-  segmentBorderColorMain: platform === PLATFORM.IOS ? "#a7a6ab" : "#3F51B5",
+  segmentBorderColorMain: platform === PLATFORM.IOS ? "#a7a6ab" : "#ff6347",
 
   // Spinner
   defaultSpinnerColor: "#45D56E",
   inverseSpinnerColor: "#1A191B",
 
   // Tab
-  tabDefaultBg: platform === PLATFORM.IOS ? "#F8F8F8" : "#3F51B5",
+  tabDefaultBg: platform === PLATFORM.IOS ? "#F8F8F8" : "#ff6347",
   topTabBarTextColor: platform === PLATFORM.IOS ? "#6b6b6b" : "#b3c7f9",
   topTabBarActiveTextColor: platform === PLATFORM.IOS ? "#007aff" : "#fff",
   topTabBarBorderColor: platform === PLATFORM.IOS ? "#a7a6ab" : "#fff",
@@ -276,7 +276,7 @@ export default {
   },
 
   // Title
-  titleFontfamily: platform === PLATFORM.IOS ? "System" : "Roboto_medium",
+  titleFontfamily: platform === PLATFORM.IOS ? "System" : "cabifycircularweb_book",
   titleFontSize: platform === PLATFORM.IOS ? 17 : 19,
   subTitleFontSize: platform === PLATFORM.IOS ? 11 : 14,
   subtitleColor: platform === PLATFORM.IOS ? "#000" : "#fff",

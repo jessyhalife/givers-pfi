@@ -1,12 +1,51 @@
 import React, { Component } from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
-import { Form, Item, Input, Label, Text, Content, Button } from "native-base";
-/*Make it stateless and recieve navigation as props*/
-const ages = ["A", "B", "C", "D", "E"];
+import { View, ScrollView, StyleSheet, TouchableHighlight } from "react-native";
+import {
+  Form,
+  Item,
+  Input,
+  Label,
+  Text,
+  Content,
+  Button,
+  H2
+} from "native-base";
 class Principal extends Component {
   state = {
+    ages: [],
+    qty: 1,
+    selectedAges: []
   };
+
+  componentDidMount() {
+    this._fetchAges();
+  }
+
+  _fetchAges() {
+    fetch("https://us-central1-givers-229af.cloudfunctions.net/webApi/ages")
+      .then(response => response.json())
+      .then(json => this.setState({ ages: json }));
+  }
+  manageAges(key) {
+    console.log(key);
+    let prev = this.state.selectedAges;
+    if (
+      !prev.find(x => {
+        return x == key;
+      })
+    ) {
+      prev.push(key);
+    } else {
+      prev = prev.filter(x => {
+        return key !== x;
+      });
+    }
+    this.setState({ selectedAges: prev }, () => {
+      console.log(prev);
+    });
+  }
   render() {
+    const { selectedAges } = this.state;
     return (
       <View
         style={{
@@ -19,7 +58,6 @@ class Principal extends Component {
         <ScrollView>
           <Label style={styles.labels}>Ubicación</Label>
           <Input placeholder="Ubicación actual" placeholderTextColor="#ddd" />
-
           <Label style={styles.labels}>Edades</Label>
           <View
             style={{
@@ -27,14 +65,39 @@ class Principal extends Component {
               flexDirection: "row",
               justifyContent: "space-around",
               alignItems: "center",
+              flexWrap: "wrap",
               marginTop: 10,
               marginBottom: 3
             }}
           >
-            {ages.map(element => {
+            {this.state.ages.map(element => {
               return (
-                <Button style={styles.tiles}>
-                  <Text style={{ color: "black", fontWeight: 'bold', alignSelf: 'center' }}>{element}</Text>
+                <Button
+                  onPress={() => {
+                    this.manageAges(element.id);
+                  }}
+                  style={
+                    selectedAges.find(x => {
+                      return x == element.id;
+                    })
+                      ? press.pressed
+                      : styles.tiles
+                  }
+                  key={element.id}
+                >
+                  <Text
+                    style={{
+                      alignSelf: "center",
+                      fontFamily: "cabifycircularweb_light",
+                      color: selectedAges.find(x => {
+                        return x == element.id;
+                      })
+                        ? "white"
+                        : "#696969"
+                    }}
+                  >
+                    {element.data.tipo}
+                  </Text>
                 </Button>
               );
             })}
@@ -50,33 +113,60 @@ class Principal extends Component {
               marginBottom: 3
             }}
           >
-            {ages.map(element => {
-              return (
-                <Button style={styles.tiles}>
-                  <Text style={{ color: "black", fontWeight: 'bold', alignSelf: 'center' }}>{element}</Text>
-                </Button>
-              );
-            })}
+            <Button
+              rounded
+              light
+              onPress={() => {
+                if (this.state.qty > 1)
+                  this.setState({ qty: this.state.qty - 1 });
+              }}
+            >
+              <Text>-</Text>
+            </Button>
+            <H2>{this.state.qty}</H2>
+            <Button
+              rounded
+              light
+              onPress={() => {
+                this.setState({ qty: this.state.qty + 1 });
+              }}
+            >
+              <Text>+</Text>
+            </Button>
           </View>
         </ScrollView>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  tiles: {
-    borderColor: "rgba(0,0,0,0.2)",
+const press = StyleSheet.create({
+  pressed: {
+    borderColor: "red",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#eee",
-    borderRadius: 50,
-    width: 50,
-    height: 50
+    backgroundColor: "#696969",
+    width: 100,
+    height: 100,
+    margin: 10,
+    color: "white",
+    fontFamily: "cabifycircularweb_bold"
+  }
+});
+const styles = StyleSheet.create({
+  tiles: {
+    borderColor: "#eee",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+    width: 100,
+    height: 100,
+    margin: 10
   },
   labels: {
     fontSize: 20,
-    fontWeight: "bold"
+    fontFamily: "cabifycircularweb_book",
+    color: "black"
+    // fontWeight: "bold"
   }
 });
 export default Principal;

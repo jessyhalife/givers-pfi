@@ -25,6 +25,7 @@ export default class MapGiver extends PureComponent {
       console.log(this.state.markers);
     });
   }
+
   componentDidMount() {
     if (this.state.locationPermission) {
       this.watchID = navigator.geolocation.watchPosition(
@@ -45,6 +46,19 @@ export default class MapGiver extends PureComponent {
     } else {
     }
   }
+  // _getLocation = async () => {
+  //   await navigator.geolocation.getCurrentPosition(position => {
+  //     // this.setState({ coords: position.coords, loading: false });
+  //     const region = {
+  //       latitude: position.coords.latitude,
+  //       longitude: position.coords.longitude,
+  //       latitudeDelta: 0.012,
+  //       longitudeDelta: 0.01
+  //     };
+  //     this.map.animateToRegion(region, 500);
+  //   });
+  // };
+
   getMapRegion = () => ({
     latitude: this.state.latitude,
     longitude: this.state.longitude,
@@ -73,7 +87,10 @@ export default class MapGiver extends PureComponent {
           >
             <Icon name="person-add" style={{ color: "#000" }} />
           </Button>
-          <Button style={{ backgroundColor: "#fff", borderColor: "#eee" }}>
+          <Button
+            style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+            onPress={() => this.props.navigation.navigate("NewPointScreen")}
+          >
             <Icon name="pin" style={{ color: "#000" }} />
           </Button>
         </Fab>

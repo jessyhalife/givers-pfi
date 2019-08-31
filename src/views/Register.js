@@ -116,7 +116,6 @@ export default class Register extends Component {
             <View style={styles.buttons}>
               <Button
                 rounded
-                danger
                 onPress={this._handleRegister}
                 style={{ padding: 20 }}
               >

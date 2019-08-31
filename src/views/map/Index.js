@@ -14,12 +14,12 @@ export default class Home extends Component {
 
   componentDidMount() {
     let gente = [];
+    console.log("genchi");
     pplRef.onSnapshot(snapshots => {
       snapshots.docs.forEach(x => {
-        gente.push(x.data().data);
+        gente.push(x.data().location);
       });
-      console.log(gente);
-      // this.setState({ people: gente });
+      this.setState({ people: gente });
     });
   }
   render() {
@@ -27,7 +27,10 @@ export default class Home extends Component {
     return (
       <View style={styles.container} KeyboardAvoidingView={true}>
         <View style={styles.map}>
-            <MapGiver people={this.state.people} navigation={this.props.navigation}/>
+          <MapGiver
+            people={this.state.people}
+            navigation={this.props.navigation}
+          />
         </View>
       </View>
     );

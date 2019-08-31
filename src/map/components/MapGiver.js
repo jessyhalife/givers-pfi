@@ -99,8 +99,8 @@ export default class MapGiver extends PureComponent {
               <Marker
                 key={i}
                 coordinate={{
-                  latitude: Number(x.latitude),
-                  longitude: Number(x.longitude)
+                  latitude: Number(x.location.latitude),
+                  longitude: Number(x.location.longitude)
                 }}
               />
             );

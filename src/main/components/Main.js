@@ -18,7 +18,7 @@ export default class Main extends Component {
                     }} source={require('../../assets/img/air-support.png')} ></Image> 
               </View>
               <View style={styles.content}>
-                <Text style={{color: '#424242', fontSize:20, fontWeight: 'bold', marginBottom: 30}}>
+                <Text style={{color: '#424242', fontSize:20, ////fontWeight: 'bold', marginBottom: 30}}>
                   ¡Ayudándote a ayudar!
                 </Text>
                 <Text style={{color: '#858484', fontSize: 15}}>

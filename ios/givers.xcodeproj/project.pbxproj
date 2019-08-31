@@ -63,6 +63,12 @@
 		9831AB5EA9D546AFB5443749 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF87E509634E47C2906A6AFF /* libRNFirebase.a */; };
 		8A3DD2E6768B4BDF806BEB43 /* Dephiana (DEMO).otf in Resources */ = {isa = PBXBuildFile; fileRef = C5C4B8205C9A4B428577AD2E /* Dephiana (DEMO).otf */; };
 		8907496E4E8142AEAD64AB7E /* Dephiana (DEMO).ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A8EDE3905B94AE2A68C4D4E /* Dephiana (DEMO).ttf */; };
+		C0DA38DC2AA74EA282F30176 /* CabifyCircularWeb-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E491A85F4F443DD99BA8BFB /* CabifyCircularWeb-Bold.otf */; };
+		9705DB434DBE451F9BBE3D30 /* CabifyCircularWeb-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 352B42988003412580496842 /* CabifyCircularWeb-Book.otf */; };
+		9CF4C49FFB2D44CDBF6F584A /* CabifyCircularWeb-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 734584B4C39A4976A883A71E /* CabifyCircularWeb-Light.otf */; };
+		F21B4074D4DB49C98E4E3CFA /* CabifyCircularWeb-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 147D62D1BD3C45998F87608D /* CabifyCircularWeb-Bold.ttf */; };
+		9498EC14BB1D48B4860B4403 /* CabifyCircularWeb-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84E22547C7744F279F0E7A6E /* CabifyCircularWeb-Book.ttf */; };
+		6D1DF8CB50A845F09FC5B4E5 /* CabifyCircularWeb-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67A0C83B70D740B399BC5FC3 /* CabifyCircularWeb-Light.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -400,6 +406,12 @@
 		AF87E509634E47C2906A6AFF /* libRNFirebase.a */ = {isa = PBXFileReference; name = "libRNFirebase.a"; path = "libRNFirebase.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		C5C4B8205C9A4B428577AD2E /* Dephiana (DEMO).otf */ = {isa = PBXFileReference; name = "Dephiana (DEMO).otf"; path = "../src/assets/fonts/dephiana/Dephiana (DEMO).otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		1A8EDE3905B94AE2A68C4D4E /* Dephiana (DEMO).ttf */ = {isa = PBXFileReference; name = "Dephiana (DEMO).ttf"; path = "../src/assets/fonts/dephiana/Dephiana (DEMO).ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1E491A85F4F443DD99BA8BFB /* CabifyCircularWeb-Bold.otf */ = {isa = PBXFileReference; name = "CabifyCircularWeb-Bold.otf"; path = "../src/assets/fonts/CabifyCircularWeb-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		352B42988003412580496842 /* CabifyCircularWeb-Book.otf */ = {isa = PBXFileReference; name = "CabifyCircularWeb-Book.otf"; path = "../src/assets/fonts/CabifyCircularWeb-Book.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		734584B4C39A4976A883A71E /* CabifyCircularWeb-Light.otf */ = {isa = PBXFileReference; name = "CabifyCircularWeb-Light.otf"; path = "../src/assets/fonts/CabifyCircularWeb-Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		147D62D1BD3C45998F87608D /* CabifyCircularWeb-Bold.ttf */ = {isa = PBXFileReference; name = "CabifyCircularWeb-Bold.ttf"; path = "../src/assets/fonts/CabifyCircularWeb-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		84E22547C7744F279F0E7A6E /* CabifyCircularWeb-Book.ttf */ = {isa = PBXFileReference; name = "CabifyCircularWeb-Book.ttf"; path = "../src/assets/fonts/CabifyCircularWeb-Book.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		67A0C83B70D740B399BC5FC3 /* CabifyCircularWeb-Light.ttf */ = {isa = PBXFileReference; name = "CabifyCircularWeb-Light.ttf"; path = "../src/assets/fonts/CabifyCircularWeb-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -699,6 +711,12 @@
 				599DC93F92E24B3D9A24AC6B /* MaterialIcons.ttf */,
 				C5C4B8205C9A4B428577AD2E /* Dephiana (DEMO).otf */,
 				1A8EDE3905B94AE2A68C4D4E /* Dephiana (DEMO).ttf */,
+				1E491A85F4F443DD99BA8BFB /* CabifyCircularWeb-Bold.otf */,
+				352B42988003412580496842 /* CabifyCircularWeb-Book.otf */,
+				734584B4C39A4976A883A71E /* CabifyCircularWeb-Light.otf */,
+				147D62D1BD3C45998F87608D /* CabifyCircularWeb-Bold.ttf */,
+				84E22547C7744F279F0E7A6E /* CabifyCircularWeb-Book.ttf */,
+				67A0C83B70D740B399BC5FC3 /* CabifyCircularWeb-Light.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1168,6 +1186,12 @@
 				2DEE5BC6208B45578E9676A6 /* MaterialIcons.ttf in Resources */,
 				8A3DD2E6768B4BDF806BEB43 /* Dephiana (DEMO).otf in Resources */,
 				8907496E4E8142AEAD64AB7E /* Dephiana (DEMO).ttf in Resources */,
+				C0DA38DC2AA74EA282F30176 /* CabifyCircularWeb-Bold.otf in Resources */,
+				9705DB434DBE451F9BBE3D30 /* CabifyCircularWeb-Book.otf in Resources */,
+				9CF4C49FFB2D44CDBF6F584A /* CabifyCircularWeb-Light.otf in Resources */,
+				F21B4074D4DB49C98E4E3CFA /* CabifyCircularWeb-Bold.ttf in Resources */,
+				9498EC14BB1D48B4860B4403 /* CabifyCircularWeb-Book.ttf in Resources */,
+				6D1DF8CB50A845F09FC5B4E5 /* CabifyCircularWeb-Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
