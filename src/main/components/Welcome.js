@@ -2,11 +2,19 @@ import React, { Component } from "react";
 import { THEMECOLOR } from "../../const";
 import firebaseApp from "../../config";
 
-import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
+import { Image, View, ActivityIndicator, Text, StyleSheet } from "react-native";
 
 export default class Welcome extends Component {
+  constructor(props) {
+    super(props);
+    this._checkAuth = this._checkAuth.bind(this);
+  }
   componentDidMount() {
-    this._checkAuth();
+    setTimeout(() => {
+      this._checkAuth();
+    }, 2000);
+
+    //this._checkAuth();
   }
   _checkAuth = () => {
     firebaseApp.auth().onAuthStateChanged(user => {
@@ -16,13 +24,25 @@ export default class Welcome extends Component {
   };
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: THEMECOLOR }}>
+      <View style={{ backgroundColor: THEMECOLOR, flex: 1 }}>
         <Image
-          style={{ height: 100, width: null, flex: 1, marginTop: 100 }}
-          source={require("../assets/img/givers_blanco.png")}
+          style={{
+            height: 100,
+            width: 400,
+            flex: 1,
+            marginTop: 10,
+            resizeMode: "contain"
+          }}
+          source={require("../../assets/img/givers_blanco.png")}
         />
-        <ActivityIndicator size="large" color={THEMECOLOR}></ActivityIndicator>
       </View>
+      // <View style={{ flex: 1, backgroundColor: THEMECOLOR }}>
+      //   <Image
+      //     style={{ height: 10, width: null, flex: 1, marginTop: 100 }}
+      //     source={require("../../assets/img/givers_blanco.png")}
+      //   />
+      //   <ActivityIndicator size="large" color={THEMECOLOR}></ActivityIndicator>
+      // </View>
     );
   }
 }

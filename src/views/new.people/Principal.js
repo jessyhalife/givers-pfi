@@ -10,6 +10,8 @@ import {
   Button,
   H2
 } from "native-base";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+
 class Principal extends Component {
   state = {
     ages: [],
@@ -57,7 +59,47 @@ class Principal extends Component {
       >
         <ScrollView>
           <Label style={styles.labels}>Ubicación</Label>
-          <Input placeholder="Ubicación actual" placeholderTextColor="#ddd" />
+
+          <GooglePlacesAutocomplete
+            placeholder="Search"
+            minLength={2} // minimum length of text to search
+            autoFocus={true}
+            returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+            listViewDisplayed="auto" // true/false/undefined
+            renderDescription={row => row.description} // custom description render
+            onPress={(data, details = null) => {
+              // 'details' is provided when fetchDetails = true
+              console.log(data, details);
+            }}
+            getDefaultValue={() => ""}
+            query={{
+              // available options: https://developers.google.com/places/web-service/autocomplete
+              key: "AIzaSyCzOx_nARYJW68tQKsdnirAeMCtd8B1_Fc",
+              language: "es", // language of the results
+              types: "address" // default: 'geocode'
+            }}
+            currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+            currentLocationLabel="Current location"
+            nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+            GoogleReverseGeocodingQuery={
+              {
+                // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+              }
+            }
+            GooglePlacesSearchQuery={{
+              // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+              rankby: "distance"
+            }}
+            filterReverseGeocodingByTypes={[
+              "locality",
+              "administrative_area_level_3"
+            ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+            // predefinedPlaces={[homePlace, workPlace]}
+            debounce={0} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+            // renderLeftButton={() => (
+            //   <Image source={require("path/custom/left-icon")} />
+            // )}
+          />
           <Label style={styles.labels}>Edades</Label>
           <View
             style={{

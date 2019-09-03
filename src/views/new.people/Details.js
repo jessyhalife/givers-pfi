@@ -5,7 +5,10 @@ class Details extends Component {
   render() {
     return (
       <View>
-        <Text>Acá pedimos los detalles</Text>
+        <Text>Algún otro detalle?</Text>
+        <Textarea>
+          
+        </Textarea>
       </View>
     );
   }

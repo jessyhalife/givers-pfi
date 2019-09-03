@@ -26,8 +26,16 @@ export default class MapGiver extends PureComponent {
     });
   }
 
-  componentDidMount() {
-    if (this.state.locationPermission) {
+  async componentDidMount() {
+    const permissionOK = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    );
+    if (!permissionOK) {
+      var granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+    }
+    if (permissionOK || granted === PermissionsAndroid.RESULTS.GRANTED) {
       this.watchID = navigator.geolocation.watchPosition(
         position => {
           this.setState(
@@ -35,9 +43,7 @@ export default class MapGiver extends PureComponent {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude
             },
-            () => {
-              console.log(this.state.latitude);
-            }
+            () => {}
           );
         },
         error => console.log(error),
@@ -107,7 +113,6 @@ export default class MapGiver extends PureComponent {
           region={this.getMapRegion()}
         >
           {this.state.markers.map((x, i) => {
-            console.log(x);
             return (
               <Marker
                 key={i}

@@ -12,21 +12,6 @@ import { THEMECOLOR, THEMECOLORLIGHT } from "../../const";
 import Principal from "../new.people/Principal.js";
 import Needs from "../new.people/Needs.js";
 import Details from "../new.people/Details.js";
-import {
-  Container,
-  Form,
-  Item,
-  Input,
-  Label,
-  Content,
-  Header,
-  H1,
-  Text,
-  Icon,
-  Button,
-  Badge,
-  Textarea
-} from "native-base";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 
 export default class NewPeople extends Component {
@@ -34,7 +19,17 @@ export default class NewPeople extends Component {
     error: false,
     formOK: false,
     loading: false,
-    screenState: 1
+    screenState: 1,
+    person: {
+      qty: 1,
+      details: "",
+      ages: [],
+      needs: [],
+      location: {}
+    },
+    mapRegion: null,
+    lastLat: null,
+    lastLong: null
   };
 
   _handleForward = () => {
@@ -43,11 +38,40 @@ export default class NewPeople extends Component {
   _handleBackward = () => {
     this.setState({ screenState: this.state.screenState - 1 });
   };
+  firstStep = params => {
+    let { person } = this.state;
+    person.qty = params.qty;
+    person.ages = params.ages;
+    person.location = params.location;
+    this.setState({ person: person });
+  };
+  secondStep = () => {};
   handleSave = () => {};
-
-  componentWillUnmount() {}
-
+  watchID = null;
+  componentDidMount() {
+    this.watchID = navigator.geolocation.getCurrentPosition(
+      position => {
+        // Create the object to update this.state.mapRegion through the onRegionChange function
+        this.setState(
+          prevState => ({
+            person: {
+              ...prevState.person,
+              location: position.coords
+            }
+          }),
+          () => {
+            console.log(this.state.person);
+          }
+        );
+      },
+      error => console.log(error)
+    );
+  }
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
+  }
   render() {
+    console.log("wtf");
     const progressStepsStyle = {
       activeStepIconBorderColor: THEMECOLORLIGHT,
       activeLabelColor: THEMECOLORLIGHT,
@@ -68,7 +92,7 @@ export default class NewPeople extends Component {
             nextBtnIcon="arrow-forward"
           >
             <View>
-              <Principal />
+              <Principal data={this.state.person} />
             </View>
           </ProgressStep>
           <ProgressStep
@@ -77,12 +101,12 @@ export default class NewPeople extends Component {
             nextBtnStyle={styles.nextBtnStyle}
           >
             <View>
-              <Needs />
+              <Needs data={this.state.person} />
             </View>
           </ProgressStep>
           <ProgressStep label="">
             <View>
-              <Details />
+              <Details data={this.state.person} />
             </View>
           </ProgressStep>
         </ProgressSteps>

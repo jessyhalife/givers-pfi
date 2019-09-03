@@ -14,7 +14,6 @@ export default class Home extends Component {
 
   componentDidMount() {
     let gente = [];
-    console.log("genchi");
     pplRef.onSnapshot(snapshots => {
       snapshots.docs.forEach(x => {
         gente.push(x.data().location);
@@ -22,8 +21,8 @@ export default class Home extends Component {
       this.setState({ people: gente });
     });
   }
+
   render() {
-    console.log(this.state.people);
     return (
       <View style={styles.container} KeyboardAvoidingView={true}>
         <View style={styles.map}>
