@@ -52,18 +52,6 @@ export default class MapGiver extends PureComponent {
     } else {
     }
   }
-  // _getLocation = async () => {
-  //   await navigator.geolocation.getCurrentPosition(position => {
-  //     // this.setState({ coords: position.coords, loading: false });
-  //     const region = {
-  //       latitude: position.coords.latitude,
-  //       longitude: position.coords.longitude,
-  //       latitudeDelta: 0.012,
-  //       longitudeDelta: 0.01
-  //     };
-  //     this.map.animateToRegion(region, 500);
-  //   });
-  // };
 
   getMapRegion = () => ({
     latitude: this.state.latitude,

@@ -16,7 +16,8 @@ export default class Home extends Component {
     let gente = [];
     pplRef.onSnapshot(snapshots => {
       snapshots.docs.forEach(x => {
-        gente.push(x.data().location);
+        if (x.data().activo)
+          gente.push(x.data().location);
       });
       this.setState({ people: gente });
     });

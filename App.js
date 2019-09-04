@@ -7,14 +7,11 @@ import {
   createSwitchNavigator,
   createTabNavigator
 } from "react-navigation";
-//import Login from "./src/login/components/Login";
+
 import Login from "./src/views/Login";
-//import Main from "./src/main/components/Main";
 import Main from "./src/views/Main";
 import Welcome from "./src/main/components/Welcome";
-//import Home from "./src/home/components/Home";
 import MapScreen from "./src/views/map/Index";
-//import Register from "./src/register/components/Register";
 import Register from "./src/views/Register";
 import NewPeople from "./src/views/map/NewPeople";
 import NewPoint from "./src/views/map/NewPoint";
