@@ -8,6 +8,7 @@ const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
 import { PermissionsAndroid } from "react-native";
 import { Fab, Icon, Container, Button } from "native-base";
+
 export default class MapGiver extends PureComponent {
   constructor(props) {
     super(props);
