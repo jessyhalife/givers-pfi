@@ -1,20 +1,18 @@
+/* #region  IMPORTS */
 import React, { Component } from "react";
-import {
-  Image,
-  View,
-  StyleSheet,
-  ActivityIndicator,
-  TouchableOpacity
-} from "react-native";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { Button, Text } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 import firebaseApp from "../../config";
 import { THEMECOLOR, THEMECOLORLIGHT } from "../../const";
 import Principal from "../new.people/Principal.js";
 import Needs from "../new.people/Needs.js";
 import Details from "../new.people/Details.js";
-import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
+import Wizard from "react-native-wizard";
+/* #endregion */
 
 export default class NewPeople extends Component {
+  /* #region  state */
   state = {
     error: false,
     formOK: false,
@@ -29,9 +27,14 @@ export default class NewPeople extends Component {
     },
     mapRegion: null,
     lastLat: null,
-    lastLong: null
+    lastLong: null,
+    isLastStep: false,
+    isFirstStep: true,
+    currentIndex: 0
   };
+  /* #endregion */
 
+  /* #region  functions */
   _handleForward = () => {
     this.setState({ screenState: this.state.screenState + 1 });
   };
@@ -70,60 +73,90 @@ export default class NewPeople extends Component {
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
   }
+  /* #endregion */
+
   render() {
-    console.log("wtf");
-    const progressStepsStyle = {
-      activeStepIconBorderColor: THEMECOLORLIGHT,
-      activeLabelColor: THEMECOLORLIGHT,
-      activeStepNumColor: "white",
-      activeStepIconColor: THEMECOLORLIGHT,
-      completedStepIconColor: THEMECOLOR,
-      completedProgressBarColor: THEMECOLOR,
-      completedCheckColor: "white",
-      borderWidth: 2
-    };
+    const steps = [
+      {
+        component: () => <Principal data={this.state.person} />
+      },
+      {
+        component: () => <Needs />
+      },
+      { component: () => <Details /> }
+    ];
 
     return (
       <View style={{ flex: 1 }}>
-        <ProgressSteps {...progressStepsStyle}>
-          <ProgressStep
-            label=""
-            nextBtnStyle={styles.nextBtnStyle}
-            nextBtnIcon="arrow-forward"
-          >
-            <View>
-              <Principal data={this.state.person} />
-            </View>
-          </ProgressStep>
-          <ProgressStep
-            label=""
-            nextBtnIcon="arrow-forward"
-            nextBtnStyle={styles.nextBtnStyle}
-          >
-            <View>
-              <Needs data={this.state.person} />
-            </View>
-          </ProgressStep>
-          <ProgressStep label="">
-            <View>
-              <Details data={this.state.person} />
-            </View>
-          </ProgressStep>
-        </ProgressSteps>
+        <ScrollView>
+          <View>
+            <Wizard
+              ref={e => (this.wizard = e)}
+              currentStep={(currentIndex, isFirstStep, isLastStep) => {
+                this.setState({
+                  isLastStep: isLastStep,
+                  isFirstStep: isFirstStep,
+                  currentIndex: currentIndex
+                });
+              }}
+              steps={steps}
+            />
+          </View>
+        </ScrollView>
+        <View>
+          <View>
+            {this.state.isFirstStep ? (
+              undefined
+            ) : (
+              <Button
+                bordered
+                light
+                style={styles.button}
+                onPress={() => {
+                  this.wizard.prev();
+                }}
+              >
+                <Text
+                  style={{
+                    color: THEMECOLOR,
+                    alignItems: "center",
+                    fontWeight: "bold"
+                  }}
+                >
+                  VOLVER
+                </Text>
+              </Button>
+            )}
+          </View>
+          <View>
+            <Button
+              style={styles.button}
+              danger
+              onPress={() => {
+                this.wizard.next();
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  alignItems: "center",
+                  fontWeight: "bold"
+                }}
+              >
+                {this.state.isLastStep ? "GUARDAR" : "SIGUIENTE"}
+              </Text>
+            </Button>
+          </View>
+        </View>
       </View>
     );
   }
 }
-
 const styles = StyleSheet.create({
-  nextBtnStyle: {
-    borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.2)",
-    alignItems: "center",
+  button: {
     justifyContent: "center",
-    backgroundColor: THEMECOLOR,
-    borderRadius: 50,
-    width: 50,
-    height: 50
-  }
+    alignItems: "center",
+    height: 60
+  },
+  nextButton: {}
 });

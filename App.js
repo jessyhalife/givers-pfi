@@ -1,3 +1,4 @@
+//#region IMPORT
 import React, { Component } from "react";
 import {
   createAppContainer,
@@ -10,14 +11,15 @@ import {
 
 import Login from "./src/views/Login";
 import Main from "./src/views/Main";
-import Welcome from "./src/main/components/Welcome";
+import Welcome from "./src/views/Welcome";
 import MapScreen from "./src/views/map/Index";
 import Register from "./src/views/Register";
 import NewPeople from "./src/views/map/NewPeople";
 import NewPoint from "./src/views/map/NewPoint";
 import Activity from "./src/views/Activity";
 import { Icon } from "native-base";
-
+import { THEMECOLOR, THEMECOLORLIGHT } from "./src/const";
+//#endregion
 const MapStackNavigator = createStackNavigator(
   {
     MapScreen: {
@@ -39,7 +41,20 @@ const MapStackNavigator = createStackNavigator(
       }
     }
   },
-  {}
+  {
+    defaultNavigationOptions: ({ navigation }) => {
+      return {
+        headerLeft: (
+          <Icon
+            style={{ paddingLeft: 20 }}
+            onPress={() => navigation.openDrawer()}
+            name="menu"
+            size={30}
+          />
+        )
+      };
+    }
+  }
 );
 
 const MapTabNavigator = createBottomTabNavigator(
@@ -50,8 +65,12 @@ const MapTabNavigator = createBottomTabNavigator(
         title: "Givers",
         tabBarLabel: "Explorar",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="pin" size={10} iconStyle={{ color: tintColor }} />
-        )
+          <Icon name="pin" size={10} style={{ color: tintColor }} />
+        ),
+        tabBarOptions: {
+          activeTintColor: THEMECOLOR,
+          inactiveTintColor: "#c1c1c1"
+        }
       }
     },
     Search: {
@@ -60,8 +79,12 @@ const MapTabNavigator = createBottomTabNavigator(
         title: "Búsqueda",
         tabBarLabel: "Buscar",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="search" size={10} iconStyle={{ color: tintColor }} />
-        )
+          <Icon name="search" size={10} style={{ color: tintColor }} />
+        ),
+        tabBarOptions: {
+          activeTintColor: THEMECOLOR,
+          inactiveTintColor: "#c1c1c1"
+        }
       }
     },
     Activity: {
@@ -69,14 +92,18 @@ const MapTabNavigator = createBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: "Mi actividad",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="list" size={10} iconStyle={{ color: tintColor }} />
-        )
+          <Icon name="list" size={10} style={{ color: tintColor }} />
+        ),
+        tabBarOptions: {
+          activeTintColor: THEMECOLOR,
+          inactiveTintColor: "#c1c1c1"
+        }
       }
     }
   },
   {
     navigationOptions: {
-      title: "Givers"
+      title: "USERNAME"
     }
   }
 );
@@ -85,7 +112,7 @@ const MapDrawerNavigator = createDrawerNavigator(
   {
     Map: { screen: MapTabNavigator }
   },
-  {}
+  { initialRouteName: "Map" }
 );
 
 const AppSwitchNavigator = createSwitchNavigator(

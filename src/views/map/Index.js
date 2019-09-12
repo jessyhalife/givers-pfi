@@ -13,13 +13,12 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    let gente = [];
     pplRef.onSnapshot(snapshots => {
+      let gente = [];
       snapshots.docs.forEach(x => {
-        if (x.data().activo)
-          gente.push(x.data().location);
+        gente.push({ location: x.data().location, id: x.id });
       });
-      this.setState({ people: gente });
+      this.setState({ people: gente }, () => {});
     });
   }
 

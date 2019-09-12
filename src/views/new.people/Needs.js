@@ -1,19 +1,25 @@
 import React, { Component } from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet, TouchableHighlight } from "react-native";
 import {
   Form,
   Item,
   Input,
   Label,
   Text,
-  Content,
   Button,
-  Icon
+  Icon,
+  List,
+  ListItem,
+  CheckBox,
+  Body
 } from "native-base";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+
 class Needs extends Component {
   state = {
     needs: [],
-    selectedNeeds: []
+    selectedNeeds: [],
+    loading: true
   };
 
   componentDidMount() {
@@ -25,7 +31,7 @@ class Needs extends Component {
       "https://us-central1-givers-229af.cloudfunctions.net/webApi/helptypes"
     )
       .then(response => response.json())
-      .then(json => this.setState({ needs: json }));
+      .then(json => this.setState({ needs: json, loading: false }));
   }
 
   manageNeeds(key) {
@@ -51,54 +57,59 @@ class Needs extends Component {
     return (
       <View
         style={{
-          flex: 2,
-          flexDirection: "column",
-          justifyContent: "space-around",
-          padding: 15
+          flex: 2
         }}
       >
-        <ScrollView>
-          <Label style={styles.labels}>Necesidades</Label>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-around",
-              alignItems: "center",
-              marginTop: 10,
-              marginBottom: 3,
-              flexWrap: "wrap"
-            }}
-          >
-            {this.state.needs.map(element => {
-              return (
-                <Button
-                  style={styles.tiles}
-                  key={element.id}
-                  onPress={() => {
-                    this.manageNeeds(element.id);
-                  }}
-                >
-                  {element.data.icon ? (
-                    <Icon
-                      name={element.data.icon}
-                      style={{ color: "black" }}
-                    ></Icon>
-                  ) : (
-                    ""
-                  )}
-                  <Text
-                    style={{
-                      color: "black"
-                    }}
-                  >
-                    {element.data.description}
-                  </Text>
-                </Button>
-              );
-            })}
-          </View>
-        </ScrollView>
+        {this.state.loading ? (
+          <SkeletonPlaceholder>
+            {[0, 1, 2, 3, 4].map((_, index) => (
+              <View key={index} style={{ marginBottom: 12 }}>
+                <SkeletonPlaceholder>
+                  <View style={{ flexDirection: "row" }}>
+                    <View
+                      style={{
+                        justifyContent: "space-between",
+                        marginLeft: 12,
+                        flex: 1
+                      }}
+                    >
+                      <View style={{ width: "50%", height: 20 }} />
+                      <View style={{ width: "30%", height: 20 }} />
+                      <View style={{ width: "80%", height: 20 }} />
+                    </View>
+                  </View>
+                </SkeletonPlaceholder>
+              </View>
+            ))}
+          </SkeletonPlaceholder>
+        ) : (
+          <ScrollView>
+            <List>
+              <ListItem>
+                <Label>NECESIDADES</Label>
+              </ListItem>
+              {this.state.needs.map(element => {
+                return (
+                  <ListItem>
+                    <TouchableHighlight>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          flex: 3
+                        }}
+                      >
+                        <CheckBox checked={false}></CheckBox>
+                        <Text style={{ marginLeft: 3 }}>
+                          {element.data.description}
+                        </Text>
+                      </View>
+                    </TouchableHighlight>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </ScrollView>
+        )}
       </View>
     );
   }

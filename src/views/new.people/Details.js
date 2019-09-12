@@ -6,9 +6,6 @@ class Details extends Component {
     return (
       <View>
         <Text>Algún otro detalle?</Text>
-        <Textarea>
-          
-        </Textarea>
       </View>
     );
   }
