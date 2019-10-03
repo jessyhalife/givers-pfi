@@ -17,6 +17,7 @@ import { Fab, Icon, Container, Button } from "native-base";
 import SlidingUpPanel from "rn-sliding-up-panel";
 import PeopleView from "./PeopleView";
 import Geocoder from "react-native-geocoding";
+import mapStyle from "../assets/mapStyle";
 
 Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 
@@ -75,8 +76,7 @@ export default class MapGiver extends PureComponent {
           .then(add => {
             pers.address = add.results[0].formatted_address;
             this.setState({ activeMarker: pers }, () => {
-              console.log(this._panel);
-              this._panel.show(200, 2);
+              this._panel.show(200, 1);
             });
           })
           .catch(err => alert(err));
@@ -130,12 +130,6 @@ export default class MapGiver extends PureComponent {
             draggableRange={{
               top: height - 120,
               bottom: 0
-            }}
-            onDragEnd={e => {
-              this.setState({ activePanel: e >= 20 });
-            }}
-            onHideCallback={() => {
-              this.setState({ activePanel: false }, () => {});
             }}
           >
             <View
@@ -205,6 +199,8 @@ export default class MapGiver extends PureComponent {
           followUserLocation
           zoomEnabled
           loadingEnabled
+          customMapStyle={mapStyle}
+          provider={MapView.PROVIDER_GOOGLE}
           region={this.getMapRegion()}
         >
           {this.state.markers.map(x => {

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { View, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { H1, Text, Button } from "native-base";
+import mapStyle from '../../assets/mapStyle';
 import MapView, {
   Marker,
   AnimatedRegion,
@@ -152,6 +153,7 @@ class LocationStep extends Component {
         </View>
         <View style={{ flex: 3 }}>
           <MapView
+            customMapStyle={mapStyle}
             provider={PROVIDER_GOOGLE}
             ref={ref => {
               this.mapRef = ref;

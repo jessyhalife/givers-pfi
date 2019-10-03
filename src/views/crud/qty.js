@@ -133,14 +133,14 @@ class QtyComponent extends Component {
 }
 const press = StyleSheet.create({
   pressed: {
-    borderColor: "#eee",
+    borderColor: "#ffe965",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: THEMECOLOR,
+    backgroundColor: "#ffe965",
     width: 150,
     height: 50,
     margin: 10,
-    color: "white",
+    color: "#766605",
     fontWeight: "bold"
   }
 });

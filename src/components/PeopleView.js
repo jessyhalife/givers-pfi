@@ -9,27 +9,8 @@ export default PeopleView = props => {
       <View style={{ flexDirection: "row" }}>
         <View style={{ margin: 10 }}>
           <Text style={{ fontWeight: "bold", fontSize: 17, color: "black" }}>
-            {data.address.split(",")[0]}
+            {data.address.split(",")[0].toUpperCase()}
           </Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Button light style={{ padding: 1 }}>
-            <Icon style={{ color: "gray", fontSize: 18 }} name="eye"></Icon>
-            <Text style={{ fontWeight: "bold", marginRight: 5 }}>{data.seen}</Text>
-          </Button>
-        </View>
-        <View style={{ flexDirection: "row", marginLeft: 7}}>
-          <Button light style={{ padding: 1 }}>
-            <Icon style={{ color: "gray", fontSize: 18 }} name="eye-off"></Icon>
-            <Text
-              style={{
-                fontWeight: "bold",
-                fontSize: 15
-              }}
-            >
-              {data.not_seen}
-            </Text>
-          </Button>
         </View>
       </View>
 
@@ -38,24 +19,52 @@ export default PeopleView = props => {
           name="contacts"
           style={{ fontSize: 17, color: "gray", marginRight: 10 }}
         ></Icon>
-        <Text>
+        <Text style={{}}>
           {ages
             .filter(x => {
               return data.ages.indexOf(x.id) >= 0;
             })
             .map(x => {
-              return x.data.tipo;
+              return x.data.tipo.toLowerCase();
             })
             .join(" | ")}
         </Text>
       </View>
-      <View style={{ alignItems: "flex-end" , margin: 20}}>
-        <Button warning style={{ width: "30%", padding: 10 }}>
-          <Text style={{ fontSize: 18, color: "black", fontWeight: "bold" }}>
-            Ayudé!
-          </Text>
-          <Icon name="hand" style={{ color: "black" }}></Icon>
-        </Button>
+      <View
+        style={{
+          margin: 20,
+          flexDirection: "row"
+        }}
+      >
+        <View style={{}}>
+          <Button light style={{ padding: 1, borderRadius: 10 }}>
+            <Icon style={{ color: "gray", fontSize: 15 }} name="eye"></Icon>
+            <Text style={{ fontWeight: "bold", marginRight: 7, fontSize: 15 }}>
+              {data.seen}
+            </Text>
+          </Button>
+        </View>
+        <View style={{ marginLeft:10 }}>
+          <Button light style={{ padding: 1, borderRadius: 10 }}>
+            <Icon style={{ color: "gray", fontSize: 15 }} name="eye-off"></Icon>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 15,
+                marginRight: 7
+              }}
+            >
+              {data.not_seen}
+            </Text>
+          </Button>
+        </View>
+        <View style={{marginLeft: 10}}>
+          <Button  style={{ padding: 20, borderRadius: 10, borderColor: "#ffe965", backgroundColor: "#ffe965"}}>
+            <Text style={{ fontSize: 18, color: "#766605", fontWeight: "bold" }}>
+              yo ayudé
+            </Text>
+          </Button>
+        </View>
       </View>
       {/* <View style={{ flexDirection: "row", marginLeft: 10 }}>
           {needs
