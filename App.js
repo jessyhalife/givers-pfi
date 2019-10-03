@@ -18,6 +18,7 @@ import NewPeople from "./src/views/map/NewPeople";
 import NewPoint from "./src/views/map/NewPoint";
 import Activity from "./src/views/Activity";
 import { Icon } from "native-base";
+import { View , Button} from "react-native";
 import { THEMECOLOR, THEMECOLORLIGHT } from "./src/const";
 //#endregion
 const MapStackNavigator = createStackNavigator(
@@ -25,13 +26,16 @@ const MapStackNavigator = createStackNavigator(
     MapScreen: {
       screen: MapScreen,
       navigationOptions: {
-        title: "Givers"
+        title: "Givers",
+        headerTitleStyle: {
+          textAlign: "center"
+        }
       }
     },
     NewPeopleScreen: {
       screen: NewPeople,
       navigationOptions: {
-        title: "Registro de personas"
+        title: "Registro de personas",
       }
     },
     NewPointScreen: {
@@ -63,6 +67,7 @@ const MapTabNavigator = createBottomTabNavigator(
       screen: MapStackNavigator,
       navigationOptions: {
         title: "Givers",
+        headerLayoutPreset: "center",
         tabBarLabel: "Explorar",
         tabBarIcon: ({ tintColor }) => (
           <Icon name="pin" size={10} style={{ color: tintColor }} />

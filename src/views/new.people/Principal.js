@@ -14,30 +14,50 @@ import {
 } from "native-base";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-
+import Geocoder from "react-native-geocoding";
+Geocoder.init("AIzaSyCzOx_nARYJW68tQKsdnirAeMCtd8B1_Fc");
 class Principal extends Component {
   state = {
-    ages: [],
-    qty: 1,
-    selectedAges: [],
-    location: {},
-    loading: true
+    person: {
+      ages: [],
+      qty: 1,
+      location: {}
+    },
+    address: "",
+    list_ages: [],
+    loading: false
   };
 
   componentDidMount() {
-    this.setState({ location: this.props.data.location, loading: true });
+    this.setState(
+      {
+        person: this.props.data
+      },
+      () => {}
+    );
     this._fetchAges();
+    console.log("entra aca el hdp");
+    // Geocoder.from({
+    //   latitude: this.state.person.location.lat,
+    //   longitude: this.state.person.location.lng
+    // })
+    Geocoder.from({
+      latitude: -34.58422666666667,
+      longitude: -58.44041666666667
+    }).then(json => {
+      this.setState({ address: json.results[0].formatted_address });
+      this.GooglePlacesRef.setAddressText(this.state.address);
+    });
   }
 
   _fetchAges() {
     fetch("https://us-central1-givers-229af.cloudfunctions.net/webApi/ages")
       .then(response => response.json())
-      .then(json => this.setState({ ages: json }))
+      .then(json => this.setState({ list_ages: json }))
       .then(() => this.setState({ loading: false }));
   }
   manageAges(key) {
-    console.log(key);
-    let prev = this.state.selectedAges;
+    let prev = this.state.person.ages;
     if (
       !prev.find(x => {
         return x == key;
@@ -49,12 +69,13 @@ class Principal extends Component {
         return key !== x;
       });
     }
-    this.setState({ selectedAges: prev }, () => {
-      console.log(prev);
+    this.setState({ person: { ...this.state.person, ages: prev } }, () => {
+      console.log("handling change");
+      //this.props.handleChange(this.state.person);
     });
   }
   render() {
-    const { selectedAges } = this.state;
+    const { ages } = this.state.person;
     return (
       <View
         style={{
@@ -73,7 +94,6 @@ class Principal extends Component {
                 <SkeletonPlaceholder>
                   <View style={{ flexDirection: "row" }}>
                     <View style={{ width: 100, height: 100 }} />
-
                     <View
                       style={{
                         justifyContent: "space-between",
@@ -98,25 +118,41 @@ class Principal extends Component {
               </ListItem>
               <ListItem>
                 <GooglePlacesAutocomplete
+                  ref={instance => {
+                    this.GooglePlacesRef = instance;
+                  }}
                   placeholder="Search"
+                  getDefaultValue={() => this.state.address}
+                  value={this.state.address}
                   minLength={3} // minimum length of text to search
                   returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-                  listViewDisplayed="auto" // true/false/undefined
-                  renderDescription={row => row.description} // custom description render
-                  fetchDetails={false}
-                  onPress={(data, details = null) => {
+                  listViewDisplayed="false" // true/false/undefined
+                  renderDescription={row => row.description || row.vicinity} // custom description render
+                  fetchDetails={true}
+                  onPress={(data, details) => {
                     // 'details' is provided when fetchDetails = true
-                    console.log(data, details);
+                    this.setState(
+                      {
+                        person: {
+                          ...this.state.person,
+                          location: details.geometry.location
+                        },
+                        address: data.description || data.vicinity
+                      },
+                      () => {
+                        console.log(this.state.person);
+                        console.log(this.state.address);
+                      }
+                    );
                   }}
-                  getDefaultValue={() => ""}
                   query={{
                     // available options: https://developers.google.com/places/web-service/autocomplete
-                    key: "AIzaSyCzOx_nARYJW68tQKsdnirAeMCtd8B1_Fc",
+                    key: "AIzaSyBAZBpWYMUskFgPU_LATPHd521AKJ3CEz4", //"AIzaSyCzOx_nARYJW68tQKsdnirAeMCtd8B1_Fc",
                     language: "es", // language of the results
                     types: "address" // default: 'geocode'
                   }}
                   currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-                  currentLocationLabel="Current location"
+                  currentLocationLabel="Ubicación actual"
                   nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
                   GoogleReverseGeocodingQuery={
                     {
@@ -171,14 +207,14 @@ class Principal extends Component {
                     marginBottom: 3
                   }}
                 >
-                  {this.state.ages.map(element => {
+                  {this.state.list_ages.map(element => {
                     return (
                       <Button
                         onPress={() => {
                           this.manageAges(element.id);
                         }}
                         style={
-                          selectedAges.find(x => {
+                          ages.find(x => {
                             return x == element.id;
                           })
                             ? press.pressed
@@ -200,9 +236,8 @@ class Principal extends Component {
                 </View>
               </ListItem>
               <ListItem>
-                <Item>
-                  <Label style={styles.labels}>¿CUÁNTOS SON?</Label>
-                </Item>
+                <Label style={styles.labels}>¿CUÁNTOS SON?</Label>
+
                 <Item regular>
                   <Input keyboardType={"numeric"}></Input>
                 </Item>

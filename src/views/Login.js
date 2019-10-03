@@ -35,6 +35,7 @@ export default class Main extends Component {
           this.props.navigation.navigate("Map");
         })
         .catch(error => {
+          console.log(error);
           this.setState({
             loading: false,
             error: true,

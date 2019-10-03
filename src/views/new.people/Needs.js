@@ -52,7 +52,9 @@ class Needs extends Component {
       console.log(prev);
     });
   }
-
+  componentWillReceiveProps() {
+    console.table(this.props.data);
+  }
   render() {
     return (
       <View
@@ -98,7 +100,7 @@ class Needs extends Component {
                           flex: 3
                         }}
                       >
-                        <CheckBox checked={false}></CheckBox>
+                        <CheckBox checked={false} key={element.id}></CheckBox>
                         <Text style={{ marginLeft: 3 }}>
                           {element.data.description}
                         </Text>

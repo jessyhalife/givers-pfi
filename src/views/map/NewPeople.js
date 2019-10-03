@@ -1,109 +1,140 @@
-/* #region  IMPORTS */
 import React, { Component } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { Button, Text } from "native-base";
+import { Button, Text, Icon } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
-import firebaseApp from "../../config";
 import { THEMECOLOR, THEMECOLORLIGHT } from "../../const";
-import Principal from "../new.people/Principal.js";
-import Needs from "../new.people/Needs.js";
-import Details from "../new.people/Details.js";
+import QtyComponent from "../crud/qty.js";
+import LocationComponent from "../crud/location.js";
+import DetailsComponent from "../crud/details.js";
+import NeedsComponent from "../crud/needs.js";
 import Wizard from "react-native-wizard";
-/* #endregion */
 
-export default class NewPeople extends Component {
-  /* #region  state */
+class NewPeople extends Component {
+  static navigationOptions = ({ navigation }) => {
+    console.log(navigation.state);
+    return {
+      headerLeft: (
+        <Icon
+          style={{ paddingLeft: 20 }}
+          onPress={() => {
+            if (navigation.state.currentIndex === 0) {
+              navigation.goBack();
+            } else {
+              navigation.state.prev();
+            }
+          }}
+          name="arrow-round-back"
+          size={30}
+        />
+      )
+    };
+  };
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this._next = this._next.bind(this);
+    this._prev = this._prev.bind(this);
+    this._submit = this._submit.bind(this);
+  }
   state = {
-    error: false,
-    formOK: false,
-    loading: false,
-    screenState: 1,
-    person: {
-      qty: 1,
-      details: "",
-      ages: [],
-      needs: [],
-      location: {}
-    },
-    mapRegion: null,
-    lastLat: null,
-    lastLong: null,
     isLastStep: false,
     isFirstStep: true,
-    currentIndex: 0
+    currentIndex: 0,
+    latitude: 0,
+    longitude: 0,
+    ages: [],
+    needs: [],
+    qty: "",
+    details: ""
   };
-  /* #endregion */
-
-  /* #region  functions */
-  _handleForward = () => {
-    this.setState({ screenState: this.state.screenState + 1 });
-  };
-  _handleBackward = () => {
-    this.setState({ screenState: this.state.screenState - 1 });
-  };
-  firstStep = params => {
-    let { person } = this.state;
-    person.qty = params.qty;
-    person.ages = params.ages;
-    person.location = params.location;
-    this.setState({ person: person });
-  };
-  secondStep = () => {};
-  handleSave = () => {};
-  watchID = null;
   componentDidMount() {
-    this.watchID = navigator.geolocation.getCurrentPosition(
-      position => {
-        // Create the object to update this.state.mapRegion through the onRegionChange function
-        this.setState(
-          prevState => ({
-            person: {
-              ...prevState.person,
-              location: position.coords
-            }
-          }),
-          () => {
-            console.log(this.state.person);
-          }
-        );
-      },
-      error => console.log(error)
-    );
+    this.props.navigation.setParams({
+      currentIndex: this.state.currentIndex,
+      prev: this._prev
+    });
   }
-  componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.watchID);
-  }
-  /* #endregion */
 
+  handleChange(prop) {
+    if (typeof prop == "object") {
+      for (var p in prop) {
+        this.setState({ [p]: prop[p] }, () => {
+          console.table(this.state);
+        });
+      }
+    } else {
+      this.setState({ [prop]: prop });
+    }
+  }
+
+  _next(prop) {
+    this.handleChange(prop);
+    this.wizard.next();
+  }
+
+  _prev(prop) {
+    this.handleChange(prop);
+    this.wizard.prev();
+  }
+  _submit(prop) {
+    alert("Bye");
+    var body = {
+      people: {
+        location: {
+          latitude: this.state.latitude,
+          longitude: this.state.longitude
+        },
+        qty: this.state.qty,
+        needs: this.state.needs,
+        ages: this.state.ages,
+        details: this.state.details
+      }
+    };
+    console.log(JSON.stringify(body));
+    fetch("https://us-central1-givers-229af.cloudfunctions.net/webApi/people", {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" }
+    })
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(error => console.log("Error!!: ", error));
+
+    this.props.navigation.goBack();
+  }
   render() {
+    console.table(this.state);
     const steps = [
       {
-        component: () => <Principal data={this.state.person} />
+        component: () => <LocationComponent next={this._next} />
       },
       {
-        component: () => <Needs />
+        component: () => <QtyComponent prev={this._prev} next={this._next} />
       },
-      { component: () => <Details /> }
+      {
+        component: () => <NeedsComponent next={this._next} prev={this._prev} />
+      },
+      {
+        component: () => (
+          <DetailsComponent prev={this._prev} submit={this._submit} />
+        )
+      }
     ];
-
     return (
       <View style={{ flex: 1 }}>
         <ScrollView>
-          <View>
-            <Wizard
-              ref={e => (this.wizard = e)}
-              currentStep={(currentIndex, isFirstStep, isLastStep) => {
-                this.setState({
-                  isLastStep: isLastStep,
-                  isFirstStep: isFirstStep,
-                  currentIndex: currentIndex
-                });
-              }}
-              steps={steps}
-            />
-          </View>
+          <Wizard
+            ref={e => (this.wizard = e)}
+            currentStep={(currentIndex, isFirstStep, isLastStep) => {
+              this.setState({
+                isLastStep: isLastStep,
+                isFirstStep: isFirstStep,
+                currentIndex: currentIndex
+              });
+            }}
+            steps={steps}
+          />
         </ScrollView>
-        <View>
+        {/* <View>
           <View>
             {this.state.isFirstStep ? (
               undefined
@@ -147,7 +178,7 @@ export default class NewPeople extends Component {
               </Text>
             </Button>
           </View>
-        </View>
+        </View> */}
       </View>
     );
   }
@@ -160,3 +191,5 @@ const styles = StyleSheet.create({
   },
   nextButton: {}
 });
+
+export default NewPeople;

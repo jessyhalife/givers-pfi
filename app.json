@@ -1,4 +1,7 @@
 {
   "name": "givers",
-  "displayName": "givers"
+  "displayName": "givers",
+  "expo": {
+    "sdkVersion": "33.0.0"
+  }
 }

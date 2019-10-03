@@ -16,6 +16,9 @@ import { PermissionsAndroid } from "react-native";
 import { Fab, Icon, Container, Button } from "native-base";
 import SlidingUpPanel from "rn-sliding-up-panel";
 import PeopleView from "./PeopleView";
+import Geocoder from "react-native-geocoding";
+
+Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 
 export default class MapGiver extends PureComponent {
   constructor(props) {
@@ -26,13 +29,37 @@ export default class MapGiver extends PureComponent {
       longitude: -122.083,
       locationPermission: true,
       active: false,
-      activeMarker: null
+      activeMarker: null,
+      ages: [],
+      needs: [],
+      activePanel: false
     };
     this.mapRef = null;
+    this.getAges = this.getAges.bind(this);
+    this.getNeeds = this.getNeeds.bind(this);
   }
   componentWillReceiveProps(props) {
-    console.log(props.people);
     this.setState({ markers: props.people }, () => {});
+  }
+  getAges() {
+    fetch("https://us-central1-givers-229af.cloudfunctions.net/webApi/ages")
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+        this.setState({ ages: json });
+        return;
+      });
+  }
+  getNeeds() {
+    fetch(
+      "https://us-central1-givers-229af.cloudfunctions.net/webApi/helptypes"
+    )
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+        this.setState({ needs: json });
+        return;
+      });
   }
   _markerInfo(key) {
     fetch(
@@ -40,9 +67,19 @@ export default class MapGiver extends PureComponent {
     )
       .then(response => response.json())
       .then(json => {
-        this.setState({ activeMarker: json }, () => {
-          this._panel.show(150, 5);
-        });
+        var pers = json;
+        Geocoder.from({
+          latitude: pers.location.latitude,
+          longitude: pers.location.longitude
+        })
+          .then(add => {
+            pers.address = add.results[0].formatted_address;
+            this.setState({ activeMarker: pers }, () => {
+              console.log(this._panel);
+              this._panel.show(200, 2);
+            });
+          })
+          .catch(err => alert(err));
       });
   }
   async componentDidMount() {
@@ -70,6 +107,8 @@ export default class MapGiver extends PureComponent {
       );
     } else {
     }
+
+    await Promise.all([this.getAges(), this.getNeeds()]).then(data => {});
   }
   getMapRegion = () => ({
     latitude: this.state.latitude,
@@ -84,28 +123,6 @@ export default class MapGiver extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <Fab
-          active={this.state.active}
-          direction="up"
-          containerStyle={{}}
-          style={{ backgroundColor: THEMECOLOR, position: "absolute" }}
-          position="bottomRight"
-          onPress={() => this.setState({ active: !this.state.active })}
-        >
-          <Icon name="add" />
-          <Button
-            style={{ backgroundColor: "#fff", borderColor: "#eee" }}
-            onPress={() => this.props.navigation.navigate("NewPeopleScreen")}
-          >
-            <Icon name="person-add" style={{ color: "#000" }} />
-          </Button>
-          <Button
-            style={{ backgroundColor: "#fff", borderColor: "#eee" }}
-            onPress={() => this.props.navigation.navigate("NewPointScreen")}
-          >
-            <Icon name="pin" style={{ color: "#000" }} />
-          </Button>
-        </Fab>
         <View style={{ flex: 2 }}>
           <SlidingUpPanel
             ref={c => (this._panel = c)}
@@ -114,15 +131,17 @@ export default class MapGiver extends PureComponent {
               top: height - 120,
               bottom: 0
             }}
-            // onHideCallback={() => {
-            //   this.setState({ activeMarker: null }, () => {
-            //     console.log("borro");
-            //   });
-            // }}
+            onDragEnd={e => {
+              this.setState({ activePanel: e >= 20 });
+            }}
+            onHideCallback={() => {
+              this.setState({ activePanel: false }, () => {});
+            }}
           >
             <View
               style={{
                 flex: 2,
+                zIndex: 1,
                 backgroundColor: "white",
                 borderColor: "#eee",
                 borderWidth: 2,
@@ -137,18 +156,49 @@ export default class MapGiver extends PureComponent {
             >
               <Icon
                 name="remove"
-                style={{ alignSelf: "center", color: "#eee" }}
+                style={{ alignSelf: "center", color: "#ccc", fontSize: 30 }}
               ></Icon>
               {this.state.activeMarker && (
-                <PeopleView data={this.state.activeMarker} />
+                <PeopleView
+                  data={this.state.activeMarker}
+                  ages={this.state.ages}
+                  needs={this.state.needs}
+                />
               )}
             </View>
           </SlidingUpPanel>
         </View>
+        {!this.state.activePanel ? (
+          <Fab
+            active={this.state.active}
+            direction="up"
+            containerStyle={{}}
+            style={{ backgroundColor: THEMECOLOR, position: "absolute" }}
+            position="bottomRight"
+            onPress={() => this.setState({ active: !this.state.active })}
+          >
+            <Icon name="add" />
+            <Button
+              style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+              onPress={() => this.props.navigation.navigate("NewPeopleScreen")}
+            >
+              <Icon name="person-add" style={{ color: "#000" }} />
+            </Button>
+            <Button
+              style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+              onPress={() => this.props.navigation.navigate("NewPointScreen")}
+            >
+              <Icon name="pin" style={{ color: "#000" }} />
+            </Button>
+          </Fab>
+        ) : (
+          undefined
+        )}
         <MapView
           ref={ref => {
             this.mapRef = ref;
           }}
+          moveOnMarkerPress={false}
           showsUserLocation={true}
           style={styles.map}
           showUserLocation
@@ -159,14 +209,14 @@ export default class MapGiver extends PureComponent {
         >
           {this.state.markers.map(x => {
             return (
-              <Marker
+              <Marker.Animated
                 key={x.id}
                 coordinate={{
                   latitude: Number(x.location.latitude),
                   longitude: Number(x.location.longitude)
                 }}
                 onPress={() => this._markerInfo(x.id)}
-              ></Marker>
+              ></Marker.Animated>
             );
           })}
         </MapView>

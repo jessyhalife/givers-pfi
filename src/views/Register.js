@@ -37,11 +37,13 @@ export default class Register extends Component {
 
   _handleRegister = () => {
     this.setState({ loading: true });
+    console.log("test");
     let { email, password } = this.state;
     firebaseApp
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(data => {
+        console.log(data);
         this.setState({ error: false, loading: false });
       })
       .catch(error => {
