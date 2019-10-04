@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { View, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { H1, Text, Button } from "native-base";
-import mapStyle from '../../assets/mapStyle';
+import mapStyle from "../../assets/mapStyle";
 import MapView, {
   Marker,
   AnimatedRegion,
@@ -53,14 +53,33 @@ class LocationStep extends Component {
       }
     );
   }
-  componentWillMount() {
-    console.log("will mount");
-    this.getCurrentLocation();
+  componentDidMount() {
+    console.log("props: ", this.props.location);
+    if (this.props.location.latitude == 0 || this.props.location.longitude == 0)
+    {
+      console.log("sin location");
+      this.getCurrentLocation();
+      }
+    else
+    {
+      console.log("con location, con ");
+      this.setLocation(this.props.location, () => {
+        Geocoder.from({
+          latitude: this.state.initialRegion.latitude,
+          longitude: this.state.initialRegion.longitude
+        }).then(json => {
+          console.log(json);
+          this.GooglePlacesRef.setAddressText(
+            json.results[0].formatted_address
+          );
+          //this.userMarker.animateMarkerToCoordinate(this.state.marker, 2000);
+        });
+      });
+      }
   }
   setLocation(data, callback) {
     let lat = data.hasOwnProperty("latitude") ? data.latitude : data.lat;
     let long = data.hasOwnProperty("longitude") ? data.longitude : data.lng;
-    let location = { latitude: lat, longitude: long };
     let region = {
       latitude: Number(lat),
       longitude: Number(long),
@@ -100,7 +119,7 @@ class LocationStep extends Component {
             onPress={(data, details) => {
               // 'details' is provided when fetchDetails = true
               this.setLocation(details.geometry.location, () => {
-                this.mapView.animateToRegion(this.state.initialRegion, 2000);
+                // this.mapView.animateToRegion(this.state.initialRegion, 2000);
                 this.userMarker.animateMarkerToCoordinate(
                   this.state.marker,
                   2000

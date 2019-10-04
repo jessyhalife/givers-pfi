@@ -11,7 +11,6 @@ import Wizard from "react-native-wizard";
 
 class NewPeople extends Component {
   static navigationOptions = ({ navigation }) => {
-    console.log(navigation.state);
     return {
       headerLeft: (
         <Icon
@@ -55,11 +54,10 @@ class NewPeople extends Component {
   }
 
   handleChange(prop) {
+    console.table(this.state);
     if (typeof prop == "object") {
       for (var p in prop) {
-        this.setState({ [p]: prop[p] }, () => {
-          console.table(this.state);
-        });
+        this.setState({ [p]: prop[p] }, () => {});
       }
     } else {
       this.setState({ [prop]: prop });
@@ -102,20 +100,44 @@ class NewPeople extends Component {
     this.props.navigation.goBack();
   }
   render() {
-    console.table(this.state);
     const steps = [
       {
-        component: () => <LocationComponent next={this._next} />
-      },
-      {
-        component: () => <QtyComponent prev={this._prev} next={this._next} />
-      },
-      {
-        component: () => <NeedsComponent next={this._next} prev={this._prev} />
+        component: () => (
+          <LocationComponent
+            next={this._next}
+            location={{
+              latitude: this.state.latitude,
+              longitude: this.state.longitude
+            }}
+          />
+        )
       },
       {
         component: () => (
-          <DetailsComponent prev={this._prev} submit={this._submit} />
+          <QtyComponent
+            prev={this._prev}
+            next={this._next}
+            qty={this.state.qty}
+            needs={this.state.needs}
+          />
+        )
+      },
+      {
+        component: () => (
+          <NeedsComponent
+            next={this._next}
+            prev={this._prev}
+            needs={this.state.needs}
+          />
+        )
+      },
+      {
+        component: () => (
+          <DetailsComponent
+            prev={this._prev}
+            submit={this._submit}
+            details={this.state.details}
+          />
         )
       }
     ];

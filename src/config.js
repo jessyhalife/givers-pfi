@@ -9,5 +9,5 @@ let config = {
     messagingSenderId: "1070274682388"
   };
   
-  let firebaseApp = Firebase.initializeApp(config);
+  let firebaseApp = Firebase.app();//Firebase.initializeApp(config);
   export default firebaseApp;

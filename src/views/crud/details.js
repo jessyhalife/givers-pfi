@@ -6,6 +6,9 @@ class DetailsComponent extends Component {
   state = {
     details: ""
   };
+  componentDidMount() {
+    this.setState({ details: this.props.details && "" });
+  }
   render() {
     return (
       <View>
