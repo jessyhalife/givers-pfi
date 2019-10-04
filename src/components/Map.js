@@ -46,7 +46,6 @@ export default class MapGiver extends PureComponent {
     fetch("https://us-central1-givers-229af.cloudfunctions.net/webApi/ages")
       .then(response => response.json())
       .then(json => {
-        console.log(json);
         this.setState({ ages: json });
         return;
       });
@@ -57,7 +56,6 @@ export default class MapGiver extends PureComponent {
     )
       .then(response => response.json())
       .then(json => {
-        console.log(json);
         this.setState({ needs: json });
         return;
       });
