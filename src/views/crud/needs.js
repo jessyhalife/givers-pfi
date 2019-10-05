@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Text, Button, H1 } from "native-base";
+import { Text, Button, H1, Icon } from "native-base";
 import {
-  TouchableHighlight,
+  TouchableOpacity,
   View,
-  CheckBox,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  FlatList,
+  StatusBar
 } from "react-native";
 import { THEMECOLOR } from "../../const.js";
 class NeedsComponent extends Component {
@@ -29,7 +30,16 @@ class NeedsComponent extends Component {
         arr.forEach(x => {
           x.active = false;
         });
-        this.setState({ needs: json, loading: false });
+        this.setState({ needs: json, loading: false }, () => {
+          if (this.props.getState().length >= 3) {
+            if (this.props.getState()[2].hasOwnProperty("needs")) {
+              let selected = this.props.getState()[2].needs;
+              selected.forEach(x => {
+                this.manageNeeds(x);
+              });
+            }
+          }
+        });
       });
   }
 
@@ -45,95 +55,144 @@ class NeedsComponent extends Component {
   render() {
     return (
       <View>
-        <ScrollView style={{ flex: 5 }}>
+        <ScrollView>
           <View style={{ marginTop: 20, marginLeft: 20, marginBottom: 20 }}>
             <H1 style={{ fontWeight: "bold" }}>
               ¿Sabés si necesita/n algo en particular?
             </H1>
           </View>
-          {this.state.needs.map(element => {
-            return (
-              <TouchableHighlight style={{ marginLeft: 10, marginTop: 10 }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    flex: 3
-                  }}
-                >
-                  <CheckBox
-                    checked={false}
-                    onChange={() => this.manageNeeds(element.id)}
-                    key={element.id}
-                  ></CheckBox>
-                  <Text style={{ marginLeft: 3 }}>
-                    {element.data.description}
+          <View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              alignItems: "stretch",
+              justifyContent: "center"
+            }}
+          >
+            <FlatList
+              contentContainerStyle={{
+                alignItems: "center",
+                flex: 1,
+                justifyContent: "center"
+              }}
+              data={this.state.needs}
+              keyExtractor={item => item.id}
+              numColumns={3}
+              renderItem={({ item }) => (
+                <View style={{ margin: 3, alignItems: "center" }}>
+                  <TouchableOpacity
+                    style={
+                      !item.active
+                        ? styles.tiles
+                        : { ...styles.tiles, ...styles.selectedTile }
+                    }
+                    onPress={() => {
+                      this.manageNeeds(item.id);
+                    }}
+                  >
+                    <Icon
+                      name={item.data.icon}
+                      style={
+                        !item.active ? { color: "#ddd" } : { color: "white" }
+                      }
+                    ></Icon>
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      marginTop: 10,
+                      marginBottom: 15,
+                      width: 100,
+                      textAlign: "center"
+                    }}
+                  >
+                    {item.data.description}
                   </Text>
                 </View>
-              </TouchableHighlight>
-            );
-          })}
+              )}
+            ></FlatList>
+          </View>
+          <View>
+            <Button
+              style={{
+                ...styles.button,
+                backgroundColor: THEMECOLOR
+              }}
+              onPress={() => {
+                this.props.saveState(2, {
+                  needs: this.state.needs
+                    .filter(x => x.active)
+                    .map(y => {
+                      return y.id;
+                    })
+                });
+                this.props.next({
+                  needs: this.state.needs
+                    .filter(x => x.active)
+                    .map(y => {
+                      return y.id;
+                    })
+                });
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  alignItems: "center",
+                  fontWeight: "bold"
+                }}
+              >
+                SIGUIENTE
+              </Text>
+            </Button>
+            <Button
+              bordered
+              light
+              style={{
+                ...styles.button,
+                backgroundColor: "white"
+              }}
+              onPress={() => {
+                this.props.prev({
+                  needs: this.state.needs
+                    .filter(x => x.active)
+                    .map(y => {
+                      return y.id;
+                    })
+                });
+              }}
+            >
+              <Text
+                style={{
+                  color: THEMECOLOR,
+                  alignItems: "center",
+                  fontWeight: "bold"
+                }}
+              >
+                VOLVER
+              </Text>
+            </Button>
+          </View>
         </ScrollView>
-        <View style={{ flex: 3 }}>
-          <Button
-            bordered
-            light
-            style={styles.button}
-            onPress={() => {
-              console.log(this.state.needs);
-              this.props.prev({
-                needs: this.state.needs.filter(x => x.active)
-              });
-            }}
-          >
-            <Text
-              style={{
-                color: THEMECOLOR,
-                alignItems: "center",
-                fontWeight: "bold"
-              }}
-            >
-              VOLVER
-            </Text>
-          </Button>
-        </View>
-        <View>
-          <Button
-            style={{ ...styles.button, backgroundColor: THEMECOLOR }}
-            onPress={() => {
-              this.props.next({
-                needs: this.state.needs.filter(x => x.active)
-              });
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                alignItems: "center",
-                fontWeight: "bold"
-              }}
-            >
-              SIGUIENTE
-            </Text>
-          </Button>
-        </View>
       </View>
     );
   }
 }
 const styles = StyleSheet.create({
+  icon: {
+    color: "gray"
+  },
+  selectedTile: {
+    elevation: 0,
+    backgroundColor: "#a6eee6"
+  },
   tiles: {
-    borderColor: "rgba(0,0,0,0.2)",
-    // alignItems: "center",
-    // justifyContent: "center",
-    backgroundColor: "#fff",
-    width: 150,
-    height: 200,
-    shadowColor: "#eee",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.8,
-    shadowRadius: 4,
-    elevation: 2,
-    margin: 20
+    alignItems: "center",
+    justifyContent: "center",
+    width: 60,
+    height: 60,
+    backgroundColor: "#f8f8f8",
+    borderRadius: 50,
+    elevation: 2
   },
   labels: {
     fontSize: 20,
@@ -143,6 +202,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 60
+  },
+  bottomView: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute", //Here is the trick
+    bottom: 0 //Here is the trick
   }
 });
 export default NeedsComponent;

@@ -2,12 +2,19 @@ import { View, TextInput, StyleSheet } from "react-native";
 import React, { Component } from "react";
 import { Text, Textarea, Button, H1 } from "native-base";
 import { THEMECOLOR } from "../../const.js";
+import AwesomeButton from "react-native-really-awesome-button";
+
 class DetailsComponent extends Component {
   state = {
     details: ""
   };
   componentDidMount() {
     this.setState({ details: this.props.details && "" });
+  }
+  async submit() {
+    await this.props.submit({ details: this.state.details }).then(() => {
+      alert("ok");
+    });
   }
   render() {
     return (
@@ -16,11 +23,38 @@ class DetailsComponent extends Component {
           <H1 style={{ fontWeight: "bold" }}>¿Algo que quieras agregar?</H1>
         </View>
         <Textarea
+          style={{ margin: 20, height: 300, fontSize: 20 }}
           value={this.state.details}
           onChange={e => this.setState({ details: e.nativeEvent.text })}
           rowSpan={5}
           bordered
         />
+        <View>
+          <AwesomeButton
+            progress
+            onPress={() => {
+              this.submit();
+            }}
+          >
+            Text
+          </AwesomeButton>
+          {/* <Button
+            style={{ ...styles.button, backgroundColor: THEMECOLOR }}
+            onPress={() => {
+              this.props.submit({ details: this.state.details });
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+                alignItems: "center",
+                fontWeight: "bold"
+              }}
+            >
+              GUARDAR
+            </Text>
+          </Button> */}
+        </View>
         <View>
           <Button
             bordered
@@ -38,24 +72,6 @@ class DetailsComponent extends Component {
               }}
             >
               VOLVER
-            </Text>
-          </Button>
-        </View>
-        <View>
-          <Button
-            style={{ ...styles.button, backgroundColor: THEMECOLOR }}
-            onPress={() => {
-              this.props.submit({ details: this.state.details });
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                alignItems: "center",
-                fontWeight: "bold"
-              }}
-            >
-              GUARDAR
             </Text>
           </Button>
         </View>

@@ -37,7 +37,6 @@ class LocationStep extends Component {
             latitude: this.state.initialRegion.latitude,
             longitude: this.state.initialRegion.longitude
           }).then(json => {
-            console.log(json);
             this.GooglePlacesRef.setAddressText(
               json.results[0].formatted_address
             );
@@ -54,28 +53,25 @@ class LocationStep extends Component {
     );
   }
   componentDidMount() {
-    console.log("props: ", this.props.location);
-    if (this.props.location.latitude == 0 || this.props.location.longitude == 0)
-    {
-      console.log("sin location");
+    if (
+      this.props.getState().length == 0 ||
+      (this.props.getState().length > 0 &&
+        !this.props.getState()[0].hasOwnProperty("latitude"))
+    ) {
       this.getCurrentLocation();
-      }
-    else
-    {
-      console.log("con location, con ");
-      this.setLocation(this.props.location, () => {
+    } else {
+      this.setLocation(this.props.getState()[0], () => {
         Geocoder.from({
           latitude: this.state.initialRegion.latitude,
           longitude: this.state.initialRegion.longitude
         }).then(json => {
-          console.log(json);
           this.GooglePlacesRef.setAddressText(
             json.results[0].formatted_address
           );
           //this.userMarker.animateMarkerToCoordinate(this.state.marker, 2000);
         });
       });
-      }
+    }
   }
   setLocation(data, callback) {
     let lat = data.hasOwnProperty("latitude") ? data.latitude : data.lat;
@@ -100,129 +96,130 @@ class LocationStep extends Component {
   render() {
     return (
       <View style={{ flexDirection: "column" }}>
-        <View
-          style={{ flex: 1, marginTop: 20, marginLeft: 20, marginBottom: 20 }}
-        >
-          <H1 style={{ fontWeight: "bold" }}>¿Dónde?</H1>
-        </View>
-        <View style={{ flex: 1 }}>
-          <GooglePlacesAutocomplete
-            ref={instance => {
-              this.GooglePlacesRef = instance;
-            }}
-            placeholder="Search"
-            minLength={3} // minimum length of text to search
-            returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-            listViewDisplayed="false" // true/false/undefined
-            renderDescription={row => row.description || row.vicinity} // custom description render
-            fetchDetails={true}
-            onPress={(data, details) => {
-              // 'details' is provided when fetchDetails = true
-              this.setLocation(details.geometry.location, () => {
-                // this.mapView.animateToRegion(this.state.initialRegion, 2000);
-                this.userMarker.animateMarkerToCoordinate(
-                  this.state.marker,
-                  2000
-                );
-              });
-            }}
-            query={{
-              // available options: https://developers.google.com/places/web-service/autocomplete
-              key: "AIzaSyBAZBpWYMUskFgPU_LATPHd521AKJ3CEz4", //"AIzaSyCzOx_nARYJW68tQKsdnirAeMCtd8B1_Fc",
-              language: "es", // language of the results
-              types: "address" // default: 'geocode'
-            }}
-            currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-            currentLocationLabel="Ubicación actual"
-            nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-            GoogleReverseGeocodingQuery={
-              {
-                // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-              }
-            }
-            GooglePlacesSearchQuery={{
-              // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-              rankby: "distance"
-            }}
-            filterReverseGeocodingByTypes={[
-              "locality",
-              "administrative_area_level_3"
-            ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-            // predefinedPlaces={[homePlace, workPlace]}
-            debounce={0}
-            styles={{
-              textInputContainer: {
-                backgroundColor: "rgba(0,0,0,0)",
-                borderColor: "#D9D5DC",
-                borderWidth: 1,
-                marginBottom: 11
-              },
-              textInput: {
-                marginLeft: 0,
-                marginRight: 0,
-                height: 38,
-                color: "#5d5d5d",
-                fontSize: 18
-              },
-              predefinedPlacesDescription: {
-                color: "#1faadb"
-              }
-            }}
-          />
-        </View>
-        <View style={{ flex: 3 }}>
-          <MapView
-            customMapStyle={mapStyle}
-            provider={PROVIDER_GOOGLE}
-            ref={ref => {
-              this.mapRef = ref;
-            }}
-            style={styles.map}
-            region={this.state.initialRegion}
-            followUserLocation={true}
-            ref={ref => (this.mapView = ref)}
-            zoomEnabled={true}
-            showsUserLocation={true}
-            onMapReady={() => {
-              this.setState({ mapReady: true });
-            }}
+        <ScrollView>
+          <View
+            style={{ flex: 1, marginTop: 20, marginLeft: 20, marginBottom: 20 }}
           >
-            {this.state.mapReady &&
-            this.state.marker.latitude !== null &&
-            this.state.marker.longitude !== null ? (
-              <Marker
-                ref={marker => {
-                  this.userMarker = marker;
-                }}
-                draggable
-                coordinate={{
-                  latitude: this.state.marker.latitude,
-                  longitude: this.state.marker.longitude
-                }}
-                onDragEnd={e => {
-                  this.setLocation(e.nativeEvent.coordinate, () => {
-                    this.mapView.animateToRegion(
-                      this.state.initialRegion,
-                      2000
-                    );
-                    Geocoder.from({
-                      latitude: this.state.initialRegion.latitude,
-                      longitude: this.state.initialRegion.longitude
-                    }).then(json => {
-                      console.log(json);
-                      this.GooglePlacesRef.setAddressText(
-                        json.results[0].formatted_address
+            <H1 style={{ fontWeight: "bold" }}>¿Dónde?</H1>
+          </View>
+          <View style={{ flex: 3 }}>
+            <GooglePlacesAutocomplete
+              ref={instance => {
+                this.GooglePlacesRef = instance;
+              }}
+              placeholder="Search"
+              minLength={3} // minimum length of text to search
+              returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+              listViewDisplayed="false" // true/false/undefined
+              renderDescription={row => row.description || row.vicinity} // custom description render
+              fetchDetails={true}
+              onPress={(data, details) => {
+                // 'details' is provided when fetchDetails = true
+                this.setLocation(details.geometry.location, () => {
+                  // this.mapView.animateToRegion(this.state.initialRegion, 2000);
+                  this.userMarker.animateMarkerToCoordinate(
+                    this.state.marker,
+                    2000
+                  );
+                });
+              }}
+              query={{
+                // available options: https://developers.google.com/places/web-service/autocomplete
+                key: "AIzaSyBAZBpWYMUskFgPU_LATPHd521AKJ3CEz4", //"AIzaSyCzOx_nARYJW68tQKsdnirAeMCtd8B1_Fc",
+                language: "es", // language of the results
+                types: "address" // default: 'geocode'
+              }}
+              currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+              currentLocationLabel="Ubicación actual"
+              nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+              GoogleReverseGeocodingQuery={
+                {
+                  // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                }
+              }
+              GooglePlacesSearchQuery={{
+                // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                rankby: "distance"
+              }}
+              filterReverseGeocodingByTypes={[
+                "locality",
+                "administrative_area_level_3"
+              ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+              // predefinedPlaces={[homePlace, workPlace]}
+              debounce={0}
+              styles={{
+                textInputContainer: {
+                  backgroundColor: "rgba(0,0,0,0)",
+                  borderColor: "#D9D5DC",
+                  borderWidth: 1,
+                  marginBottom: 11
+                },
+                textInput: {
+                  marginLeft: 0,
+                  marginRight: 0,
+                  height: 38,
+                  color: "#5d5d5d",
+                  fontSize: 18
+                },
+                predefinedPlacesDescription: {
+                  color: "#1faadb"
+                }
+              }}
+            />
+          </View>
+          <View style={{ flex: 3 }}>
+            <MapView
+              customMapStyle={mapStyle}
+              provider={PROVIDER_GOOGLE}
+              ref={ref => {
+                this.mapRef = ref;
+              }}
+              style={styles.map}
+              region={this.state.initialRegion}
+              followUserLocation={true}
+              ref={ref => (this.mapView = ref)}
+              zoomEnabled={true}
+              showsUserLocation={true}
+              onMapReady={() => {
+                this.setState({ mapReady: true });
+              }}
+            >
+              {this.state.mapReady &&
+              this.state.marker.latitude !== null &&
+              this.state.marker.longitude !== null ? (
+                <Marker
+                  ref={marker => {
+                    this.userMarker = marker;
+                  }}
+                  draggable
+                  coordinate={{
+                    latitude: this.state.marker.latitude,
+                    longitude: this.state.marker.longitude
+                  }}
+                  onDragEnd={e => {
+                    this.setLocation(e.nativeEvent.coordinate, () => {
+                      this.mapView.animateToRegion(
+                        this.state.initialRegion,
+                        2000
                       );
+                      Geocoder.from({
+                        latitude: this.state.initialRegion.latitude,
+                        longitude: this.state.initialRegion.longitude
+                      }).then(json => {
+                        this.GooglePlacesRef.setAddressText(
+                          json.results[0].formatted_address
+                        );
+                      });
                     });
-                  });
-                }}
-              ></Marker>
-            ) : (
-              undefined
-            )}
-          </MapView>
-        </View>
-        <View style={{ flex: 2 }}>
+                  }}
+                ></Marker>
+              ) : (
+                undefined
+              )}
+            </MapView>
+          </View>
+        </ScrollView>
+        <View style={{ bottom: 0, position: "relative" }}>
           <Button
             style={{ ...styles.button, backgroundColor: THEMECOLOR }}
             onPress={() => {
@@ -230,6 +227,7 @@ class LocationStep extends Component {
                 latitude: this.state.marker.latitude,
                 longitude: this.state.marker.longitude
               };
+              this.props.saveState(0, location);
               this.props.next(location);
             }}
           >

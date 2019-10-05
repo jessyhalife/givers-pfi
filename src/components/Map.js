@@ -75,6 +75,7 @@ export default class MapGiver extends PureComponent {
             pers.address = add.results[0].formatted_address;
             this.setState({ activeMarker: pers }, () => {
               this._panel.show(200, 1);
+              this.setState({ activePanel: true });
             });
           })
           .catch(err => alert(err));
@@ -121,71 +122,6 @@ export default class MapGiver extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ flex: 2 }}>
-          <SlidingUpPanel
-            ref={c => (this._panel = c)}
-            backdropOpacity={1}
-            draggableRange={{
-              top: height - 120,
-              bottom: 0
-            }}
-          >
-            <View
-              style={{
-                flex: 2,
-                zIndex: 1,
-                backgroundColor: "white",
-                borderColor: "#eee",
-                borderWidth: 2,
-                shadowRadius: 2,
-                shadowOffset: {
-                  width: 0,
-                  height: -3
-                },
-                shadowColor: "#000000",
-                elevation: 4
-              }}
-            >
-              <Icon
-                name="remove"
-                style={{ alignSelf: "center", color: "#ccc", fontSize: 30 }}
-              ></Icon>
-              {this.state.activeMarker && (
-                <PeopleView
-                  data={this.state.activeMarker}
-                  ages={this.state.ages}
-                  needs={this.state.needs}
-                />
-              )}
-            </View>
-          </SlidingUpPanel>
-        </View>
-        {!this.state.activePanel ? (
-          <Fab
-            active={this.state.active}
-            direction="up"
-            containerStyle={{}}
-            style={{ backgroundColor: THEMECOLOR, position: "absolute" }}
-            position="bottomRight"
-            onPress={() => this.setState({ active: !this.state.active })}
-          >
-            <Icon name="add" />
-            <Button
-              style={{ backgroundColor: "#fff", borderColor: "#eee" }}
-              onPress={() => this.props.navigation.navigate("NewPeopleScreen")}
-            >
-              <Icon name="person-add" style={{ color: "#000" }} />
-            </Button>
-            <Button
-              style={{ backgroundColor: "#fff", borderColor: "#eee" }}
-              onPress={() => this.props.navigation.navigate("NewPointScreen")}
-            >
-              <Icon name="pin" style={{ color: "#000" }} />
-            </Button>
-          </Fab>
-        ) : (
-          undefined
-        )}
         <MapView
           ref={ref => {
             this.mapRef = ref;
@@ -214,6 +150,69 @@ export default class MapGiver extends PureComponent {
             );
           })}
         </MapView>
+        <View style={{ flex: 2, flexDirection: "column" }}>
+          {!this.state.activePanel ? 
+          <Fab
+            active={this.state.active}
+            direction="up"
+            containerStyle={{}}
+            style={{ backgroundColor: THEMECOLOR }}
+            onPress={() => this.setState({ active: !this.state.active })}
+          >
+            <Icon name="add" />
+            <Button
+              style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+              onPress={() => this.props.navigation.navigate("NewPeopleScreen")}
+            >
+              <Icon name="person-add" style={{ color: "#000" }} />
+            </Button>
+            <Button
+              style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+              onPress={() => this.props.navigation.navigate("NewPointScreen")}
+            >
+              <Icon name="pin" style={{ color: "#000" }} />
+            </Button>
+          </Fab>
+          : undefined}
+          <SlidingUpPanel
+            onHideCallback={() => this.setState({ activePanel: false, active: false })}
+            ref={c => (this._panel = c)}
+            backdropOpacity={1}
+            draggableRange={{
+              top: height - 200,
+              bottom: 0
+            }}
+          >
+            <View
+              style={{
+                position: "relative",
+                flex: 2,
+                backgroundColor: "white",
+                borderColor: "#eee",
+                borderWidth: 2,
+                shadowRadius: 2,
+                shadowOffset: {
+                  width: 0,
+                  height: -3
+                },
+                shadowColor: "#000000",
+                elevation: 4
+              }}
+            >
+              <Icon
+                name="remove"
+                style={{ alignSelf: "center", color: "#ccc", fontSize: 30 }}
+              ></Icon>
+              {this.state.activeMarker && (
+                <PeopleView
+                  data={this.state.activeMarker}
+                  ages={this.state.ages}
+                  needs={this.state.needs}
+                />
+              )}
+            </View>
+          </SlidingUpPanel>
+        </View>
       </View>
     );
   }

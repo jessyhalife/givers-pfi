@@ -52,9 +52,7 @@ class Needs extends Component {
       console.log(prev);
     });
   }
-  componentWillReceiveProps() {
-    console.table(this.props.data);
-  }
+
   render() {
     return (
       <View

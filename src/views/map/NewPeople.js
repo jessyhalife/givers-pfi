@@ -8,6 +8,7 @@ import LocationComponent from "../crud/location.js";
 import DetailsComponent from "../crud/details.js";
 import NeedsComponent from "../crud/needs.js";
 import Wizard from "react-native-wizard";
+import MultiStep from "react-native-multistep-wizard";
 
 class NewPeople extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -54,7 +55,6 @@ class NewPeople extends Component {
   }
 
   handleChange(prop) {
-    console.table(this.state);
     if (typeof prop == "object") {
       for (var p in prop) {
         this.setState({ [p]: prop[p] }, () => {});
@@ -71,7 +71,7 @@ class NewPeople extends Component {
 
   _prev(prop) {
     this.handleChange(prop);
-    this.wizard.prev();
+    this.wizard.previous();
   }
   _submit(prop) {
     alert("Bye");
@@ -102,7 +102,8 @@ class NewPeople extends Component {
   render() {
     const steps = [
       {
-        component: () => (
+        name: "LocationStep",
+        component: (
           <LocationComponent
             next={this._next}
             location={{
@@ -113,7 +114,8 @@ class NewPeople extends Component {
         )
       },
       {
-        component: () => (
+        name: "QtyStep",
+        component: (
           <QtyComponent
             prev={this._prev}
             next={this._next}
@@ -123,7 +125,8 @@ class NewPeople extends Component {
         )
       },
       {
-        component: () => (
+        name: "NeedStep",
+        component: (
           <NeedsComponent
             next={this._next}
             prev={this._prev}
@@ -132,7 +135,8 @@ class NewPeople extends Component {
         )
       },
       {
-        component: () => (
+        name: "DetailStep",
+        component: (
           <DetailsComponent
             prev={this._prev}
             submit={this._submit}
@@ -141,9 +145,56 @@ class NewPeople extends Component {
         )
       }
     ];
+    // const steps = [
+    //   {
+    //     component: () => (
+    //       <LocationComponent
+    //         next={this._next}
+    //         location={{
+    //           latitude: this.state.latitude,
+    //           longitude: this.state.longitude
+    //         }}
+    //       />
+    //     )
+    //   },
+    //   {
+    //     component: () => (
+    //       <QtyComponent
+    //         prev={this._prev}
+    //         next={this._next}
+    //         qty={this.state.qty}
+    //         needs={this.state.needs}
+    //       />
+    //     )
+    //   },
+    //   {
+    //     component: () => (
+    //       <NeedsComponent
+    //         next={this._next}
+    //         prev={this._prev}
+    //         needs={this.state.needs}
+    //       />
+    //     )
+    //   },
+    //   {
+    //     component: () => (
+    //       <DetailsComponent
+    //         prev={this._prev}
+    //         submit={this._submit}
+    //         details={this.state.details}
+    //       />
+    //     )
+    //   }
+    // ];
+
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView>
+        <MultiStep
+          ref={e => (this.wizard = e)}
+          steps={steps}
+          onFinish={this._submit}
+        ></MultiStep>
+        {/* <ScrollView>
           <Wizard
             ref={e => (this.wizard = e)}
             currentStep={(currentIndex, isFirstStep, isLastStep) => {
@@ -155,52 +206,7 @@ class NewPeople extends Component {
             }}
             steps={steps}
           />
-        </ScrollView>
-        {/* <View>
-          <View>
-            {this.state.isFirstStep ? (
-              undefined
-            ) : (
-              <Button
-                bordered
-                light
-                style={styles.button}
-                onPress={() => {
-                  this.wizard.prev();
-                }}
-              >
-                <Text
-                  style={{
-                    color: THEMECOLOR,
-                    alignItems: "center",
-                    fontWeight: "bold"
-                  }}
-                >
-                  VOLVER
-                </Text>
-              </Button>
-            )}
-          </View>
-          <View>
-            <Button
-              style={styles.button}
-              danger
-              onPress={() => {
-                this.wizard.next();
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  alignItems: "center",
-                  fontWeight: "bold"
-                }}
-              >
-                {this.state.isLastStep ? "GUARDAR" : "SIGUIENTE"}
-              </Text>
-            </Button>
-          </View>
-        </View> */}
+        </ScrollView> */}
       </View>
     );
   }
