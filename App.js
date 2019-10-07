@@ -17,25 +17,30 @@ import Register from "./src/views/Register";
 import NewPeople from "./src/views/map/NewPeople";
 import NewPoint from "./src/views/map/NewPoint";
 import Activity from "./src/views/Activity";
-import { Icon } from "native-base";
-import { View , Button} from "react-native";
+// import { Icon } from "native-base";
 import { THEMECOLOR, THEMECOLORLIGHT } from "./src/const";
+import Icon from "react-native-vector-icons/AntDesign";
+
 //#endregion
 const MapStackNavigator = createStackNavigator(
   {
     MapScreen: {
-      screen: MapScreen,
-      navigationOptions: {
-        title: "Givers",
-        headerTitleStyle: {
-          textAlign: "center"
-        }
-      }
+      screen: MapScreen
+
+      // navigationOptions: {
+      //   title: "Givers",
+      //   headerTitleStyle: {
+      //     textAlign: "center"
+      //   },
+      //   headerStyle: {
+      //     backgroundColor: "#f3f3f3"
+      //   }
+      // }
     },
     NewPeopleScreen: {
       screen: NewPeople,
       navigationOptions: {
-        title: "Registro de personas",
+        title: "Registro de personas"
       }
     },
     NewPointScreen: {
@@ -46,18 +51,8 @@ const MapStackNavigator = createStackNavigator(
     }
   },
   {
-    defaultNavigationOptions: ({ navigation }) => {
-      return {
-        headerLeft: (
-          <Icon
-            style={{ paddingLeft: 20 }}
-            onPress={() => navigation.openDrawer()}
-            name="menu"
-            size={30}
-          />
-        )
-      };
-    }
+    header: null,
+    headerMode: "none"
   }
 );
 
@@ -66,15 +61,16 @@ const MapTabNavigator = createBottomTabNavigator(
     Explore: {
       screen: MapStackNavigator,
       navigationOptions: {
-        title: "Givers",
-        headerLayoutPreset: "center",
-        tabBarLabel: "Explorar",
+        tabBarLabel: "MAPA",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="pin" size={10} style={{ color: tintColor }} />
+          <Icon name="find" size={18} style={{ color: tintColor }} />
         ),
         tabBarOptions: {
           activeTintColor: THEMECOLOR,
-          inactiveTintColor: "#c1c1c1"
+          inactiveTintColor: "#919191",
+          style: {
+            backgroundColor: "#f3f3f3"
+          }
         }
       }
     },
@@ -82,26 +78,32 @@ const MapTabNavigator = createBottomTabNavigator(
       screen: Activity,
       navigationOptions: {
         title: "Búsqueda",
-        tabBarLabel: "Buscar",
+        tabBarLabel: "BUSCAR",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="search" size={10} style={{ color: tintColor }} />
+          <Icon name="search1" size={18} style={{ color: tintColor }} />
         ),
         tabBarOptions: {
           activeTintColor: THEMECOLOR,
-          inactiveTintColor: "#c1c1c1"
+          inactiveTintColor: "#919191",
+          style: {
+            backgroundColor: "#f3f3f3"
+          }
         }
       }
     },
     Activity: {
       screen: Activity,
       navigationOptions: {
-        tabBarLabel: "Mi actividad",
+        tabBarLabel: "ACTIVIDAD",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="list" size={10} style={{ color: tintColor }} />
+          <Icon name="menuunfold" size={18} style={{ color: tintColor }} />
         ),
         tabBarOptions: {
           activeTintColor: THEMECOLOR,
-          inactiveTintColor: "#c1c1c1"
+          inactiveTintColor: "#919191",
+          style: {
+            backgroundColor: "#f3f3f3"
+          }
         }
       }
     }

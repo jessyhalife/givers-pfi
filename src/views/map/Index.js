@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import MapGiver from "../../components/Map";
 import db from "../../db";
 import firebaseApp from "../../config/config";

@@ -69,6 +69,9 @@
 		F21B4074D4DB49C98E4E3CFA /* CabifyCircularWeb-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 147D62D1BD3C45998F87608D /* CabifyCircularWeb-Bold.ttf */; };
 		9498EC14BB1D48B4860B4403 /* CabifyCircularWeb-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84E22547C7744F279F0E7A6E /* CabifyCircularWeb-Book.ttf */; };
 		6D1DF8CB50A845F09FC5B4E5 /* CabifyCircularWeb-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67A0C83B70D740B399BC5FC3 /* CabifyCircularWeb-Light.ttf */; };
+		C8060FB2330C46C795B74910 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA981C1F6E7248F393097B27 /* libRNSVG.a */; };
+		2E5C50F06CC046F99FB2B9B9 /* libRNSVG-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 989680CB83C4490DB1DDBE93 /* libRNSVG-tvOS.a */; };
+		28648C53E6BF41FFA08F9AA2 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 084486D6257B4745A6CDD6C1 /* Fontisto.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -412,6 +415,10 @@
 		147D62D1BD3C45998F87608D /* CabifyCircularWeb-Bold.ttf */ = {isa = PBXFileReference; name = "CabifyCircularWeb-Bold.ttf"; path = "../src/assets/fonts/CabifyCircularWeb-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		84E22547C7744F279F0E7A6E /* CabifyCircularWeb-Book.ttf */ = {isa = PBXFileReference; name = "CabifyCircularWeb-Book.ttf"; path = "../src/assets/fonts/CabifyCircularWeb-Book.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		67A0C83B70D740B399BC5FC3 /* CabifyCircularWeb-Light.ttf */ = {isa = PBXFileReference; name = "CabifyCircularWeb-Light.ttf"; path = "../src/assets/fonts/CabifyCircularWeb-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1C96C2EE4B47421BAE117819 /* RNSVG.xcodeproj */ = {isa = PBXFileReference; name = "RNSVG.xcodeproj"; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		AA981C1F6E7248F393097B27 /* libRNSVG.a */ = {isa = PBXFileReference; name = "libRNSVG.a"; path = "libRNSVG.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		989680CB83C4490DB1DDBE93 /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; name = "libRNSVG-tvOS.a"; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		084486D6257B4745A6CDD6C1 /* Fontisto.ttf */ = {isa = PBXFileReference; name = "Fontisto.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -445,6 +452,7 @@
 				F21FB1FF4315444DB67943D7 /* libAirMaps.a in Frameworks */,
 				885C1A5124F14611AB5D81D1 /* libReactNativePermissions.a in Frameworks */,
 				9831AB5EA9D546AFB5443749 /* libRNFirebase.a in Frameworks */,
+				C8060FB2330C46C795B74910 /* libRNSVG.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,6 +472,7 @@
 				377FA9BB1BDD4B62A6BE5747 /* libRNGestureHandler-tvOS.a in Frameworks */,
 				AF74C3CAD910464B84AC0D59 /* libRNVectorIcons-tvOS.a in Frameworks */,
 				B77E9AB494DD4E2397E084E3 /* libRNSVG-tvOS.a in Frameworks */,
+				2E5C50F06CC046F99FB2B9B9 /* libRNSVG-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -642,6 +651,7 @@
 				22FF8D1AF6B444A39D599F26 /* AirMaps.xcodeproj */,
 				60265BE00333482FBC85A262 /* ReactNativePermissions.xcodeproj */,
 				C1019EAB005941C6891D150D /* RNFirebase.xcodeproj */,
+				1C96C2EE4B47421BAE117819 /* RNSVG.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -717,6 +727,7 @@
 				147D62D1BD3C45998F87608D /* CabifyCircularWeb-Bold.ttf */,
 				84E22547C7744F279F0E7A6E /* CabifyCircularWeb-Book.ttf */,
 				67A0C83B70D740B399BC5FC3 /* CabifyCircularWeb-Light.ttf */,
+				084486D6257B4745A6CDD6C1 /* Fontisto.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1192,6 +1203,7 @@
 				F21B4074D4DB49C98E4E3CFA /* CabifyCircularWeb-Bold.ttf in Resources */,
 				9498EC14BB1D48B4860B4403 /* CabifyCircularWeb-Book.ttf in Resources */,
 				6D1DF8CB50A845F09FC5B4E5 /* CabifyCircularWeb-Light.ttf in Resources */,
+				28648C53E6BF41FFA08F9AA2 /* Fontisto.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1326,6 +1338,8 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/givers.app/givers";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1335,6 +1349,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-shimmer/ios",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 				);
 			};
 			name = Debug;
@@ -1356,6 +1371,8 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/givers.app/givers";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1365,6 +1382,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-shimmer/ios",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 				);
 			};
 			name = Release;
@@ -1393,6 +1411,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-shimmer/ios",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 				);
 			};
 			name = Debug;
@@ -1420,6 +1439,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-shimmer/ios",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 				);
 			};
 			name = Release;
@@ -1449,6 +1469,8 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1458,6 +1480,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-shimmer/ios",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 				);
 			};
 			name = Debug;
@@ -1487,6 +1510,8 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1496,6 +1521,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-shimmer/ios",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 				);
 			};
 			name = Release;
@@ -1524,6 +1550,8 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1533,6 +1561,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-shimmer/ios",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 				);
 			};
 			name = Debug;
@@ -1561,6 +1590,8 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1570,6 +1601,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-shimmer/ios",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 				);
 			};
 			name = Release;

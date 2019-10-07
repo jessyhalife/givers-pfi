@@ -106,10 +106,14 @@ class NewPeople extends Component {
         name: "LocationStep",
         component: (
           <LocationComponent
+            showAnterior={false}
             next={this._next}
             location={{
               latitude: this.state.latitude,
               longitude: this.state.longitude
+            }}
+            prev={() => {
+              this.props.navigation.goBack();
             }}
           />
         )
@@ -132,6 +136,7 @@ class NewPeople extends Component {
             next={this._next}
             prev={this._prev}
             needs={this.state.needs}
+            title="¿Necesitan algo en particular?"
           />
         )
       },

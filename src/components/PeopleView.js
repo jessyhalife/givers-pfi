@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Icon, Button } from "native-base";
-
+import { THEMECOLOR } from "../const.js";
 export default PeopleView = props => {
   const { data, ages, needs } = props;
   return (
@@ -90,17 +90,17 @@ export default PeopleView = props => {
             {data.not_seen}
           </Text>
         </View>
-        <View style={{ right: 0, position: "absolute"}}>
+        <View style={{ right: 0, position: "absolute" }}>
           <Button
             style={{
               padding: 20,
               borderRadius: 10,
-              backgroundColor: "#a6eee6",
+              backgroundColor: THEMECOLOR,
               elevation: 5
             }}
           >
             <Text style={{ fontSize: 18, color: "f8f8f8", fontWeight: "bold" }}>
-            Ayudé
+              Ayudé
             </Text>
           </Button>
         </View>

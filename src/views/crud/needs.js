@@ -9,6 +9,9 @@ import {
   StatusBar
 } from "react-native";
 import { THEMECOLOR } from "../../const.js";
+import Header from "../../components/header";
+import ButtonsWizard from "../../components/buttons_wizard";
+
 class NeedsComponent extends Component {
   state = {
     needs: [],
@@ -56,11 +59,13 @@ class NeedsComponent extends Component {
     return (
       <View>
         <ScrollView>
-          <View style={{ marginTop: 20, marginLeft: 20, marginBottom: 20 }}>
-            <H1 style={{ fontWeight: "bold" }}>
-              ¿Sabés si necesita/n algo en particular?
-            </H1>
-          </View>
+          <Header
+            showBack={true}
+            title={this.props.title}
+            back={() => {
+              this.props.prev();
+            }}
+          />
           <View
             style={{
               flexDirection: "row",
@@ -111,70 +116,37 @@ class NeedsComponent extends Component {
               )}
             ></FlatList>
           </View>
-          <View>
-            <Button
-              style={{
-                ...styles.button,
-                backgroundColor: THEMECOLOR
-              }}
-              onPress={() => {
-                this.props.saveState(2, {
-                  needs: this.state.needs
-                    .filter(x => x.active)
-                    .map(y => {
-                      return { id: y.id };
-                    })
-                });
-                this.props.next({
-                  needs: this.state.needs
-                    .filter(x => x.active)
-                    .map(y => {
-                      return { id: y.id };
-                    })
-                });
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  alignItems: "center",
-                  fontWeight: "bold"
-                }}
-              >
-                SIGUIENTE
-              </Text>
-            </Button>
-            <Button
-              bordered
-              light
-              style={{
-                ...styles.button,
-                backgroundColor: "white"
-              }}
-              onPress={() => {
-                this.props.saveState(2, {
-                  needs: this.state.needs
-                    .filter(x => x.active)
-                    .map(y => {
-                      return { id: y.id };
-                    })
-                });
-                this.props.prev({
-                  needs: this.state.needs.filter(x => x.active)
-                });
-              }}
-            >
-              <Text
-                style={{
-                  color: THEMECOLOR,
-                  alignItems: "center",
-                  fontWeight: "bold"
-                }}
-              >
-                VOLVER
-              </Text>
-            </Button>
-          </View>
+          <ButtonsWizard
+            showAnterior={true}
+            siguiente={() => {
+              this.props.saveState(2, {
+                needs: this.state.needs
+                  .filter(x => x.active)
+                  .map(y => {
+                    return { id: y.id };
+                  })
+              });
+              this.props.next({
+                needs: this.state.needs
+                  .filter(x => x.active)
+                  .map(y => {
+                    return { id: y.id };
+                  })
+              });
+            }}
+            back={() => {
+              this.props.saveState(2, {
+                needs: this.state.needs
+                  .filter(x => x.active)
+                  .map(y => {
+                    return { id: y.id };
+                  })
+              });
+              this.props.prev({
+                needs: this.state.needs.filter(x => x.active)
+              });
+            }}
+          />
         </ScrollView>
       </View>
     );

@@ -13,6 +13,9 @@ import { THEMECOLOR } from "../../const.js";
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
 import Geocoder from "react-native-geocoding";
+import Header from "../../components/header";
+import ButtonsWizard from "../../components/buttons_wizard";
+
 Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 
 class LocationStep extends Component {
@@ -97,11 +100,14 @@ class LocationStep extends Component {
     return (
       <View style={{ flexDirection: "column" }}>
         <ScrollView>
-          <View
-            style={{ flex: 1, marginTop: 20, marginLeft: 20, marginBottom: 20 }}
-          >
-            <H1 style={{ fontWeight: "bold" }}>¿Dónde?</H1>
-          </View>
+          <Header
+            showBack={true}
+            title="¿Dónde?"
+            back={() => {
+              alert(typeof this.props.prev);
+              this.props.prev();
+            }}
+          />
           <View style={{ flex: 3 }}>
             <GooglePlacesAutocomplete
               ref={instance => {
@@ -151,7 +157,6 @@ class LocationStep extends Component {
                 textInputContainer: {
                   backgroundColor: "rgba(0,0,0,0)",
                   borderColor: "#D9D5DC",
-                  borderWidth: 1,
                   marginBottom: 11
                 },
                 textInput: {
@@ -159,7 +164,7 @@ class LocationStep extends Component {
                   marginRight: 0,
                   height: 38,
                   color: "#5d5d5d",
-                  fontSize: 18
+                  fontSize: 16
                 },
                 predefinedPlacesDescription: {
                   color: "#1faadb"
@@ -219,29 +224,21 @@ class LocationStep extends Component {
             </MapView>
           </View>
         </ScrollView>
-        <View style={{ bottom: 0, position: "relative" }}>
-          <Button
-            style={{ ...styles.button, backgroundColor: THEMECOLOR }}
-            onPress={() => {
-              let location = {
-                latitude: this.state.marker.latitude,
-                longitude: this.state.marker.longitude
-              };
-              this.props.saveState(0, location);
-              this.props.next(location);
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                alignItems: "center",
-                fontWeight: "bold"
-              }}
-            >
-              SIGUIENTE
-            </Text>
-          </Button>
-        </View>
+        <ButtonsWizard
+          showAnterior={this.props.showAnterior}
+          siguiente={() => {
+            let location = {
+              latitude: this.state.marker.latitude,
+              longitude: this.state.marker.longitude
+            };
+            this.props.saveState(0, location);
+            this.props.next();
+          }}
+          back={() => {
+            this.props.saveState(0, location);
+            this.props.prev();
+          }}
+        />
       </View>
     );
   }

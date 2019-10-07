@@ -2,10 +2,10 @@ import React, { PureComponent } from "react";
 import {
   View,
   StyleSheet,
-  Text,
   Alert,
   TouchableOpacity,
-  Dimensions
+  Dimensions, 
+  Text
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { THEMECOLOR } from "../const";
@@ -13,11 +13,12 @@ const { height, width } = Dimensions.get("window");
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
 import { PermissionsAndroid } from "react-native";
-import { Fab, Icon, Container, Button } from "native-base";
+import { Fab, Container, Button } from "native-base";
 import SlidingUpPanel from "rn-sliding-up-panel";
 import PeopleView from "./PeopleView";
 import Geocoder from "react-native-geocoding";
 import mapStyle from "../assets/mapStyle";
+import Icon from "react-native-vector-icons/AntDesign";
 
 Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 
@@ -176,8 +177,9 @@ export default class MapGiver extends PureComponent {
                   latitude: Number(x.location.latitude),
                   longitude: Number(x.location.longitude)
                 }}
+                onPress={() => this._markerInfo(x.id)}
               >
-                <MapView.Callout
+                {/* <MapView.Callout
                   onPress={() => this._markerInfo(x.id)}
                   style={{
                     flex: 1,
@@ -207,7 +209,7 @@ export default class MapGiver extends PureComponent {
                       <View style={{ flexDirection: "row" }}>
                         <Text style={{ fontSize: 18, fontWeight: "bold" }}>
                           Hay {x.qty} {x.qty > 1 ? "personas" : "persona"} que
-                          podes ayudar!
+                          podés ayudar!
                         </Text>
                       </View>
                       <View style={{ flexDirection: "row" }}>
@@ -215,7 +217,7 @@ export default class MapGiver extends PureComponent {
                       </View>
                     </View>
                   </View>
-                </MapView.Callout>
+                </MapView.Callout> */}
               </Marker.Animated>
             );
           })}
@@ -229,20 +231,20 @@ export default class MapGiver extends PureComponent {
               style={{ backgroundColor: THEMECOLOR }}
               onPress={() => this.setState({ active: !this.state.active })}
             >
-              <Icon name="add" />
+              <Icon name="plus" />
               <Button
                 style={{ backgroundColor: "#fff", borderColor: "#eee" }}
                 onPress={() =>
                   this.props.navigation.navigate("NewPeopleScreen")
                 }
               >
-                <Icon name="person-add" style={{ color: "#000" }} />
+                <Icon name="adduser" size={18} style={{ color: "#000" }} />
               </Button>
               <Button
                 style={{ backgroundColor: "#fff", borderColor: "#eee" }}
                 onPress={() => this.props.navigation.navigate("NewPointScreen")}
               >
-                <Icon name="pin" style={{ color: "#000" }} />
+                <Icon name="pushpin" size={18} style={{ color: "#000" }} /> 
               </Button>
             </Fab>
           ) : (

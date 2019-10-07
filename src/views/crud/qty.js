@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
 import { Input, Item, Button, H1 } from "native-base";
 import { THEMECOLOR } from "../../const.js";
+import Header from "../../components/header";
+import ButtonsWizard from "../../components/buttons_wizard";
+
 class QtyComponent extends Component {
   state = {
     loading: true,
@@ -64,8 +67,14 @@ class QtyComponent extends Component {
     return (
       <View>
         <ScrollView>
-          <View style={{ flex: 2, marginTop: 20, marginLeft: 20 }}>
-            <H1 style={{ fontWeight: "bold" }}>¿Cuántos son?</H1>
+          <Header
+            showBack={true}
+            title="¿Cuántos son?"
+            back={() => {
+              this.props.prev();
+            }}
+          />
+          <View>
             <Item regular style={{ margin: 20 }}>
               <Input
                 keyboardType="numeric"
@@ -111,7 +120,35 @@ class QtyComponent extends Component {
               })}
             </View>
           </View>
-          <View style={{ position: "relative", width: "100%" }}>
+          <ButtonsWizard
+            showAnterior={true}
+            siguiente={() => {
+              this.props.saveState(1, {
+                qty: this.state.qty,
+                ages: this.state.ages
+                  .filter(x => x.active)
+                  .map(y => {
+                    return y.id;
+                  })
+              });
+              this.props.next({
+                qty: this.state.qty,
+                ages: this.state.ages.filter(x => x.active)
+              });
+            }}
+            back={() => {
+              this.props.saveState(1, {
+                qty: this.state.qty,
+                ages: this.state.ages
+                  .filter(x => x.active)
+                  .map(y => {
+                    return y.id;
+                  })
+              });
+              this.props.prev();
+            }}
+          />
+          {/* <View style={{ position: "relative", width: "100%" }}>
             <Button
               style={{ ...styles.button, backgroundColor: THEMECOLOR }}
               onPress={() => {
@@ -157,7 +194,7 @@ class QtyComponent extends Component {
                 VOLVER
               </Text>
             </Button>
-          </View>
+          </View> */}
         </ScrollView>
       </View>
     );
