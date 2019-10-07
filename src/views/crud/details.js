@@ -2,7 +2,6 @@ import { View, TextInput, StyleSheet } from "react-native";
 import React, { Component } from "react";
 import { Text, Textarea, Button, H1 } from "native-base";
 import { THEMECOLOR } from "../../const.js";
-import AwesomeButton from "react-native-really-awesome-button";
 
 class DetailsComponent extends Component {
   state = {
@@ -30,15 +29,7 @@ class DetailsComponent extends Component {
           bordered
         />
         <View>
-          <AwesomeButton
-            progress
-            onPress={() => {
-              this.submit();
-            }}
-          >
-            Text
-          </AwesomeButton>
-          {/* <Button
+          <Button
             style={{ ...styles.button, backgroundColor: THEMECOLOR }}
             onPress={() => {
               this.props.submit({ details: this.state.details });
@@ -53,7 +44,7 @@ class DetailsComponent extends Component {
             >
               GUARDAR
             </Text>
-          </Button> */}
+          </Button>
         </View>
         <View>
           <Button

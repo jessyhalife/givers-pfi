@@ -122,14 +122,14 @@ class NeedsComponent extends Component {
                   needs: this.state.needs
                     .filter(x => x.active)
                     .map(y => {
-                      return y.id;
+                      return { id: y.id };
                     })
                 });
                 this.props.next({
                   needs: this.state.needs
                     .filter(x => x.active)
                     .map(y => {
-                      return y.id;
+                      return { id: y.id };
                     })
                 });
               }}
@@ -152,12 +152,15 @@ class NeedsComponent extends Component {
                 backgroundColor: "white"
               }}
               onPress={() => {
-                this.props.prev({
+                this.props.saveState(2, {
                   needs: this.state.needs
                     .filter(x => x.active)
                     .map(y => {
-                      return y.id;
+                      return { id: y.id };
                     })
+                });
+                this.props.prev({
+                  needs: this.state.needs.filter(x => x.active)
                 });
               }}
             >

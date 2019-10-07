@@ -73,6 +73,7 @@ class NewPeople extends Component {
     this.handleChange(prop);
     this.wizard.previous();
   }
+
   _submit(prop) {
     alert("Bye");
     var body = {

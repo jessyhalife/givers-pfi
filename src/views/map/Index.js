@@ -16,9 +16,18 @@ export default class Home extends Component {
     pplRef.onSnapshot(snapshots => {
       let gente = [];
       snapshots.docs.forEach(x => {
-        gente.push({ location: x.data().location, id: x.id });
+        gente.push({
+          location: x.data().location,
+          id: x.id,
+          qty: x.data().qty,
+          seen: x.data().seen,
+          notSeen: x.data().not_seen,
+          ages: x.data().ages
+        });
       });
-      this.setState({ people: gente }, () => {});
+      this.setState({ people: gente }, () => {
+        console.table(gente);
+      });
     });
   }
 
