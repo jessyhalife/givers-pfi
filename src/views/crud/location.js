@@ -248,7 +248,7 @@ class LocationStep extends Component {
               longitude: this.state.marker.longitude
             };
             this.props.saveState(this.props.index, location);
-            this.props.next();
+            this.props.next(location);
           }}
           back={() => {
             this.props.saveState(this.props.index, location);

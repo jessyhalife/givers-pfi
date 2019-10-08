@@ -19,56 +19,40 @@ import Header from "../components/header";
 import Icon from "react-native-vector-icons/AntDesign";
 import firebaseApp from "../config";
 import { THEMECOLOR } from "../const";
+
 export default class Profile extends Component {
   state = {
-    user: {}
+    user: {},
+    username: ""
   };
-  componentWillMount() {
-    this.setState({ user: firebaseApp.auth().currentUser }, () => {});
-  }
 
-  async componentDidMount() {
-    await firebaseApp
-      .auth()
-      .getUser("nhDqe1Rf6oX59ZLUeWMnYmaB7j13")
-      .then(d => {
-        console.log(d);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  componentDidMount() {
+    firebaseApp.auth().onAuthStateChanged(user => {
+      this.setState({ user: user });
+    });
   }
 
   render() {
+    var { user } = this.state;
     return (
       <View>
         <ScrollView>
           <Header
             showBack={true}
-            title={`Hola, ${this.state.user.displayName &&
-              this.state.user.email}`}
+            title={`Hola, ${user.displayName}`}
             back={() => {
               this.navigation.goBack();
             }}
           />
-          <Text>Tus datos</Text>
-          <Text>{this.state.user.email}</Text>
-          <Input
-            value={this.state.username}
-            onChange={e => this.setState({ username: e.nativeEvent.text })}
-          ></Input>
+          
           <Button
             onPress={() =>
               firebaseApp
                 .auth()
                 .currentUser.updateProfile({
-                  displayName: "Jane Q. User",
-                  photoURL: "https://example.com/jane-q-user/profile.jpg"
+                  displayName: this.state.username
                 })
-                .then(function() {
-                  // Update successful.
-                  this.setState({ user: firebaseApp.auth().currentUser });
-                })
+                .then(function() {})
                 .catch(function(error) {
                   // An error happened.
                 })

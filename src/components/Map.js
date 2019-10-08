@@ -1,10 +1,10 @@
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import {
   View,
   StyleSheet,
   Alert,
   TouchableOpacity,
-  Dimensions, 
+  Dimensions,
   Text
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
@@ -13,7 +13,7 @@ const { height, width } = Dimensions.get("window");
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
 import { PermissionsAndroid } from "react-native";
-import { Fab, Container, Button } from "native-base";
+import { Fab, Container, Button, Root, Toast } from "native-base";
 import SlidingUpPanel from "rn-sliding-up-panel";
 import PeopleView from "./PeopleView";
 import Geocoder from "react-native-geocoding";
@@ -22,7 +22,13 @@ import Icon from "react-native-vector-icons/AntDesign";
 
 Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 
-export default class MapGiver extends PureComponent {
+export default class MapGiver extends Component {
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+    console.log("paramsposta");
+    console.log(params);
+    return params;
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +40,8 @@ export default class MapGiver extends PureComponent {
       activeMarker: null,
       ages: [],
       needs: [],
-      activePanel: false
+      activePanel: false,
+      showToast: false
     };
     this.mapRef = null;
     this.getAges = this.getAges.bind(this);
@@ -42,7 +49,21 @@ export default class MapGiver extends PureComponent {
   }
   componentWillReceiveProps(props) {
     this.setState({ markers: props.people }, () => {});
+    console.log("paramsNav");
+    console.log(this.props.navigation.state.params);
+    if (this.props.navigation.getParam("toast", false)) {
+      console.log("hay algo");
+      Toast.show({
+        text: this.props.navigation.state.params.toastMessage,
+        buttonText: "Okey",
+        duration: 6000,
+        position: "top",
+        type: "success",
+        textStyle: { fontSize: 18 }
+      });
+    }
   }
+
   seen = id => {
     fetch(
       `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/seen/${id}`,
@@ -153,33 +174,34 @@ export default class MapGiver extends PureComponent {
 
   render() {
     return (
-      <View style={styles.container}>
-        <MapView
-          ref={ref => {
-            this.mapRef = ref;
-          }}
-          moveOnMarkerPress={true}
-          showsUserLocation={true}
-          style={styles.map}
-          showUserLocation
-          followUserLocation
-          zoomEnabled
-          loadingEnabled
-          customMapStyle={mapStyle}
-          provider={MapView.PROVIDER_GOOGLE}
-          region={this.getMapRegion()}
-        >
-          {this.state.markers.map(x => {
-            return (
-              <Marker.Animated
-                key={x.id}
-                coordinate={{
-                  latitude: Number(x.location.latitude),
-                  longitude: Number(x.location.longitude)
-                }}
-                onPress={() => this._markerInfo(x.id)}
-              >
-                {/* <MapView.Callout
+      <Root>
+        <View style={styles.container}>
+          <MapView
+            ref={ref => {
+              this.mapRef = ref;
+            }}
+            moveOnMarkerPress={true}
+            showsUserLocation={true}
+            style={styles.map}
+            showUserLocation
+            followUserLocation
+            zoomEnabled
+            loadingEnabled
+            customMapStyle={mapStyle}
+            provider={MapView.PROVIDER_GOOGLE}
+            region={this.getMapRegion()}
+          >
+            {this.state.markers.map(x => {
+              return (
+                <Marker.Animated
+                  key={x.id}
+                  coordinate={{
+                    latitude: Number(x.location.latitude),
+                    longitude: Number(x.location.longitude)
+                  }}
+                  onPress={() => this._markerInfo(x.id)}
+                >
+                  {/* <MapView.Callout
                   onPress={() => this._markerInfo(x.id)}
                   style={{
                     flex: 1,
@@ -218,82 +240,85 @@ export default class MapGiver extends PureComponent {
                     </View>
                   </View>
                 </MapView.Callout> */}
-              </Marker.Animated>
-            );
-          })}
-        </MapView>
-        <View style={{ flex: 2, flexDirection: "column" }}>
-          {!this.state.activePanel ? (
-            <Fab
-              active={this.state.active}
-              direction="up"
-              containerStyle={{}}
-              style={{ backgroundColor: THEMECOLOR }}
-              onPress={() => this.setState({ active: !this.state.active })}
-            >
-              <Icon name="plus" />
-              <Button
-                style={{ backgroundColor: "#fff", borderColor: "#eee" }}
-                onPress={() =>
-                  this.props.navigation.navigate("NewPeopleScreen")
-                }
+                </Marker.Animated>
+              );
+            })}
+          </MapView>
+          <View style={{ flex: 2, flexDirection: "column" }}>
+            {!this.state.activePanel ? (
+              <Fab
+                active={this.state.active}
+                direction="up"
+                containerStyle={{}}
+                style={{ backgroundColor: THEMECOLOR }}
+                onPress={() => this.setState({ active: !this.state.active })}
               >
-                <Icon name="adduser" size={18} style={{ color: "#000" }} />
-              </Button>
-              <Button
-                style={{ backgroundColor: "#fff", borderColor: "#eee" }}
-                onPress={() => this.props.navigation.navigate("NewPointScreen")}
-              >
-                <Icon name="pushpin" size={18} style={{ color: "#000" }} /> 
-              </Button>
-            </Fab>
-          ) : (
-            undefined
-          )}
-          <SlidingUpPanel
-            onHideCallback={() =>
-              this.setState({ activePanel: false, active: false })
-            }
-            ref={c => (this._panel = c)}
-            backdropOpacity={1}
-            draggableRange={{
-              top: height - 200,
-              bottom: 0
-            }}
-          >
-            <View
-              style={{
-                position: "relative",
-                flex: 2,
-                backgroundColor: "white",
-                borderColor: "#eee",
-                borderWidth: 2,
-                shadowRadius: 2,
-                shadowOffset: {
-                  width: 0,
-                  height: -3
-                },
-                shadowColor: "#000000",
-                elevation: 4
+                <Icon name="plus" />
+                <Button
+                  style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+                  onPress={() =>
+                    this.props.navigation.navigate("NewPeopleScreen")
+                  }
+                >
+                  <Icon name="adduser" size={18} style={{ color: "#000" }} />
+                </Button>
+                <Button
+                  style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+                  onPress={() =>
+                    this.props.navigation.navigate("NewPointScreen")
+                  }
+                >
+                  <Icon name="pushpin" size={18} style={{ color: "#000" }} />
+                </Button>
+              </Fab>
+            ) : (
+              undefined
+            )}
+            <SlidingUpPanel
+              onHideCallback={() =>
+                this.setState({ activePanel: false, active: false })
+              }
+              ref={c => (this._panel = c)}
+              backdropOpacity={1}
+              draggableRange={{
+                top: height - 200,
+                bottom: 0
               }}
             >
-              <Icon
-                name="minus"
-                style={{ alignSelf: "center", color: "#ccc", fontSize: 30 }}
-              ></Icon>
-              {this.state.activeMarker && (
-                <PeopleView
-                  data={this.state.activeMarker}
-                  ages={this.state.ages}
-                  needs={this.state.needs}
-                  seen={this.seen}
-                  notseen={this.notSeen}
-                />
-              )}
-            </View>
-          </SlidingUpPanel>
+              <View
+                style={{
+                  position: "relative",
+                  flex: 2,
+                  backgroundColor: "white",
+                  borderColor: "#eee",
+                  borderWidth: 2,
+                  shadowRadius: 2,
+                  shadowOffset: {
+                    width: 0,
+                    height: -3
+                  },
+                  shadowColor: "#000000",
+                  elevation: 4
+                }}
+              >
+                <Icon
+                  name="minus"
+                  style={{ alignSelf: "center", color: "#ccc", fontSize: 30 }}
+                ></Icon>
+                {this.state.activeMarker && (
+                  <PeopleView
+                    data={this.state.activeMarker}
+                    ages={this.state.ages}
+                    needs={this.state.needs}
+                    seen={this.seen}
+                    notseen={this.notSeen}
+                  />
+                )}
+              </View>
+            </SlidingUpPanel>
+          </View>
         </View>
-      </View>
+      </Root>
     );
   }
 }

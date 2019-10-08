@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Image, View, StyleSheet, ActivityIndicator } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import firebaseApp from "../config";
+import { THEMECOLOR } from "../const";
 import {
   Container,
   Form,
@@ -12,7 +13,9 @@ import {
   Text,
   Content,
   Button,
-  Badge
+  Badge,
+  Root,
+  Toast
 } from "native-base";
 import Header from "../components/header";
 
@@ -20,9 +23,9 @@ export default class Main extends Component {
   state = {
     loading: false,
     error: false,
-    errorMessage: "",
     email: null,
-    password: null
+    password: null,
+    showToast: false
   };
   _handleLogin = () => {
     let { email, password } = this.state;
@@ -32,14 +35,24 @@ export default class Main extends Component {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          this.props.navigation.navigate("Map");
+          this.props.navigation.navigate("MapScreen", {
+            toast: true,
+            toastMessage: `Hola de vuelta ${
+              firebaseApp.auth().currentUser.displayName
+            }!. Hoy un gran día para dar una mano!`
+          });
         })
         .catch(error => {
-          console.log(error);
+          Toast.show({
+            text: error.toString(),
+            buttonText: "Okey",
+            duration: 6000,
+            position: "top",
+            type: "danger",
+            textStyle: { fontSize: 14 }
+          });
           this.setState({
-            loading: false,
-            error: true,
-            errorMessage: JSON.stringify(error)
+            loading: false
           });
         });
     } else {
@@ -52,66 +65,90 @@ export default class Main extends Component {
   };
   render() {
     return (
-      <Container>
-        <ScrollView>
-          <Content>
-            <View style={{ padding: 30, marginTop: 100 }}>
-              <H1 style={{ fontFamily: "cabifycircularweb_book" }}>
-                Iniciar sesión
-              </H1>
-            </View>
-            <View style={styles.content}>
-              {this.state.error ? (
-                <Badge>
-                  <Text>{this.state.errorMessage.Error}</Text>
-                </Badge>
-              ) : (
-                <View />
-              )}
-              <Form>
-                <Item>
-                  <Label>Email</Label>
-                  <Input
-                    onChange={e => {
-                      this.setState({ email: e.nativeEvent.text });
-                    }}
-                    placeholder="example@mail.com"
-                    placeholderTextColor="#ddd"
-                  />
-                </Item>
-                <Item last>
-                  <Label>Contraseña</Label>
-                  <Input
-                    shake={true}
-                    onChange={e => {
-                      this.setState({ password: e.nativeEvent.text });
-                    }}
-                    placeholder="password"
-                    placeholderTextColor="#ddd"
-                    secureTextEntry={true}
-                  />
-                </Item>
-              </Form>
-            </View>
-            <View style={styles.buttons}>
-              <Button
-                rounded
-                onPress={this._handleLogin}
-                style={{ padding: 20 }}
-              >
-                {this.state.loading ? (
-                  <ActivityIndicator size="small" color="white" />
-                ) : (
-                  <Text>Iniciar sesión</Text>
-                )}
-              </Button>
-              <Button transparent onPress={() => {}}>
-                <Text>Olvidé mi contraseña</Text>
-              </Button>
-            </View>
-          </Content>
-        </ScrollView>
-      </Container>
+      <Root>
+        <Container>
+          <ScrollView>
+            <Content>
+              <View style={{ padding: 30, marginTop: 100 }}>
+                <H1>Iniciar sesión</H1>
+              </View>
+              <View style={styles.content}>
+                <Form>
+                  <Item>
+                    <Label>Email</Label>
+                    <Input
+                      onChange={e => {
+                        this.setState({ email: e.nativeEvent.text });
+                      }}
+                      placeholder="example@mail.com"
+                      placeholderTextColor="#ddd"
+                    />
+                  </Item>
+                  <Item last>
+                    <Label>Contraseña</Label>
+                    <Input
+                      shake={true}
+                      onChange={e => {
+                        this.setState({ password: e.nativeEvent.text });
+                      }}
+                      placeholder="password"
+                      placeholderTextColor="#ddd"
+                      secureTextEntry={true}
+                    />
+                  </Item>
+                </Form>
+              </View>
+              <View style={styles.buttons}>
+                <Button
+                  onPress={this._handleLogin}
+                  style={{ padding: 20, backgroundColor: THEMECOLOR }}
+                >
+                  {this.state.loading ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
+                    <Text>Iniciar sesión</Text>
+                  )}
+                </Button>
+                <Button
+                  transparent
+                  onPress={() => {
+                    if (this.state.email !== "") {
+                      firebaseApp
+                        .auth()
+                        .sendPasswordResetEmail(this.state.email)
+                        .then(data => {
+                          Toast.show({
+                            text:
+                              "Ya te enviamos un e-mail. Revisá tu bandeja de entrada!",
+                            buttonText: "top",
+                            duration: 6000,
+                            position: "bottom",
+                            type: "success",
+                            textStyle: { fontSize: 14 }
+                          });
+                        })
+                        .catch(err => {
+                          Toast.show({
+                            text: err.toString(),
+                            buttonText: "Okey",
+                            duration: 6000,
+                            position: "top",
+                            type: "danger",
+                            textStyle: { fontSize: 14 }
+                          });
+                        });
+                    }
+                  }}
+                >
+                  <Text style={{ color: THEMECOLOR }}>
+                    Olvidé mi contraseña
+                  </Text>
+                </Button>
+              </View>
+            </Content>
+          </ScrollView>
+        </Container>
+      </Root>
     );
   }
 }

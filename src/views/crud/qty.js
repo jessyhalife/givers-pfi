@@ -145,7 +145,10 @@ class QtyComponent extends Component {
                     return y.id;
                   })
               });
-              this.props.prev();
+              this.props.prev({
+                qty: this.state.qty,
+                ages: this.state.ages.filter(x => x.active)
+              });
             }}
           />
         </ScrollView>

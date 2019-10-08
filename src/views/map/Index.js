@@ -14,6 +14,7 @@ export default class Home extends Component {
 
   componentDidMount() {
     pplRef.onSnapshot(snapshots => {
+      console.log("TEEEST");
       let gente = [];
       snapshots.docs.forEach(x => {
         gente.push({
@@ -25,6 +26,7 @@ export default class Home extends Component {
           ages: x.data().ages
         });
       });
+
       this.setState({ people: gente }, () => {});
     });
   }

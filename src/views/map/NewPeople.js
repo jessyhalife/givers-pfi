@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { Button, Text, Icon } from "native-base";
+import { Button, Text, Icon, Toast, Root } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 import { THEMECOLOR, THEMECOLORLIGHT } from "../../const";
 import QtyComponent from "../crud/qty.js";
@@ -45,7 +45,8 @@ class NewPeople extends Component {
     ages: [],
     needs: [],
     qty: "",
-    details: ""
+    details: "",
+    showToast: false
   };
   componentDidMount() {
     this.props.navigation.setParams({
@@ -95,9 +96,12 @@ class NewPeople extends Component {
     })
       .then(res => res.json())
       .then(data => console.log(data))
-      .catch(error => console.log("Error!!: ", error));
+      .catch(error => ç("Error!!: ", error));
 
-    this.props.navigation.goBack();
+    this.props.navigation.navigate("MapScreen", {
+      toast: true,
+      toastMessage: "¡Gracias! ahora alguien más va a poder dar una mano."
+    });
   }
   render() {
     const steps = [
@@ -157,13 +161,15 @@ class NewPeople extends Component {
     ];
 
     return (
-      <View style={{ flex: 1 }}>
-        <MultiStep
-          ref={e => (this.wizard = e)}
-          steps={steps}
-          onFinish={this._submit}
-        ></MultiStep>
-      </View>
+      <Root>
+        <View style={{ flex: 1 }}>
+          <MultiStep
+            ref={e => (this.wizard = e)}
+            steps={steps}
+            onFinish={this._submit}
+          ></MultiStep>
+        </View>
+      </Root>
     );
   }
 }

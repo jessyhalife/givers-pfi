@@ -20,10 +20,12 @@ import {
   Button,
   CheckBox,
   ListItem,
-  Body
+  Body,
+  Root
 } from "native-base";
 import Header from "../components/header";
 import { THEMECOLOR } from "../const.js";
+
 
 export default class Register extends Component {
   state = {
@@ -48,10 +50,12 @@ export default class Register extends Component {
       .createUserWithEmailAndPassword(email, password)
       .then(userCredentials => {
         if (userCredentials.user) {
-          userCredentials.updateProfile({ displayName: username }).then(s => {
-            console.log(`test ${s}`);
-            this.setState({ error: false, loading: false });
-          });
+          userCredentials.user
+            .updateProfile({ displayName: username })
+            .then(s => {
+              this.setState({ error: false, loading: false });
+              Toast.show({});
+            });
         }
       })
       .catch(error => {
@@ -65,8 +69,10 @@ export default class Register extends Component {
             Toast.show({
               text: error.toString(),
               buttonText: "Okey",
-              duration: 3000,
-              position: "bottom"
+              duration: 6000,
+              position: "bottom",
+              type: "danger",
+              textStyle: { fontSize: 14 }
             });
           }
         );
@@ -76,93 +82,95 @@ export default class Register extends Component {
   componentWillUnmount() {}
   render() {
     return (
-      <Container>
-        <ScrollView>
-          <Content>
-            <Header
-              showBack={true}
-              title="Crear nueva cuenta"
-              back={() => {
-                this.props.navigation.navigate("Main");
-              }}
-            />
-            <Text>{this.state.errorMessage}</Text>
-            <View style={styles.content}>
-              <Form>
-                <Item>
-                  <Label>Nombre de usuario</Label>
-                  <Input
-                    onChange={e => {
-                      this.setState({ username: e.nativeEvent.text });
-                    }}
-                    placeholder="janeDoe"
-                    placeholderTextColor="#ddd"
-                  />
-                </Item>
-                <Item>
-                  <Label>Email</Label>
-                  <Input
-                    onChange={e => {
-                      this.setState({ email: e.nativeEvent.text });
-                    }}
-                    placeholder="example@mail.com"
-                    placeholderTextColor="#ddd"
-                  />
-                </Item>
-                <Item last>
-                  <Label>Contraseña</Label>
-                  <Input
-                    shake={true}
-                    onChange={e => {
-                      this.setState({ password: e.nativeEvent.text });
-                    }}
-                    placeholder="password"
-                    placeholderTextColor="#ddd"
-                    secureTextEntry={true}
-                  />
-                </Item>
-              </Form>
-            </View>
-            <View />
-            <View>
-              <ListItem>
-                <CheckBox
-                  checked={this.state.terms}
-                  onPress={() => {
-                    this.setState({ terms: !this.state.terms });
-                  }}
-                />
-                <Body>
-                  <TouchableOpacity>
-                    <Text>Acepto términos y condiciones de uso</Text>
-                  </TouchableOpacity>
-                </Body>
-              </ListItem>
-            </View>
-            <View style={styles.buttons}>
-              <Button
-                rounded
-                onPress={this._handleRegister}
-                style={{ padding: 20, backgroundColor: THEMECOLOR }}
-              >
-                {this.state.loading ? (
-                  <ActivityIndicator size="small" color="white" />
-                ) : (
-                  <Text>Crear cuenta</Text>
-                )}
-              </Button>
-              <Button
-                transparent
-                onPress={() => {
-                  this.props.navigation.navigate("Login");
+      <Root>
+        <Container>
+          <ScrollView>
+            <Content>
+              <Header
+                showBack={true}
+                title="Crear nueva cuenta"
+                back={() => {
+                  this.props.navigation.navigate("Main");
                 }}
-              >
-                <Text style={{ color: THEMECOLOR }}>Iniciar sesión</Text>
-              </Button>
-            </View>
-          </Content>
-        </ScrollView>
-      </Container>
+              />
+
+              <View style={styles.content}>
+                <Form>
+                  <Item>
+                    <Label>Nombre de usuario</Label>
+                    <Input
+                      onChange={e => {
+                        this.setState({ username: e.nativeEvent.text });
+                      }}
+                      placeholder="janeDoe"
+                      placeholderTextColor="#ddd"
+                    />
+                  </Item>
+                  <Item>
+                    <Label>Email</Label>
+                    <Input
+                      onChange={e => {
+                        this.setState({ email: e.nativeEvent.text });
+                      }}
+                      placeholder="example@mail.com"
+                      placeholderTextColor="#ddd"
+                    />
+                  </Item>
+                  <Item last>
+                    <Label>Contraseña</Label>
+                    <Input
+                      shake={true}
+                      onChange={e => {
+                        this.setState({ password: e.nativeEvent.text });
+                      }}
+                      placeholder="password"
+                      placeholderTextColor="#ddd"
+                      secureTextEntry={true}
+                    />
+                  </Item>
+                </Form>
+              </View>
+              <View />
+              <View>
+                <ListItem>
+                  <CheckBox
+                    checked={this.state.terms}
+                    onPress={() => {
+                      this.setState({ terms: !this.state.terms });
+                    }}
+                  />
+                  <Body>
+                    <TouchableOpacity>
+                      <Text>Acepto términos y condiciones de uso</Text>
+                    </TouchableOpacity>
+                  </Body>
+                </ListItem>
+              </View>
+              <View style={styles.buttons}>
+                <Button
+                  rounded
+                  onPress={this._handleRegister}
+                  style={{ padding: 20, backgroundColor: THEMECOLOR }}
+                >
+                  {this.state.loading ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
+                    <Text>Crear cuenta</Text>
+                  )}
+                </Button>
+                <Button
+                  transparent
+                  onPress={() => {
+                    this.props.navigation.navigate("Login");
+                  }}
+                >
+                  <Text style={{ color: THEMECOLOR }}>Iniciar sesión</Text>
+                </Button>
+              </View>
+            </Content>
+          </ScrollView>
+        </Container>
+      </Root>
     );
   }
 }

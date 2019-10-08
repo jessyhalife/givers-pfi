@@ -70,7 +70,9 @@ class NeedsComponent extends Component {
             showBack={true}
             title={this.props.title}
             back={() => {
-              this.props.prev();
+              this.props.prev({
+                needs: this.state.needs.filter(x => x.active)
+              });
             }}
           />
           <View

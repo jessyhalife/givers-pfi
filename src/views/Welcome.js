@@ -16,8 +16,14 @@ export default class Welcome extends Component {
   }
   _checkAuth = () => {
     firebaseApp.auth().onAuthStateChanged(user => {
-      console.log(user);
-      this.props.navigation.navigate(user ? "Map" : "Main");
+      if (user) {
+        this.props.navigation.navigate("MapScreen", {
+          toast: true,
+          toastMessage: `Hola ${user.displayName}. Hoy un gran día para dar una mano!`
+        });
+      } else {
+        this.props.navigation.navigate("Main");
+      }
     });
   };
   render() {
