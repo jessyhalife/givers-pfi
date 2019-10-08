@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Image, View, StyleSheet } from "react-native";
 import { Container, Button, Body, Text, Content, H1 } from "native-base";
-
+import { THEMECOLOR } from "../const";
 export default class Main extends Component {
   _navigateLogin = () => {
     this.props.navigation.navigation("Login");
@@ -17,10 +17,8 @@ export default class Main extends Component {
             />
           </View>
           <View style={styles.content}>
-            <H1 style={{ fontFamily: "cabifycircularweb_book" }}>
-              Ayudandote a ayudar!
-            </H1>
-            <Text style={{ fontFamily: "cabifycircularweb_light" }}>
+            <H1>Ayudandote a ayudar!</H1>
+            <Text>
               Phasellus ac augue sed tellus malesuada maximus at mollis nisl.
               Proin rutrum ipsum vitae Phasellus ac augue sed tellus malesuada
               maximus at mollis nisl. Dui euismod pretium. Nunc sed eros nec
@@ -29,14 +27,12 @@ export default class Main extends Component {
           </View>
           <View style={styles.buttons}>
             <Button
-              rounded
+              style={{ backgroundColor: THEMECOLOR }}
               onPress={() => {
                 this.props.navigation.navigate("Register");
               }}
             >
-              <Text style={{ fontFamily: "cabifycircularweb_book" }}>
-                Crear nueva cuenta
-              </Text>
+              <Text>Crear nueva cuenta</Text>
             </Button>
             <Button
               rounded
@@ -45,9 +41,7 @@ export default class Main extends Component {
                 this.props.navigation.navigate("Login");
               }}
             >
-              <Text style={{ fontFamily: "cabifycircularweb_book" }}>
-                Iniciar sesión
-              </Text>
+              <Text style={{ color: THEMECOLOR }}>Iniciar sesión</Text>
             </Button>
           </View>
         </Content>

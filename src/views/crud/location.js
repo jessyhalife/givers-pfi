@@ -15,11 +15,13 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
 import Geocoder from "react-native-geocoding";
 import Header from "../../components/header";
 import ButtonsWizard from "../../components/buttons_wizard";
+import getDistance from "geolib/es/getDistance";
 
 Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 
 class LocationStep extends Component {
   state = {
+    currentLocation: {},
     initialRegion: {
       latitude: 35,
       longitude: 45,
@@ -30,8 +32,10 @@ class LocationStep extends Component {
       latitude: 35,
       longitude: 45
     },
-    mapReady: false
+    mapReady: false,
+    validDate: true
   };
+
   getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(
       position => {
@@ -55,15 +59,16 @@ class LocationStep extends Component {
       }
     );
   }
+
   componentDidMount() {
     if (
-      this.props.getState().length == 0 ||
-      (this.props.getState().length > 0 &&
-        !this.props.getState()[0].hasOwnProperty("latitude"))
+      this.props.getState().length == this.props.index ||
+      (this.props.getState().length > this.props.index &&
+        !this.props.getState()[this.props.index].hasOwnProperty("latitude"))
     ) {
       this.getCurrentLocation();
     } else {
-      this.setLocation(this.props.getState()[0], () => {
+      this.setLocation(this.props.getState()[this.props.index], () => {
         Geocoder.from({
           latitude: this.state.initialRegion.latitude,
           longitude: this.state.initialRegion.longitude
@@ -75,6 +80,12 @@ class LocationStep extends Component {
         });
       });
     }
+  }
+  validateDate(location) {
+    navigator.geolocation.getCurrentPosition(position => {
+      let distance = getDistance(position.coords, location);
+      this.setState({ validDate: distance / 1000 <= 5 });
+    });
   }
   setLocation(data, callback) {
     let lat = data.hasOwnProperty("latitude") ? data.latitude : data.lat;
@@ -92,6 +103,8 @@ class LocationStep extends Component {
       },
       () => {
         callback();
+        if (!this.props.event)
+          this.validateDate({ latitude: lat, longitude: long });
       }
     );
   }
@@ -104,7 +117,6 @@ class LocationStep extends Component {
             showBack={true}
             title="¿Dónde?"
             back={() => {
-              alert(typeof this.props.prev);
               this.props.prev();
             }}
           />
@@ -226,16 +238,20 @@ class LocationStep extends Component {
         </ScrollView>
         <ButtonsWizard
           showAnterior={this.props.showAnterior}
+          disabled={!this.state.validDate}
+          titleSiguiente={
+            this.state.validDate ? undefined : "Debes estar a menos de 5km"
+          }
           siguiente={() => {
             let location = {
               latitude: this.state.marker.latitude,
               longitude: this.state.marker.longitude
             };
-            this.props.saveState(0, location);
+            this.props.saveState(this.props.index, location);
             this.props.next();
           }}
           back={() => {
-            this.props.saveState(0, location);
+            this.props.saveState(this.props.index, location);
             this.props.prev();
           }}
         />

@@ -105,6 +105,7 @@ class NewPoint extends Component {
         name: "PointTypeStep",
         component: (
           <PointTypeComponent
+            index={0}
             next={this._next}
             prev={() => {
               this.props.navigation.goBack();
@@ -116,6 +117,7 @@ class NewPoint extends Component {
         name: "LocationStep",
         component: (
           <LocationComponent
+            index={1}
             showAnterior={true}
             next={this._next}
             location={{
@@ -128,21 +130,24 @@ class NewPoint extends Component {
       },
       {
         name: "WhenStep",
-        component: <WhenComponent prev={this._prev} next={this._next} />
+        component: (
+          <WhenComponent index={2} prev={this._prev} next={this._next} />
+        )
       },
       {
         name: "NeedStep",
         component: (
           <NeedsComponent
+            index={3}
             next={this._next}
             prev={this._prev}
             needs={this.state.needs}
             title="¿Cómo se puede colaborar?"
+            event={true}
           />
         )
       },
       {
-        
         name: "DetailStep",
         component: (
           <DetailsComponent
@@ -153,47 +158,6 @@ class NewPoint extends Component {
         )
       }
     ];
-    // const steps = [
-    //   {
-    //     component: () => (
-    //       <LocationComponent
-    //         next={this._next}
-    //         location={{
-    //           latitude: this.state.latitude,
-    //           longitude: this.state.longitude
-    //         }}
-    //       />
-    //     )
-    //   },
-    //   {
-    //     component: () => (
-    //       <QtyComponent
-    //         prev={this._prev}
-    //         next={this._next}
-    //         qty={this.state.qty}
-    //         needs={this.state.needs}
-    //       />
-    //     )
-    //   },
-    //   {
-    //     component: () => (
-    //       <NeedsComponent
-    //         next={this._next}
-    //         prev={this._prev}
-    //         needs={this.state.needs}
-    //       />
-    //     )
-    //   },
-    //   {
-    //     component: () => (
-    //       <DetailsComponent
-    //         prev={this._prev}
-    //         submit={this._submit}
-    //         details={this.state.details}
-    //       />
-    //     )
-    //   }
-    // ];
 
     return (
       <View style={{ flex: 1 }}>
@@ -202,19 +166,6 @@ class NewPoint extends Component {
           steps={steps}
           onFinish={this._submit}
         ></MultiStep>
-        {/* <ScrollView>
-          <Wizard
-            ref={e => (this.wizard = e)}
-            currentStep={(currentIndex, isFirstStep, isLastStep) => {
-              this.setState({
-                isLastStep: isLastStep,
-                isFirstStep: isFirstStep,
-                currentIndex: currentIndex
-              });
-            }}
-            steps={steps}
-          />
-        </ScrollView> */}
       </View>
     );
   }

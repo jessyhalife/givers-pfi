@@ -36,11 +36,7 @@ class Principal extends Component {
       () => {}
     );
     this._fetchAges();
-    console.log("entra aca el hdp");
-    // Geocoder.from({
-    //   latitude: this.state.person.location.lat,
-    //   longitude: this.state.person.location.lng
-    // })
+
     Geocoder.from({
       latitude: -34.58422666666667,
       longitude: -58.44041666666667
@@ -69,10 +65,7 @@ class Principal extends Component {
         return key !== x;
       });
     }
-    this.setState({ person: { ...this.state.person, ages: prev } }, () => {
-      console.log("handling change");
-      //this.props.handleChange(this.state.person);
-    });
+    this.setState({ person: { ...this.state.person, ages: prev } }, () => {});
   }
   render() {
     const { ages } = this.state.person;
@@ -139,10 +132,7 @@ class Principal extends Component {
                         },
                         address: data.description || data.vicinity
                       },
-                      () => {
-                        console.log(this.state.person);
-                        console.log(this.state.address);
-                      }
+                      () => {}
                     );
                   }}
                   query={{

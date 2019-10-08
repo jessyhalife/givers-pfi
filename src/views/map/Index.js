@@ -25,9 +25,7 @@ export default class Home extends Component {
           ages: x.data().ages
         });
       });
-      this.setState({ people: gente }, () => {
-        console.table(gente);
-      });
+      this.setState({ people: gente }, () => {});
     });
   }
 

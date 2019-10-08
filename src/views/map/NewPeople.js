@@ -75,7 +75,6 @@ class NewPeople extends Component {
   }
 
   _submit(prop) {
-    alert("Bye");
     var body = {
       people: {
         location: {
@@ -88,7 +87,7 @@ class NewPeople extends Component {
         details: this.state.details
       }
     };
-    console.log(JSON.stringify(body));
+
     fetch("https://us-central1-givers-229af.cloudfunctions.net/webApi/people", {
       method: "POST",
       body: JSON.stringify(body),
@@ -106,6 +105,7 @@ class NewPeople extends Component {
         name: "LocationStep",
         component: (
           <LocationComponent
+            index={0}
             showAnterior={false}
             next={this._next}
             location={{
@@ -122,6 +122,7 @@ class NewPeople extends Component {
         name: "QtyStep",
         component: (
           <QtyComponent
+            index={1}
             prev={this._prev}
             next={this._next}
             qty={this.state.qty}
@@ -133,8 +134,10 @@ class NewPeople extends Component {
         name: "NeedStep",
         component: (
           <NeedsComponent
+            index={2}
             next={this._next}
             prev={this._prev}
+            event={false}
             needs={this.state.needs}
             title="¿Necesitan algo en particular?"
           />
@@ -144,6 +147,7 @@ class NewPeople extends Component {
         name: "DetailStep",
         component: (
           <DetailsComponent
+            index={3}
             prev={this._prev}
             submit={this._submit}
             details={this.state.details}
@@ -151,47 +155,6 @@ class NewPeople extends Component {
         )
       }
     ];
-    // const steps = [
-    //   {
-    //     component: () => (
-    //       <LocationComponent
-    //         next={this._next}
-    //         location={{
-    //           latitude: this.state.latitude,
-    //           longitude: this.state.longitude
-    //         }}
-    //       />
-    //     )
-    //   },
-    //   {
-    //     component: () => (
-    //       <QtyComponent
-    //         prev={this._prev}
-    //         next={this._next}
-    //         qty={this.state.qty}
-    //         needs={this.state.needs}
-    //       />
-    //     )
-    //   },
-    //   {
-    //     component: () => (
-    //       <NeedsComponent
-    //         next={this._next}
-    //         prev={this._prev}
-    //         needs={this.state.needs}
-    //       />
-    //     )
-    //   },
-    //   {
-    //     component: () => (
-    //       <DetailsComponent
-    //         prev={this._prev}
-    //         submit={this._submit}
-    //         details={this.state.details}
-    //       />
-    //     )
-    //   }
-    // ];
 
     return (
       <View style={{ flex: 1 }}>
@@ -200,19 +163,6 @@ class NewPeople extends Component {
           steps={steps}
           onFinish={this._submit}
         ></MultiStep>
-        {/* <ScrollView>
-          <Wizard
-            ref={e => (this.wizard = e)}
-            currentStep={(currentIndex, isFirstStep, isLastStep) => {
-              this.setState({
-                isLastStep: isLastStep,
-                isFirstStep: isFirstStep,
-                currentIndex: currentIndex
-              });
-            }}
-            steps={steps}
-          />
-        </ScrollView> */}
       </View>
     );
   }

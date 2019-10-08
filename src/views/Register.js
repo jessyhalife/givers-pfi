@@ -14,8 +14,7 @@ import {
   Item,
   Input,
   Label,
-  H1,
-  Footer,
+  Toast,
   Text,
   Content,
   Button,
@@ -23,6 +22,9 @@ import {
   ListItem,
   Body
 } from "native-base";
+import Header from "../components/header";
+import { THEMECOLOR } from "../const.js";
+
 export default class Register extends Component {
   state = {
     error: false,
@@ -32,37 +34,59 @@ export default class Register extends Component {
     rePassword: null,
     formOK: false,
     loading: false,
-    terms: false
+    terms: false,
+    errorMessage: "",
+    showToast: false
   };
 
   _handleRegister = () => {
     this.setState({ loading: true });
-    console.log("test");
-    let { email, password } = this.state;
+
+    let { email, password, username } = this.state;
     firebaseApp
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(data => {
-        console.log(data);
-        this.setState({ error: false, loading: false });
+      .then(userCredentials => {
+        if (userCredentials.user) {
+          userCredentials.updateProfile({ displayName: username }).then(s => {
+            console.log(`test ${s}`);
+            this.setState({ error: false, loading: false });
+          });
+        }
       })
       .catch(error => {
-        console.log(error);
-        this.setState({ error: true, loading: false });
+        this.setState(
+          {
+            error: true,
+            loading: false,
+            errorMessage: error.toString()
+          },
+          () => {
+            Toast.show({
+              text: error.toString(),
+              buttonText: "Okey",
+              duration: 3000,
+              position: "bottom"
+            });
+          }
+        );
       });
   };
 
-  componentWillUnmount() {
-    console.log(this.state.formOK);
-  }
+  componentWillUnmount() {}
   render() {
     return (
       <Container>
         <ScrollView>
           <Content>
-            <View style={{ padding: 30 }}>
-              <H1>Nueva cuenta</H1>
-            </View>
+            <Header
+              showBack={true}
+              title="Crear nueva cuenta"
+              back={() => {
+                this.props.navigation.navigate("Main");
+              }}
+            />
+            <Text>{this.state.errorMessage}</Text>
             <View style={styles.content}>
               <Form>
                 <Item>
@@ -119,7 +143,7 @@ export default class Register extends Component {
               <Button
                 rounded
                 onPress={this._handleRegister}
-                style={{ padding: 20 }}
+                style={{ padding: 20, backgroundColor: THEMECOLOR }}
               >
                 {this.state.loading ? (
                   <ActivityIndicator size="small" color="white" />
@@ -128,13 +152,12 @@ export default class Register extends Component {
                 )}
               </Button>
               <Button
-                enable={this.state.terms}
                 transparent
                 onPress={() => {
                   this.props.navigation.navigate("Login");
                 }}
               >
-                <Text>Iniciar sesión</Text>
+                <Text style={{ color: THEMECOLOR }}>Iniciar sesión</Text>
               </Button>
             </View>
           </Content>

@@ -55,7 +55,7 @@ class PointTypeComponent extends Component {
                   bottom: 10
                 }}
               >
-                Evento
+                Evento solidario
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

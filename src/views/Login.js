@@ -14,6 +14,7 @@ import {
   Button,
   Badge
 } from "native-base";
+import Header from "../components/header";
 
 export default class Main extends Component {
   state = {
@@ -31,7 +32,6 @@ export default class Main extends Component {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          console.log("test");
           this.props.navigation.navigate("Map");
         })
         .catch(error => {

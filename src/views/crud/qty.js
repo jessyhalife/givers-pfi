@@ -15,11 +15,9 @@ class QtyComponent extends Component {
   async componentDidMount() {
     this.setState({ loading: true }); //, qty: this.props.cant });
     await this._fetchAges().then(() => {
-      console.log(this.props.getState());
-      if (this.props.getState().length >= 2) {
-        console.log(this.props.getState().length);
-        if (this.props.getState()[1].hasOwnProperty("qty"))
-          this.setState({ qty: this.props.getState()[1].qty });
+      if (this.props.getState().length >= this.props.index + 1) {
+        if (this.props.getState()[this.props.index].hasOwnProperty("qty"))
+          this.setState({ qty: this.props.getState()[this.props.index].qty });
       }
     });
   }
@@ -33,10 +31,12 @@ class QtyComponent extends Component {
           x.active = false;
         });
         this.setState({ ages: json }, () => {
-          if (this.props.getState().length >= 2) {
-            if (this.props.getState()[1].hasOwnProperty("ages")) {
-              let selected = this.props.getState()[1].ages;
-              selected.forEach((x, i) => {
+          if (this.props.getState().length >= this.props.index + 1) {
+            if (
+              this.props.getState()[this.props.index].hasOwnProperty("ages")
+            ) {
+              let selected = this.props.getState()[this.props.index].ages;
+              selected.forEach(x => {
                 this.manageAges(x);
               });
             }
@@ -110,7 +110,7 @@ class QtyComponent extends Component {
                     <Text
                       style={{
                         alignSelf: "center",
-                        color: "black"
+                        color: element.active ? "white" : "black"
                       }}
                     >
                       {element.data.tipo}
@@ -123,7 +123,7 @@ class QtyComponent extends Component {
           <ButtonsWizard
             showAnterior={true}
             siguiente={() => {
-              this.props.saveState(1, {
+              this.props.saveState(this.props.index, {
                 qty: this.state.qty,
                 ages: this.state.ages
                   .filter(x => x.active)
@@ -137,7 +137,7 @@ class QtyComponent extends Component {
               });
             }}
             back={() => {
-              this.props.saveState(1, {
+              this.props.saveState(this.props.index, {
                 qty: this.state.qty,
                 ages: this.state.ages
                   .filter(x => x.active)
@@ -148,53 +148,6 @@ class QtyComponent extends Component {
               this.props.prev();
             }}
           />
-          {/* <View style={{ position: "relative", width: "100%" }}>
-            <Button
-              style={{ ...styles.button, backgroundColor: THEMECOLOR }}
-              onPress={() => {
-                this.props.saveState(1, {
-                  qty: this.state.qty,
-                  ages: this.state.ages
-                    .filter(x => x.active)
-                    .map(y => {
-                      return y.id;
-                    })
-                });
-                this.props.next({
-                  qty: this.state.qty,
-                  ages: this.state.ages.filter(x => x.active)
-                });
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  alignItems: "center",
-                  fontWeight: "bold"
-                }}
-              >
-                SIGUIENTE
-              </Text>
-            </Button>
-            <Button
-              bordered
-              light
-              style={{ ...styles.button, backgroundColor: "white" }}
-              onPress={() => {
-                this.props.prev();
-              }}
-            >
-              <Text
-                style={{
-                  color: THEMECOLOR,
-                  alignItems: "center",
-                  fontWeight: "bold"
-                }}
-              >
-                VOLVER
-              </Text>
-            </Button>
-          </View> */}
         </ScrollView>
       </View>
     );
@@ -202,14 +155,13 @@ class QtyComponent extends Component {
 }
 const press = StyleSheet.create({
   pressed: {
-    borderColor: "#a6eee6",
+    borderColor: THEMECOLOR,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#a6eee6",
+    backgroundColor: THEMECOLOR,
     width: 150,
     height: 50,
     margin: 10,
-    color: "#766605",
     fontWeight: "bold",
     borderRadius: 20
   }

@@ -278,7 +278,7 @@ export default class MapGiver extends PureComponent {
               }}
             >
               <Icon
-                name="remove"
+                name="minus"
                 style={{ alignSelf: "center", color: "#ccc", fontSize: 30 }}
               ></Icon>
               {this.state.activeMarker && (

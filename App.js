@@ -17,6 +17,7 @@ import Register from "./src/views/Register";
 import NewPeople from "./src/views/map/NewPeople";
 import NewPoint from "./src/views/map/NewPoint";
 import Activity from "./src/views/Activity";
+import Profile from "./src/views/Profile";
 // import { Icon } from "native-base";
 import { THEMECOLOR, THEMECOLORLIGHT } from "./src/const";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -106,13 +107,25 @@ const MapTabNavigator = createBottomTabNavigator(
           }
         }
       }
+    },
+    Profile: {
+      screen: Profile,
+      navigationOptions: {
+        tabBarLabel: "PERFIL",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="user" size={18} style={{ color: tintColor }} />
+        ),
+        tabBarOptions: {
+          activeTintColor: THEMECOLOR,
+          inactiveTintColor: "#919191",
+          style: {
+            backgroundColor: "#f3f3f3"
+          }
+        }
+      }
     }
   },
-  {
-    navigationOptions: {
-      title: "USERNAME"
-    }
-  }
+  {}
 );
 
 const MapDrawerNavigator = createDrawerNavigator(

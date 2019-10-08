@@ -7,7 +7,11 @@ const ButtonsWizard = props => {
   return (
     <View style={{ bottom: 0, position: "relative" }}>
       <Button
-        style={{ ...styles.button, backgroundColor: THEMECOLOR }}
+        disabled={props.disabled}
+        style={{
+          ...styles.button,
+          backgroundColor: !props.disabled ? THEMECOLOR : "gray"
+        }}
         onPress={() => {
           props.siguiente();
         }}
@@ -19,7 +23,9 @@ const ButtonsWizard = props => {
             fontWeight: "bold"
           }}
         >
-          SIGUIENTE
+          {props.titleSiguiente !== undefined
+            ? props.titleSiguiente
+            : "SIGUIENTE"}
         </Text>
       </Button>
       {props.showAnterior ? (

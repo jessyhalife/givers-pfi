@@ -35,7 +35,6 @@ class Needs extends Component {
   }
 
   manageNeeds(key) {
-    console.log(key);
     let prev = this.state.selectedNeeds;
     if (
       !prev.find(x => {
@@ -48,9 +47,7 @@ class Needs extends Component {
         return key !== x;
       });
     }
-    this.setState({ selectedNeeds: prev }, () => {
-      console.log(prev);
-    });
+    this.setState({ selectedNeeds: prev }, () => {});
   }
 
   render() {

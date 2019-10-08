@@ -33,12 +33,19 @@ class NeedsComponent extends Component {
         arr.forEach(x => {
           x.active = false;
         });
-        this.setState({ needs: json, loading: false }, () => {
-          if (this.props.getState().length >= 3) {
-            if (this.props.getState()[2].hasOwnProperty("needs")) {
-              let selected = this.props.getState()[2].needs;
+        if (this.props.event) {
+          arr = arr.filter(x => {
+            return x.data.event;
+          });
+        }
+        this.setState({ needs: arr, loading: false }, () => {
+          if (this.props.getState().length >= this.props.index + 1) {
+            if (
+              this.props.getState()[this.props.index].hasOwnProperty("needs")
+            ) {
+              let selected = this.props.getState()[this.props.index].needs;
               selected.forEach(x => {
-                this.manageNeeds(x);
+                this.manageNeeds(x.id);
               });
             }
           }
@@ -48,11 +55,11 @@ class NeedsComponent extends Component {
 
   manageNeeds(key) {
     let prev = this.state.needs;
-    console.log(key);
+
     let found = prev.findIndex(x => x.id == key);
-    console.log(found);
+
     if (found >= 0) prev[found].active = !prev[found].active;
-    console.log(prev);
+
     this.setState({ needs: prev });
   }
   render() {
@@ -119,7 +126,7 @@ class NeedsComponent extends Component {
           <ButtonsWizard
             showAnterior={true}
             siguiente={() => {
-              this.props.saveState(2, {
+              this.props.saveState(this.props.index, {
                 needs: this.state.needs
                   .filter(x => x.active)
                   .map(y => {
@@ -135,7 +142,7 @@ class NeedsComponent extends Component {
               });
             }}
             back={() => {
-              this.props.saveState(2, {
+              this.props.saveState(this.props.index, {
                 needs: this.state.needs
                   .filter(x => x.active)
                   .map(y => {
@@ -158,7 +165,7 @@ const styles = StyleSheet.create({
   },
   selectedTile: {
     elevation: 0,
-    backgroundColor: "#a6eee6"
+    backgroundColor: THEMECOLOR
   },
   tiles: {
     alignItems: "center",
