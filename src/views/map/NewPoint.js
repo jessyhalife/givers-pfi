@@ -146,16 +146,6 @@ class NewPoint extends Component {
             event={true}
           />
         )
-      },
-      {
-        name: "DetailStep",
-        component: (
-          <DetailsComponent
-            prev={this._prev}
-            submit={this._submit}
-            details={this.state.details}
-          />
-        )
       }
     ];
 

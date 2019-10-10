@@ -26,7 +26,6 @@ import {
 import Header from "../components/header";
 import { THEMECOLOR } from "../const.js";
 
-
 export default class Register extends Component {
   state = {
     error: false,
@@ -96,7 +95,7 @@ export default class Register extends Component {
 
               <View style={styles.content}>
                 <Form>
-                  <Item>
+                  <Item error={this.state.error}>
                     <Label>Nombre de usuario</Label>
                     <Input
                       onChange={e => {
@@ -106,7 +105,7 @@ export default class Register extends Component {
                       placeholderTextColor="#ddd"
                     />
                   </Item>
-                  <Item>
+                  <Item error={this.state.error}>
                     <Label>Email</Label>
                     <Input
                       onChange={e => {
@@ -116,7 +115,7 @@ export default class Register extends Component {
                       placeholderTextColor="#ddd"
                     />
                   </Item>
-                  <Item last>
+                  <Item last error={this.state.error}>
                     <Label>Contraseña</Label>
                     <Input
                       shake={true}

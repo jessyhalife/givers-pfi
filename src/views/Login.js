@@ -37,9 +37,9 @@ export default class Main extends Component {
         .then(() => {
           this.props.navigation.navigate("MapScreen", {
             toast: true,
-            toastMessage: `Hola de vuelta ${
+            toastMessage: `Hola ${
               firebaseApp.auth().currentUser.displayName
-            }!. Hoy un gran día para dar una mano!`
+            } hoy es un gran día para dar una mano!`
           });
         })
         .catch(error => {
@@ -52,14 +52,14 @@ export default class Main extends Component {
             textStyle: { fontSize: 14 }
           });
           this.setState({
-            loading: false
+            loading: false,
+            error: true
           });
         });
     } else {
       this.setState({
         loading: false,
-        error: true,
-        errorMessage: "Debe completar todos los campos"
+        error: true
       });
     }
   };
@@ -74,7 +74,7 @@ export default class Main extends Component {
               </View>
               <View style={styles.content}>
                 <Form>
-                  <Item>
+                  <Item error={this.state.error}>
                     <Label>Email</Label>
                     <Input
                       onChange={e => {
@@ -84,7 +84,7 @@ export default class Main extends Component {
                       placeholderTextColor="#ddd"
                     />
                   </Item>
-                  <Item last>
+                  <Item last error={this.state.error}>
                     <Label>Contraseña</Label>
                     <Input
                       shake={true}
@@ -118,11 +118,10 @@ export default class Main extends Component {
                         .sendPasswordResetEmail(this.state.email)
                         .then(data => {
                           Toast.show({
-                            text:
-                              "Ya te enviamos un e-mail. Revisá tu bandeja de entrada!",
-                            buttonText: "top",
+                            text: `Te enviamos un e-mail a ${this.state.email}. Revisá tu bandeja de entrada!`,
+                            buttonText: "OKEY",
                             duration: 6000,
-                            position: "bottom",
+                            position: "top",
                             type: "success",
                             textStyle: { fontSize: 14 }
                           });

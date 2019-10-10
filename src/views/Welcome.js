@@ -19,7 +19,7 @@ export default class Welcome extends Component {
       if (user) {
         this.props.navigation.navigate("MapScreen", {
           toast: true,
-          toastMessage: `Hola ${user.displayName}. Hoy un gran día para dar una mano!`
+          toastMessage: `Hola ${user.displayName} hoy es un gran día para dar una mano!`
         });
       } else {
         this.props.navigation.navigate("Main");

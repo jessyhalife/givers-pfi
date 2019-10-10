@@ -14,22 +14,62 @@ import Icon from "react-native-vector-icons/AntDesign";
 
 export default class WhenComponent extends Component {
   state = {
+    title: "",
+    description: "",
     types: [],
-    dateStart: new Date(),
-    dateEnd: new Date(),
+    dateStart: "",
+    dateEnd: "",
     timeStart: "00:00",
     timeEnd: "00:00"
   };
   componentDidMount() {
+    if (this.props.getState().length >= this.props.index + 1) {
+      var {
+        title,
+        description,
+        type,
+        dateStart,
+        dateEnd,
+        timeStart,
+        timeEnd
+      } = this.props.getState()[this.props.index];
+      this.setState(
+        {
+          title,
+          description,
+          dateStart: new Date(dateStart),
+          dateEnd: new Date(dateEnd),
+          timeStart,
+          timeEnd
+        },
+        () => {
+          alert(this.state.dateStart);
+          alert(this.state.dateEnd);
+        }
+      );
+    }
     this.getHours();
     this._fetchTypes();
+    this._manageTypes(type);
   }
   _manageTypes(key) {
     const prev = this.state.types;
     prev.map(x => {
       x.active = x.id === key;
     });
-    this.setState({ types: prev });
+    this.setState({ types: prev }, () => {
+      if (!this.state.title || this.state.title == "") {
+        var name = prev.find(x => {
+          return x.id === key;
+        });
+
+        if (name !== undefined) {
+          this.setState({
+            title: name.data.description
+          });
+        }
+      }
+    });
   }
 
   getHours() {
@@ -53,6 +93,7 @@ export default class WhenComponent extends Component {
     }
     return hours;
   }
+
   _fetchTypes() {
     fetch(
       "https://us-central1-givers-229af.cloudfunctions.net/webApi/events/types"
@@ -63,21 +104,18 @@ export default class WhenComponent extends Component {
         arr.forEach(x => {
           x.active = false;
         });
-        this.setState({ types: json }, () => {
-          // if (this.props.getState().length >= 3) {
-          //   if (this.props.getState()[2].hasOwnProperty("needs")) {
-          //     let selected = this.props.getState()[2].needs;
-          //     selected.forEach(x => {
-          //       this.manageNeeds(x);
-          //     });
-          //   }
-          // }
+        this.setState({ types: arr }, () => {
+          if (this.props.getState().length >= this.props.index + 1) {
+            let t = this.props.getState()[this.props.index].type;
+            if (t) this._manageTypes(t);
+          }
         });
       })
       .catch(err => {
         alert(err);
       });
   }
+
   render() {
     const { types } = this.state;
     return (
@@ -93,7 +131,10 @@ export default class WhenComponent extends Component {
           <View style={{ flexDirection: "column" }}>
             <Text style={{ margin: 20, fontSize: 18 }}>Nombre del evento:</Text>
             <Item regular style={{ marginLeft: 20, marginRight: 20 }}>
-              <Input />
+              <Input
+                value={this.state.title}
+                onChange={e => this.setState({ title: e.nativeEvent.text })}
+              />
             </Item>
           </View>
           <View
@@ -103,7 +144,7 @@ export default class WhenComponent extends Component {
               flexWrap: "wrap"
             }}
           >
-            {this.state.types.map(x => {
+            {types.map(x => {
               return (
                 <TouchableOpacity
                   style={{ margin: 3 }}
@@ -144,13 +185,16 @@ export default class WhenComponent extends Component {
                 style={{ marginLeft: 10 }}
               ></Icon>
               <DatePicker
-                defaultDate={new Date()}
+                defaultDate={this.state.dateStart}
                 minimumDate={new Date()}
                 locale={"es"}
                 modalTransparent={true}
                 animationType={"slide"}
                 androidMode={"default"}
                 selectedValue={this.state.dateStart}
+                onDateChange={value => {
+                  this.setState({ dateStart: value });
+                }}
               ></DatePicker>
               <Picker
                 mode="dropdown"
@@ -175,13 +219,16 @@ export default class WhenComponent extends Component {
                 style={{ marginLeft: 10 }}
               ></Icon>
               <DatePicker
-                defaultDate={new Date()}
+                defaultDate={this.state.dateEnd}
                 minimumDate={new Date()}
                 locale={"es"}
                 modalTransparent={true}
                 animationType={"slide"}
                 androidMode={"default"}
                 selectedValue={this.state.dateEnd}
+                onDateChange={value => {
+                  this.setState({ dateEnd: value });
+                }}
               ></DatePicker>
               <Picker
                 mode="dropdown"
@@ -197,6 +244,13 @@ export default class WhenComponent extends Component {
                 {this.getHours()}
               </Picker>
             </Item>
+            {/* {this.state.dateStart > this.state.dateEnd ? (
+              <Text>
+                La fecha de fin debe ser mayor o igual a la fecha de inicio
+              </Text>
+            ) : (
+              undefined
+            )} */}
           </View>
           <View style={{ flexDirection: "column", marginBottom: 20 }}>
             <Text style={{ margin: 20, fontSize: 18 }}>Descripción:</Text>
@@ -204,18 +258,68 @@ export default class WhenComponent extends Component {
               style={{ margin: 20, height: 100, fontSize: 18 }}
               rowSpan={5}
               bordered
+              value={this.state.description}
+              onChange={e => this.setState({ description: e.nativeEvent.text })}
             />
           </View>
 
           <ButtonsWizard
             showAnterior={true}
             siguiente={() => {
-              this.props.saveState(this.props.index, {});
-              this.props.next();
+              this.props.saveState(this.props.index, {
+                title: this.state.title,
+                description: this.state.description,
+                type: this.state.types.find(x => {
+                  return x.active;
+                }).id,
+                dateStart: this.state.dateStart,
+                dateEnd: this.state.dateEnd,
+                timeStart: this.state.timeStart,
+                timeEnd: this.state.timeEnd
+              });
+              this.props.next({
+                title: this.state.title,
+                description: this.state.description,
+                type: this.state.types.find(x => {
+                  return x.active;
+                }).id,
+                dateStart: this.state.dateStart,
+                dateEnd: this.state.dateEnd,
+                timeStart: this.state.timeStart,
+                timeEnd: this.state.timeEnd
+              });
             }}
             back={() => {
-              this.props.saveState(this.props.index, {});
-              this.props.prev();
+              this.props.saveState(this.props.index, {
+                title: this.state.title,
+                description: this.state.description,
+                type: this.state.types
+                  .find(x => {
+                    return x.active;
+                  })
+                  .map(y => {
+                    return y.id;
+                  }),
+                dateStart: this.state.dateStart,
+                dateEnd: this.state.dateEnd,
+                timeStart: this.state.timeStart,
+                timeEnd: this.state.timeEnd
+              });
+              this.props.prev({
+                title: this.state.title,
+                description: this.state.description,
+                type: this.state.types
+                  .find(x => {
+                    return x.active;
+                  })
+                  .map(y => {
+                    return y.id;
+                  }),
+                dateStart: this.state.dateStart,
+                dateEnd: this.state.dateEnd,
+                timeStart: this.state.timeStart,
+                timeEnd: this.state.timeEnd
+              });
             }}
           />
         </ScrollView>
