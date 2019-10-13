@@ -13,12 +13,13 @@ const { height, width } = Dimensions.get("window");
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
 import { PermissionsAndroid } from "react-native";
-import { Fab, Container, Button, Root, Toast } from "native-base";
+import { Fab, Container, Button, Root, Toast, Header, Body } from "native-base";
 import SlidingUpPanel from "rn-sliding-up-panel";
 import PeopleView from "./PeopleView";
 import Geocoder from "react-native-geocoding";
 import mapStyle from "../assets/mapStyle";
 import Icon from "react-native-vector-icons/AntDesign";
+import Search from "../components/Search";
 
 Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 
@@ -33,6 +34,7 @@ export default class MapGiver extends Component {
     super(props);
     this.state = {
       markers: [],
+      evMarkers: [],
       latitude: 37.421,
       longitude: -122.083,
       locationPermission: true,
@@ -41,15 +43,16 @@ export default class MapGiver extends Component {
       ages: [],
       needs: [],
       activePanel: false,
-      showToast: false
+      showToast: false,
+      open: false
     };
     this.mapRef = null;
     this.getAges = this.getAges.bind(this);
     this.getNeeds = this.getNeeds.bind(this);
   }
   componentWillReceiveProps(props) {
-    this.setState({ markers: props.people }, () => {});
-    console.log("paramsNav");
+    this.setState({ markers: props.people, evMarkers: props.events }, () => {});
+
     console.log(this.props.navigation.state.params);
     if (this.props.navigation.getParam("toast", false)) {
       console.log("hay algo");
@@ -72,7 +75,7 @@ export default class MapGiver extends Component {
         headers: { "Content-Type": "application/json" }
       }
     )
-      .then(res => alert("ok!"))
+      .then(res => this._markerInfo(id))
       .catch(error => console.log("Error!!: ", error));
   };
   notSeen = id => {
@@ -151,7 +154,9 @@ export default class MapGiver extends Component {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude
             },
-            () => {}
+            () => {
+              this.mapRef.animateToRegion(this.getMapRegion(), 200);
+            }
           );
         },
         error => console.log(error),
@@ -175,6 +180,7 @@ export default class MapGiver extends Component {
   render() {
     return (
       <Root>
+        <Search needs={this.state.needs} ages={this.state.ages}></Search>
         <View style={styles.container}>
           <MapView
             ref={ref => {
@@ -200,80 +206,48 @@ export default class MapGiver extends Component {
                     longitude: Number(x.location.longitude)
                   }}
                   onPress={() => this._markerInfo(x.id)}
-                >
-                  {/* <MapView.Callout
-                  onPress={() => this._markerInfo(x.id)}
-                  style={{
-                    flex: 1,
-                    position: "relative"
+                ></Marker.Animated>
+              );
+            })}
+            {this.state.evMarkers.map(x => {
+              return (
+                <Marker.Animated
+                  key={x.id}
+                  coordinate={{
+                    latitude: Number(x.data.location.latitude),
+                    longitude: Number(x.data.location.longitude)
                   }}
-                >
-                  <View style={{ flexDirection: "row" }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        marginRight: 20,
-                        marginLeft: 10,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        elevation: 3
-                      }}
-                    >
-                      <Icon
-                        name="heart"
-                        style={{
-                          color: THEMECOLOR,
-                          fontSize: 30
-                        }}
-                      ></Icon>
-                    </View>
-                    <View style={{ flexDirection: "column", marginRight: 10 }}>
-                      <View style={{ flexDirection: "row" }}>
-                        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                          Hay {x.qty} {x.qty > 1 ? "personas" : "persona"} que
-                          podés ayudar!
-                        </Text>
-                      </View>
-                      <View style={{ flexDirection: "row" }}>
-                        <Text>Para más info hace click aquí</Text>
-                      </View>
-                    </View>
-                  </View>
-                </MapView.Callout> */}
-                </Marker.Animated>
+                  pinColor="green"
+                  title={x.data.title}
+                  description={x.data.description}
+                ></Marker.Animated>
               );
             })}
           </MapView>
           <View style={{ flex: 2, flexDirection: "column" }}>
-            {!this.state.activePanel ? (
-              <Fab
-                active={this.state.active}
-                direction="up"
-                containerStyle={{}}
-                style={{ backgroundColor: THEMECOLOR }}
-                onPress={() => this.setState({ active: !this.state.active })}
+            <Fab
+              active={this.state.active}
+              direction="up"
+              containerStyle={{}}
+              style={{ backgroundColor: THEMECOLOR }}
+              onPress={() => this.setState({ active: !this.state.active })}
+            >
+              <Icon name="plus" />
+              <Button
+                style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+                onPress={() =>
+                  this.props.navigation.navigate("NewPeopleScreen")
+                }
               >
-                <Icon name="plus" />
-                <Button
-                  style={{ backgroundColor: "#fff", borderColor: "#eee" }}
-                  onPress={() =>
-                    this.props.navigation.navigate("NewPeopleScreen")
-                  }
-                >
-                  <Icon name="adduser" size={18} style={{ color: "#000" }} />
-                </Button>
-                <Button
-                  style={{ backgroundColor: "#fff", borderColor: "#eee" }}
-                  onPress={() =>
-                    this.props.navigation.navigate("NewPointScreen")
-                  }
-                >
-                  <Icon name="pushpin" size={18} style={{ color: "#000" }} />
-                </Button>
-              </Fab>
-            ) : (
-              undefined
-            )}
+                <Icon name="adduser" size={18} style={{ color: "#000" }} />
+              </Button>
+              <Button
+                style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+                onPress={() => this.props.navigation.navigate("NewPointScreen")}
+              >
+                <Icon name="pushpin" size={18} style={{ color: "#000" }} />
+              </Button>
+            </Fab>
             <SlidingUpPanel
               onHideCallback={() =>
                 this.setState({ activePanel: false, active: false })
@@ -322,8 +296,20 @@ export default class MapGiver extends Component {
     );
   }
 }
-
+const actions = [
+  {
+    text: "Accessibility",
+    name: "plus",
+    position: 1
+  }
+];
 const styles = StyleSheet.create({
+  fab: {
+    position: "absolute",
+    margin: 16,
+    right: 0,
+    bottom: 0
+  },
   container: {
     flex: 1,
     flexDirection: "row",

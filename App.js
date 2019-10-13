@@ -75,23 +75,23 @@ const MapTabNavigator = createBottomTabNavigator(
         }
       }
     },
-    Search: {
-      screen: Activity,
-      navigationOptions: {
-        title: "Búsqueda",
-        tabBarLabel: "BUSCAR",
-        tabBarIcon: ({ tintColor }) => (
-          <Icon name="search1" size={18} style={{ color: tintColor }} />
-        ),
-        tabBarOptions: {
-          activeTintColor: THEMECOLOR,
-          inactiveTintColor: "#919191",
-          style: {
-            backgroundColor: "#f3f3f3"
-          }
-        }
-      }
-    },
+    // Search: {
+    //   screen: Activity,
+    //   navigationOptions: {
+    //     title: "Búsqueda",
+    //     tabBarLabel: "BUSCAR",
+    //     tabBarIcon: ({ tintColor }) => (
+    //       <Icon name="search1" size={18} style={{ color: tintColor }} />
+    //     ),
+    //     tabBarOptions: {
+    //       activeTintColor: THEMECOLOR,
+    //       inactiveTintColor: "#919191",
+    //       style: {
+    //         backgroundColor: "#f3f3f3"
+    //       }
+    //     }
+    //   }
+    // },
     Activity: {
       screen: Activity,
       navigationOptions: {

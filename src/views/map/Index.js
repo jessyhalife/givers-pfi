@@ -5,16 +5,16 @@ import db from "../../db";
 import firebaseApp from "../../config/config";
 import { THEMECOLOR } from "../../const";
 let pplRef = firebaseApp.firestore().collection("people");
+let eventRef = firebaseApp.firestore().collection("events");
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = { people: [], active: false };
+    this.state = { people: [], active: false, events: [] };
   }
 
   componentDidMount() {
     pplRef.onSnapshot(snapshots => {
-      console.log("TEEEST");
       let gente = [];
       snapshots.docs.forEach(x => {
         gente.push({
@@ -29,6 +29,17 @@ export default class Home extends Component {
 
       this.setState({ people: gente }, () => {});
     });
+
+    eventRef.onSnapshot(snapshots => {
+      let events = [];
+      snapshots.docs.forEach(x => {
+        events.push({
+          id: x.id,
+          data: x.data()
+        });
+      });
+      this.setState({ events: events });
+    });
   }
 
   render() {
@@ -38,6 +49,7 @@ export default class Home extends Component {
           <MapGiver
             people={this.state.people}
             navigation={this.props.navigation}
+            events={this.state.events}
           />
         </View>
       </View>
