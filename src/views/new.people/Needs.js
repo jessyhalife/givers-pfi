@@ -19,20 +19,30 @@ class Needs extends Component {
   state = {
     needs: [],
     selectedNeeds: [],
-    loading: true
+    loading: true,
+    idToken: ""
   };
 
   componentDidMount() {
-    this._fetchNeeds();
+    let needs = this.props.needs;
+    this.setState({ needs });
   }
 
-  _fetchNeeds() {
-    fetch(
-      "https://us-central1-givers-229af.cloudfunctions.net/webApi/helptypes"
-    )
-      .then(response => response.json())
-      .then(json => this.setState({ needs: json, loading: false }));
-  }
+  // _fetchNeeds() {
+  //   fetch(
+  //     "https://us-central1-givers-229af.cloudfunctions.net/webApi/helptypes",
+  //     {
+  //       method: "GET",
+  //       headers: new Headers({
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //         Authorization: this.state.idToken
+  //       })
+  //     }
+  //   )
+  //     .then(response => response.json())
+  //     .then(json => this.setState({ needs: json, loading: false }));
+  // }
 
   manageNeeds(key) {
     let prev = this.state.selectedNeeds;

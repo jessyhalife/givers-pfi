@@ -29,16 +29,59 @@ class Search extends Component {
       points: true
     }
   };
-  changeNeed(id) {
-    prev = this.state.needs;
-    if (prev.indexOf(id) > 0) {
-      prev = prev.find(x => {
-        return x.id !== id;
-      });
+
+  filter = () => {
+    var { people, events } = this.props;
+    if (!this.state.types.personas) {
+      people = [];
     } else {
-      prev.push(id);
+      if (this.state.needs.length > 0) {
+        people = people.filter(x => {
+          return this._containsAll(x.needs, this.state.needs);
+        });
+      }
     }
+    console.log(events);
+    if (!this.state.types.events) {
+      events = [];
+    } else {
+      if (this.state.needs.length > 0) {
+        events = events.filter(x => {
+          return this._containsAll(x.needs, this.state.needs);
+        });
+      }
+    }
+
+    this.props.filtrar(people, events);
+  };
+  _containsAll(array, array2) {
+    var exists = true;
+    if (array === undefined) {
+      exists = false;
+    } else {
+      array2.forEach(x => {
+        if (array.indexOf(x) < 0) {
+          exists = false;
+        }
+      });
+    }
+    return exists;
+  }
+
+  changeNeed(id) {
+    let prev = this.state.needs ? this.state.needs : [];
+
+    if (!prev.some(x => x === id)) {
+      prev.push(id);
+    } else {
+      prev = prev.filter(x => x !== id);
+    }
+
     this.setState({ needs: prev });
+  }
+  componentDidMount() {
+    console.log("monto");
+    console.log(this.state.needs);
   }
   render() {
     return (
@@ -62,7 +105,9 @@ class Search extends Component {
             listViewDisplayed="true" // true/false/undefined
             renderDescription={row => row.description || row.vicinity} // custom description render
             fetchDetails={true}
-            onPress={(data, details) => {}}
+            onPress={(data, details) => {
+              this.props.setMapRegion(details.geometry.location);
+            }}
             query={{
               // available options: https://developers.google.com/places/web-service/autocomplete
               key: "AIzaSyBAZBpWYMUskFgPU_LATPHd521AKJ3CEz4", //"AIzaSyCzOx_nARYJW68tQKsdnirAeMCtd8B1_Fc",
@@ -101,7 +146,9 @@ class Search extends Component {
               predefinedPlacesDescription: {
                 color: "#1faadb"
               },
-              listView: {}
+              listView: {
+                backgroundColor: "white"
+              }
             }}
           />
           <View
@@ -109,17 +156,9 @@ class Search extends Component {
               ...styles.filterBar,
               flexDirection: "row",
               textAlign: "center",
-              justifyContent: "space-between"
+              justifyContent: "flex-end"
             }}
           >
-            <View
-              style={{
-                alignItems: "center",
-                textAlign: "center"
-              }}
-            >
-              <Text>3 filtros aplicados</Text>
-            </View>
             <TouchableOpacity
               style={{
                 flexDirection: "row",
@@ -132,7 +171,8 @@ class Search extends Component {
                   fontSize: 14,
                   fontWeight: "bold",
                   marginRight: 3,
-                  color: "#3175f6"
+                  color: "#3175f6",
+                  alignSelf: "center"
                 }}
               >
                 Filtrar
@@ -268,12 +308,15 @@ class Search extends Component {
                       <ScrollView>
                         {this.props.needs.map(n => {
                           return (
-                            <ListItem last>
+                            <ListItem last key={n.id}>
                               <CheckBox
                                 onPress={() => {
                                   this.changeNeed(n.id);
                                 }}
-                                checked={this.state.needs.indexOf(n.id) > 0}
+                                checked={
+                                  this.state.needs.filter(x => x === n.id)
+                                    .length == 1
+                                }
                                 style={{ marginRight: 10 }}
                               ></CheckBox>
                               <Text style={{ marginLeft: 10 }}>
@@ -318,7 +361,10 @@ class Search extends Component {
                       backgroundColor: THEMECOLOR,
                       width: "100%"
                     }}
-                    onPress={() => this.setState({ modal: false })}
+                    onPress={() => {
+                      this.filter();
+                      this.setState({ modal: false });
+                    }}
                   >
                     <Text style={{ color: "white", fontWeight: "bold" }}>
                       Aplicar

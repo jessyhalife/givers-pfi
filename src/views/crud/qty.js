@@ -14,37 +14,29 @@ class QtyComponent extends Component {
 
   async componentDidMount() {
     this.setState({ loading: true }); //, qty: this.props.cant });
-    await this._fetchAges().then(() => {
+    // await this._fetchAges().then(() => {
+    if (this.props.getState().length >= this.props.index + 1) {
+      if (this.props.getState()[this.props.index].hasOwnProperty("qty"))
+        this.setState({ qty: this.props.getState()[this.props.index].qty });
+    }
+
+    let list = this.props.ages;
+    list.forEach(x => {
+      x.active = false;
+    });
+
+    this.setState({ ages: list }, () => {
       if (this.props.getState().length >= this.props.index + 1) {
-        if (this.props.getState()[this.props.index].hasOwnProperty("qty"))
-          this.setState({ qty: this.props.getState()[this.props.index].qty });
+        if (this.props.getState()[this.props.index].hasOwnProperty("ages")) {
+          let selected = this.props.getState()[this.props.index].ages;
+          selected.forEach(x => {
+            this.manageAges(x);
+          });
+        }
       }
     });
   }
 
-  async _fetchAges() {
-    fetch("https://us-central1-givers-229af.cloudfunctions.net/webApi/ages")
-      .then(response => response.json())
-      .then(json => {
-        let arr = json;
-        arr.forEach(x => {
-          x.active = false;
-        });
-        this.setState({ ages: json }, () => {
-          if (this.props.getState().length >= this.props.index + 1) {
-            if (
-              this.props.getState()[this.props.index].hasOwnProperty("ages")
-            ) {
-              let selected = this.props.getState()[this.props.index].ages;
-              selected.forEach(x => {
-                this.manageAges(x);
-              });
-            }
-          }
-        });
-      })
-      .then(() => this.setState({ loading: false }, () => {}));
-  }
   manageAges(key) {
     let prev = this.state.ages;
     let found = prev.findIndex(x => x.id == key);
@@ -53,12 +45,11 @@ class QtyComponent extends Component {
     var act = prev.filter(x => {
       return x.active;
     }).length;
-    if (act > qty) {
-      console.log(nr);
+    if (Number(act) > Number(qty)) {
       let nr = Number(act) - Number(qty);
-      qty += nr;
-      console.log(nr);
-      console.log(qty);
+      console.log(`nro: ${nr}`);
+      qty = Number(qty) + Number(nr);
+
       qty = qty.toString();
     }
     this.setState({ ages: prev, qty });

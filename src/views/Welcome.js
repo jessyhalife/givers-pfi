@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { THEMECOLOR } from "../const";
 import firebaseApp from "../config";
-
 import { Image, View, ActivityIndicator, Text, StyleSheet } from "react-native";
 
 export default class Welcome extends Component {

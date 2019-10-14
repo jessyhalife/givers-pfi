@@ -13,8 +13,8 @@ class DetailsComponent extends Component {
     this.setState({ details: this.props.details && "" });
   }
   async submit() {
-    await this.props.submit({ details: this.state.details }).then(() => {
-      alert("ok");
+    await this.props.submit({ details: this.state.details }).then(data => {
+      console.log(data);
     });
   }
   render() {

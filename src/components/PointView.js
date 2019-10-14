@@ -100,7 +100,7 @@ export default PointView = props => {
               elevation: 5
             }}
           >
-            <Text style={{ fontSize: 18, color: "f8f8f8", fontWeight: "bold" }}>
+            <Text style={{ fontSize: 18, color: "#f8f8f8", fontWeight: "bold" }}>
               Ayudé
             </Text>
           </Button>

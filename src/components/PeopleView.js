@@ -98,30 +98,31 @@ export default PeopleView = props => {
               backgroundColor: THEMECOLOR,
               elevation: 5
             }}
+            onPress={() => props.giveHelp()}
           >
-            <Text style={{ fontSize: 18, color: "f8f8f8", fontWeight: "bold" }}>
+            <Text style={{ fontSize: 18, color: "#f8f8f8", fontWeight: "bold" }}>
               Ayudé
             </Text>
           </Button>
         </View>
       </View>
-      {/* <View style={{ flexDirection: "row", marginLeft: 10 }}>
-          {needs
-            .filter(x => {
-              return data.needs.indexOf(x.id) >= 0;
-            })
-            .map(x => {
-              return (
-                <View style={{ flexDirection: "row" }}>
-                  <Icon
-                    style={{ margin: 5, color: "black", fontSize: 18 }}
-                    name={x.data.icon}
-                  ></Icon>
-                  <Text style={{fontSize: 18}}>{x.data.description}</Text>
-                </View>
-              );
-            })}
-        </View> */}
+      <View style={{ flexDirection: "row", marginLeft: 10 }}>
+        {needs
+          .filter(x => {
+            return data.needs.indexOf(x.id) >= 0;
+          })
+          .map(x => {
+            return (
+              <View style={{ flexDirection: "row" }}>
+                <Icon
+                  style={{ margin: 5, color: "black", fontSize: 18 }}
+                  name={x.data.icon}
+                ></Icon>
+                <Text style={{ fontSize: 18 }}>{x.data.description}</Text>
+              </View>
+            );
+          })}
+      </View>
     </View>
   );
 };

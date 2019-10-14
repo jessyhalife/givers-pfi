@@ -20,38 +20,54 @@ class NeedsComponent extends Component {
   };
 
   componentDidMount() {
-    this._fetchNeeds();
-  }
-
-  _fetchNeeds() {
-    fetch(
-      "https://us-central1-givers-229af.cloudfunctions.net/webApi/helptypes"
-    )
-      .then(response => response.json())
-      .then(json => {
-        let arr = json;
-        arr.forEach(x => {
-          x.active = false;
-        });
-        if (this.props.event) {
-          arr = arr.filter(x => {
-            return x.data.event;
+    let needs = this.props.needs;
+    if (this.props.event) {
+      needs = needs.filter(x => {
+        return x.data.event;
+      });
+    }
+    needs.forEach(x => (x.active = false));
+    this.setState({ needs }, () => {
+      if (this.props.getState().length >= this.props.index + 1) {
+        if (this.props.getState()[this.props.index].hasOwnProperty("needs")) {
+          let selected = this.props.getState()[this.props.index].needs;
+          selected.forEach(x => {
+            this.manageNeeds(x.id);
           });
         }
-        this.setState({ needs: arr, loading: false }, () => {
-          if (this.props.getState().length >= this.props.index + 1) {
-            if (
-              this.props.getState()[this.props.index].hasOwnProperty("needs")
-            ) {
-              let selected = this.props.getState()[this.props.index].needs;
-              selected.forEach(x => {
-                this.manageNeeds(x.id);
-              });
-            }
-          }
-        });
-      });
+      }
+    });
   }
+
+  // _fetchNeeds() {
+  //   fetch(
+  //     "https://us-central1-givers-229af.cloudfunctions.net/webApi/helptypes"
+  //   )
+  //     .then(response => response.json())
+  //     .then(json => {
+  //       let arr = json;
+  //       arr.forEach(x => {
+  //         x.active = false;
+  //       });
+  //       if (this.props.event) {
+  //         arr = arr.filter(x => {
+  //           return x.data.event;
+  //         });
+  //       }
+  //       this.setState({ needs: arr, loading: false }, () => {
+  //         if (this.props.getState().length >= this.props.index + 1) {
+  //           if (
+  //             this.props.getState()[this.props.index].hasOwnProperty("needs")
+  //           ) {
+  //             let selected = this.props.getState()[this.props.index].needs;
+  //             selected.forEach(x => {
+  //               this.manageNeeds(x.id);
+  //             });
+  //           }
+  //         }
+  //       });
+  //     });
+  // }
 
   manageNeeds(key) {
     let prev = this.state.needs;

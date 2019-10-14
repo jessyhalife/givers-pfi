@@ -23,7 +23,8 @@ export default class Home extends Component {
           qty: x.data().qty,
           seen: x.data().seen,
           notSeen: x.data().not_seen,
-          ages: x.data().ages
+          ages: x.data().ages,
+          needs: x.data().needs
         });
       });
 

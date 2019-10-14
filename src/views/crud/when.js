@@ -11,6 +11,7 @@ import { THEMECOLOR } from "../../const.js";
 import Header from "../../components/header";
 import ButtonsWizard from "../../components/buttons_wizard";
 import Icon from "react-native-vector-icons/AntDesign";
+import firebaseApp from "../../config/config";
 
 export default class WhenComponent extends Component {
   state = {
@@ -20,7 +21,8 @@ export default class WhenComponent extends Component {
     dateStart: "",
     dateEnd: "",
     timeStart: "00:00",
-    timeEnd: "00:00"
+    timeEnd: "00:00",
+    idToken: ""
   };
   componentDidMount() {
     if (this.props.getState().length >= this.props.index + 1) {
@@ -49,8 +51,14 @@ export default class WhenComponent extends Component {
       );
     }
     this.getHours();
-    this._fetchTypes();
-    this._manageTypes(type);
+    firebaseApp
+      .auth()
+      .currentUser.getIdToken(true)
+      .then(idToken => {
+        this.setState({ idToken });
+        this._fetchTypes();
+        this._manageTypes(type);
+      });
   }
   _manageTypes(key) {
     const prev = this.state.types;
@@ -96,7 +104,15 @@ export default class WhenComponent extends Component {
 
   _fetchTypes() {
     fetch(
-      "https://us-central1-givers-229af.cloudfunctions.net/webApi/events/types"
+      "https://us-central1-givers-229af.cloudfunctions.net/webApi/events/types",
+      {
+        method: "GET",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: this.state.idToken
+        })
+      }
     )
       .then(response => response.json())
       .then(json => {

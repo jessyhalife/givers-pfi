@@ -8,18 +8,30 @@ import {
   Text
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { THEMECOLOR } from "../const";
+import { THEMECOLOR, BASEURL } from "../const";
 const { height, width } = Dimensions.get("window");
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
 import { PermissionsAndroid } from "react-native";
-import { Fab, Container, Button, Root, Toast, Header, Body } from "native-base";
+import {
+  Fab,
+  Container,
+  Button,
+  Root,
+  Toast,
+  Header,
+  Body,
+  Spinner
+} from "native-base";
 import SlidingUpPanel from "rn-sliding-up-panel";
 import PeopleView from "./PeopleView";
 import Geocoder from "react-native-geocoding";
 import mapStyle from "../assets/mapStyle";
 import Icon from "react-native-vector-icons/AntDesign";
 import Search from "../components/Search";
+import HelpModal from "../components/HelpModal.js";
+import firebaseApp from "../config/config";
+import Modal from "react-native-modal";
 
 Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 
@@ -37,34 +49,28 @@ export default class MapGiver extends Component {
       evMarkers: [],
       latitude: 37.421,
       longitude: -122.083,
-      locationPermission: true,
       active: false,
       activeMarker: null,
       ages: [],
       needs: [],
       activePanel: false,
       showToast: false,
-      open: false
+      open: false,
+      idToken: "",
+      loading: false,
+      helpModal: false,
+      selected_id: ""
     };
     this.mapRef = null;
     this.getAges = this.getAges.bind(this);
     this.getNeeds = this.getNeeds.bind(this);
+    this.filter = this.filter.bind(this);
+    this.setMapRegion = this.setMapRegion.bind(this);
+    this.giveHelp = this.giveHelp.bind(this);
   }
+
   componentWillReceiveProps(props) {
     this.setState({ markers: props.people, evMarkers: props.events }, () => {});
-
-    console.log(this.props.navigation.state.params);
-    if (this.props.navigation.getParam("toast", false)) {
-      console.log("hay algo");
-      Toast.show({
-        text: this.props.navigation.state.params.toastMessage,
-        buttonText: "Okey",
-        duration: 6000,
-        position: "top",
-        type: "success",
-        textStyle: { fontSize: 18 }
-      });
-    }
   }
 
   seen = id => {
@@ -72,7 +78,11 @@ export default class MapGiver extends Component {
       `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/seen/${id}`,
       {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" }
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: this.state.idToken
+        })
       }
     )
       .then(res => this._markerInfo(id))
@@ -83,33 +93,73 @@ export default class MapGiver extends Component {
       `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/notSeen/${id}`,
       {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" }
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: this.state.idToken
+        })
       }
     )
       .then(res => this._markerInfo(id))
       .catch(error => console.log("Error!!: ", error));
   };
   getAges() {
-    fetch("https://us-central1-givers-229af.cloudfunctions.net/webApi/ages")
-      .then(response => response.json())
+    fetch(`https://us-central1-givers-229af.cloudfunctions.net/webApi/ages`, {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: this.state.idToken
+      })
+    })
+      .then(response => {
+        return response.json();
+      })
       .then(json => {
         this.setState({ ages: json });
         return;
+      })
+      .catch(error => {
+        console.log(error);
       });
   }
   getNeeds() {
     fetch(
-      "https://us-central1-givers-229af.cloudfunctions.net/webApi/helptypes"
+      `https://us-central1-givers-229af.cloudfunctions.net/webApi/helptypes`,
+      {
+        method: "GET",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: this.state.idToken
+        })
+      }
     )
-      .then(response => response.json())
+      .then(response => {
+        return response.json();
+      })
       .then(json => {
         this.setState({ needs: json });
         return;
-      });
+      })
+      .catch(error => {});
+  }
+
+  giveHelp() {
+    this.setState({ helpModal: true });
   }
   _markerInfo(key) {
+    this.setState({ selected_id: key });
     fetch(
-      `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/${key}`
+      `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/${key}`,
+      {
+        method: "GET",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: this.state.idToken
+        })
+      }
     )
       .then(response => response.json())
       .then(json => {
@@ -122,7 +172,7 @@ export default class MapGiver extends Component {
             pers.address = add.results[0].formatted_address;
 
             this.setState({ activeMarker: pers }, () => {
-              this._panel.show(200, 100);
+              this._panel.show(200, 10);
               this.setState({ activePanel: true });
             });
 
@@ -138,6 +188,7 @@ export default class MapGiver extends Component {
       });
   }
   async componentDidMount() {
+    this.setState({ loading: true });
     const permissionOK = await PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
     );
@@ -162,10 +213,22 @@ export default class MapGiver extends Component {
         error => console.log(error),
         { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
       );
-    } else {
     }
-
-    await Promise.all([this.getAges(), this.getNeeds()]).then(data => {});
+    firebaseApp
+      .auth()
+      .currentUser.getIdToken(true)
+      .then(idToken => {
+        console.log(idToken);
+        this.setState({ idToken }, () => {
+          Promise.all([this.getAges(), this.getNeeds()])
+            .then(data => {
+              this.setState({ loading: false });
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        });
+      });
   }
   getMapRegion = () => ({
     latitude: this.state.latitude,
@@ -177,10 +240,32 @@ export default class MapGiver extends Component {
     navigator.geolocation.clearWatch(this.watchID);
   }
 
+  setMapRegion = location => {
+    this.setState(
+      {
+        latitude: location.lat,
+        longitude: location.lng
+      },
+      () => {
+        this.mapRef.animateToRegion(this.getMapRegion());
+      }
+    );
+  };
+
+  filter = (markers, evMarkers) => {
+    this.setState({ markers, evMarkers });
+  };
   render() {
     return (
       <Root>
-        <Search needs={this.state.needs} ages={this.state.ages}></Search>
+        <Search
+          filtrar={this.filter}
+          needs={this.state.needs}
+          ages={this.state.ages}
+          people={this.props.people}
+          events={this.props.events}
+          setMapRegion={this.setMapRegion}
+        ></Search>
         <View style={styles.container}>
           <MapView
             ref={ref => {
@@ -189,10 +274,10 @@ export default class MapGiver extends Component {
             moveOnMarkerPress={true}
             showsUserLocation={true}
             style={styles.map}
-            showUserLocation
             followUserLocation
             zoomEnabled
-            loadingEnabled
+            showsMyLocationButton={true}
+            loadingEnabled={false}
             customMapStyle={mapStyle}
             provider={MapView.PROVIDER_GOOGLE}
             region={this.getMapRegion()}
@@ -225,29 +310,40 @@ export default class MapGiver extends Component {
             })}
           </MapView>
           <View style={{ flex: 2, flexDirection: "column" }}>
-            <Fab
-              active={this.state.active}
-              direction="up"
-              containerStyle={{}}
-              style={{ backgroundColor: THEMECOLOR }}
-              onPress={() => this.setState({ active: !this.state.active })}
-            >
-              <Icon name="plus" />
-              <Button
-                style={{ backgroundColor: "#fff", borderColor: "#eee" }}
-                onPress={() =>
-                  this.props.navigation.navigate("NewPeopleScreen")
-                }
+            {!this.state.activePanel ? (
+              <Fab
+                active={this.state.active}
+                direction="up"
+                containerStyle={{}}
+                style={{ backgroundColor: THEMECOLOR }}
+                onPress={() => this.setState({ active: !this.state.active })}
               >
-                <Icon name="adduser" size={18} style={{ color: "#000" }} />
-              </Button>
-              <Button
-                style={{ backgroundColor: "#fff", borderColor: "#eee" }}
-                onPress={() => this.props.navigation.navigate("NewPointScreen")}
-              >
-                <Icon name="pushpin" size={18} style={{ color: "#000" }} />
-              </Button>
-            </Fab>
+                <Icon name="plus" />
+                <Button
+                  style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+                  onPress={() =>
+                    this.props.navigation.navigate("NewPeopleScreen", {
+                      needs: this.state.needs,
+                      ages: this.state.ages
+                    })
+                  }
+                >
+                  <Icon name="adduser" size={18} style={{ color: "#000" }} />
+                </Button>
+                <Button
+                  style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+                  onPress={() =>
+                    this.props.navigation.navigate("NewPointScreen", {
+                      needs: this.state.needs
+                    })
+                  }
+                >
+                  <Icon name="pushpin" size={18} style={{ color: "#000" }} />
+                </Button>
+              </Fab>
+            ) : (
+              undefined
+            )}
             <SlidingUpPanel
               onHideCallback={() =>
                 this.setState({ activePanel: false, active: false })
@@ -277,10 +373,15 @@ export default class MapGiver extends Component {
               >
                 <Icon
                   name="minus"
-                  style={{ alignSelf: "center", color: "#ccc", fontSize: 30 }}
+                  style={{
+                    alignSelf: "center",
+                    color: "#ccc",
+                    fontSize: 30
+                  }}
                 ></Icon>
                 {this.state.activeMarker && (
                   <PeopleView
+                    giveHelp={this.giveHelp}
                     data={this.state.activeMarker}
                     ages={this.state.ages}
                     needs={this.state.needs}
@@ -292,6 +393,32 @@ export default class MapGiver extends Component {
             </SlidingUpPanel>
           </View>
         </View>
+        <Modal
+          backdropOpacity={0.3}
+          isVisible={this.state.loading}
+          animationIn="slideInUp"
+          style={{ margin: 50 }}
+          // customBackdrop={<View style={{ flex: 1 }} />}
+        >
+          <View style={{ elevation: 4 }}>
+            <View
+              style={{
+                flexDirection: "column",
+                backgroundColor: "white",
+                padding: 20
+              }}
+            >
+              <Text>Cargando..</Text>
+              <Spinner color={THEMECOLOR}></Spinner>
+            </View>
+          </View>
+        </Modal>
+        <HelpModal
+          saveHelp={() => this.setState({ helpModal: false })}
+          show={this.state.helpModal}
+          needs={this.state.needs}
+          people_id={this.state.selected_id}
+        ></HelpModal>
       </Root>
     );
   }
