@@ -6,34 +6,35 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  TextInput
 } from "react-native";
-import { Button, Icon, Input } from "native-base";
+import { Button, Icon, Textarea, Root } from "native-base";
 import { THEMECOLOR } from "../const.js";
 import firebaseApp from "../config/config";
+import Header from "./header";
 export default class HelpModal extends Component {
   state = {
     needs: []
   };
 
   save() {
-    console.log(body);
     let body = {
       needs: this.state.needs
         .filter(x => {
           return x.active;
         })
-        .map(y => {
-          return y.id;
+        .map(x => {
+          return { id: x.id };
         })
     };
-
+    console.log(body);
     firebaseApp
       .auth()
       .currentUser.getIdToken(true)
       .then(idToken => {
         fetch(
-          `http://10.0.2.2:5001/givers-229af/us-central1/webApi/people/${this.props.people_id}/help`,
+          `http://10.0.2.2:5001/givers-229af/us-central1/webApi/people/${this.props.navigation.state.params.people_id}/help`,
           {
             method: "POST",
             body: JSON.stringify(body),
@@ -53,13 +54,16 @@ export default class HelpModal extends Component {
       });
   }
   componentWillReceiveProps(props) {
-    let list = props.needs;
+    console.log(props);
+    console.log(props.navigation);
+  }
+  componentDidMount() {
+    let list = this.props.navigation.state.params.needs;
     list.forEach(x => {
       x.active = false;
     });
     this.setState({ needs: list });
   }
-  componentDidMount() {}
 
   manageNeeds(key) {
     let prev = this.state.needs;
@@ -72,84 +76,101 @@ export default class HelpModal extends Component {
   }
   render() {
     return (
-      <Modal isVisible={this.props.show}>
-        <View style={{ elevation: 4 }}>
+      //   <Modal isVisible={this.props.show}>
+      <Root>
+        <Header showBack={false} title="Registrar ayuda"></Header>
+        <ScrollView>
+          <Text style={{ fontSize: 20, fontWeight: "bold", margin: 30 }}>
+            Cómo ayudaste?
+          </Text>
+
           <View
             style={{
-              flexDirection: "column",
-              backgroundColor: "white",
-              padding: 20
+              flexDirection: "row",
+              flexWrap: "wrap",
+              alignItems: "stretch",
+              justifyContent: "center"
             }}
           >
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-              ¿Cómo ayudaste?
-            </Text>
-            <View
-              style={{
-                borderColor: "#eee",
-                marginTop: 15,
-                marginBottom: 10,
-                borderBottomWidth: 1
+            <FlatList
+              contentContainerStyle={{
+                alignItems: "center",
+                justifyContent: "center"
               }}
-            />
-            <ScrollView>
-              <View
-                style={{
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  alignItems: "stretch",
-                  justifyContent: "center"
-                }}
-              >
-                <FlatList
-                  contentContainerStyle={{
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}
-                  data={this.state.needs}
-                  keyExtractor={item => item.id}
-                  numColumns={3}
-                  renderItem={({ item }) => (
-                    <View style={{ margin: 3, alignItems: "center" }}>
-                      <TouchableOpacity
-                        style={
-                          !item.active
-                            ? styles.tiles
-                            : { ...styles.tiles, ...styles.selectedTile }
-                        }
-                        onPress={() => {
-                          this.manageNeeds(item.id);
-                        }}
-                      >
-                        <Icon
-                          name={item.data.icon}
-                          style={
-                            !item.active
-                              ? { color: "#ddd" }
-                              : { color: "white" }
-                          }
-                        ></Icon>
-                      </TouchableOpacity>
-                      <Text
-                        style={{
-                          marginTop: 10,
-                          marginBottom: 15,
-                          width: 100,
-                          textAlign: "center"
-                        }}
-                      >
-                        {item.data.description}
-                      </Text>
-                    </View>
-                  )}
-                ></FlatList>
-              </View>
-            </ScrollView>
+              data={this.state.needs}
+              keyExtractor={item => item.id}
+              numColumns={3}
+              renderItem={({ item }) => (
+                <View style={{ margin: 3, alignItems: "center" }}>
+                  <TouchableOpacity
+                    style={
+                      !item.active
+                        ? styles.tiles
+                        : { ...styles.tiles, ...styles.selectedTile }
+                    }
+                    onPress={() => {
+                      this.manageNeeds(item.id);
+                    }}
+                  >
+                    <Icon
+                      name={item.data.icon}
+                      style={
+                        !item.active ? { color: "#ddd" } : { color: "white" }
+                      }
+                    ></Icon>
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      marginTop: 10,
+                      marginBottom: 15,
+                      width: 100,
+                      textAlign: "center"
+                    }}
+                  >
+                    {item.data.description}
+                  </Text>
+                </View>
+              )}
+            ></FlatList>
+          </View>
+
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "bold",
+              marginTop: 20,
+              marginLeft: 30
+            }}
+          >
+            ¿Algún comentario?
+          </Text>
+          <TextInput
+            multiline={true}
+            style={{
+              height: 100,
+              borderColor: "#eee",
+              borderWidth: 1,
+              margin: 20
+            }}
+          ></TextInput>
+          <View style={{ flexDirection: "row", width: "100%" }}>
             <Button
-              style={{ backgroundColor: THEMECOLOR, justifyContent: "center" }}
+              bordered
+              light
+              onPress={() => this.props.navigation.goBack()}
+              style={{ width: "50%", justifyContent: "center" }}
+            >
+              <Text>Cancelar</Text>
+            </Button>
+            <Button
+              style={{
+                backgroundColor: THEMECOLOR,
+                justifyContent: "center",
+                width: "50%"
+              }}
               onPress={() => {
                 this.save();
-                this.props.saveHelp();
+                this.props.navigation.goBack();
               }}
             >
               <Text style={{ color: "white", fontWeight: "bold" }}>
@@ -157,8 +178,8 @@ export default class HelpModal extends Component {
               </Text>
             </Button>
           </View>
-        </View>
-      </Modal>
+        </ScrollView>
+      </Root>
     );
   }
 }

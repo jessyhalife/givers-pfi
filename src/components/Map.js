@@ -67,6 +67,7 @@ export default class MapGiver extends Component {
     this.filter = this.filter.bind(this);
     this.setMapRegion = this.setMapRegion.bind(this);
     this.giveHelp = this.giveHelp.bind(this);
+    this.saveHelp = this.saveHelp.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -144,9 +145,15 @@ export default class MapGiver extends Component {
       })
       .catch(error => {});
   }
-
+  saveHelp() {
+    this.props.navigation.goBack();
+  }
   giveHelp() {
-    this.setState({ helpModal: true });
+    this.props.navigation.navigate("HelpScreen", {
+      people_id: this.state.selected_id,
+      needs: this.state.needs
+    });
+    //this.setState({ helpModal: true });
   }
   _markerInfo(key) {
     this.setState({ selected_id: key });
@@ -187,6 +194,7 @@ export default class MapGiver extends Component {
           .catch(err => alert(err));
       });
   }
+
   async componentDidMount() {
     this.setState({ loading: true });
     const permissionOK = await PermissionsAndroid.check(
@@ -382,6 +390,7 @@ export default class MapGiver extends Component {
                 {this.state.activeMarker && (
                   <PeopleView
                     giveHelp={this.giveHelp}
+                    saveHelp={this.saveHelp}
                     data={this.state.activeMarker}
                     ages={this.state.ages}
                     needs={this.state.needs}
@@ -413,12 +422,15 @@ export default class MapGiver extends Component {
             </View>
           </View>
         </Modal>
-        <HelpModal
-          saveHelp={() => this.setState({ helpModal: false })}
+        {/* <HelpModal
+          saveHelp={() => {
+            this.props.navigation.goBack();
+            this.setState({ helpModal: false });
+          }}
           show={this.state.helpModal}
           needs={this.state.needs}
           people_id={this.state.selected_id}
-        ></HelpModal>
+        ></HelpModal> */}
       </Root>
     );
   }

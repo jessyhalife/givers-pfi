@@ -18,6 +18,7 @@ import NewPeople from "./src/views/map/NewPeople";
 import NewPoint from "./src/views/map/NewPoint";
 import Activity from "./src/views/Activity";
 import Profile from "./src/views/Profile";
+import HelpModal from "./src/components/HelpModal.js";
 // import { Icon } from "native-base";
 import { THEMECOLOR, THEMECOLORLIGHT } from "./src/const";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -49,6 +50,9 @@ const MapStackNavigator = createStackNavigator(
       navigationOptions: {
         title: "Nuevo punto de ayuda"
       }
+    },
+    HelpScreen: {
+      screen: HelpModal
     }
   },
   {
