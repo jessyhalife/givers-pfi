@@ -141,7 +141,7 @@ class NewPoint extends Component {
             index={3}
             next={this._next}
             prev={this._prev}
-            needs={this.state.needs}
+            needs={this.props.navigation.state.params.needs}
             title="¿Cómo se puede colaborar?"
             event={true}
           />

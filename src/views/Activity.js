@@ -1,29 +1,26 @@
 import React, { Component } from "react";
-import { View, ActivityIndicator, Text } from "react-native";
+import { View, ActivityIndicator, Text, StatusBar } from "react-native";
+import { Tabs, Tab, Header } from "native-base";
+import { THEMECOLOR } from "../const.js";
+const Activity = props => {
+  return (
+    <View>
+      <Header hasTabs>
+        <Text>Tu actividad</Text>
+      </Header>
+      <Tabs>
+        <Tab heading="Personas">
+          <Text>Acá van las personas</Text>
+        </Tab>
+        <Tab heading="Eventos">
+          <Text>Acá van los eventos</Text>
+        </Tab>
+        <Tab heading="Puntos de ayuda">
+          <Text>Acá van los puntos de ayuda</Text>
+        </Tab>
+      </Tabs>
+    </View>
+  );
+};
 
-export default class Activity extends Component {
-  state = {
-    data: ["not yet"]
-  };
-
-  componentDidMount() {
-    fetch(
-      "https://us-central1-givers-229af.cloudfunctions.net/webApi/helptypes"
-    )
-      .then(response => response.json())
-      .then(json => this.setState({ data: json }));
-  }
-
-  render() {
-    const { data } = this.state;
-    return (
-      <View>
-        <Text>
-          {data.map(x => {
-            return <Text> {x.description} </Text>;
-          })}
-        </Text>
-      </View>
-    );
-  }
-}
+export default Activity;

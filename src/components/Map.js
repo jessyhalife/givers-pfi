@@ -47,8 +47,8 @@ export default class MapGiver extends Component {
     this.state = {
       markers: [],
       evMarkers: [],
-      latitude: 37.421,
-      longitude: -122.083,
+      latitude: -34.6037389,
+      longitude: -58.3815704,
       active: false,
       activeMarker: null,
       ages: [],
@@ -206,7 +206,7 @@ export default class MapGiver extends Component {
       );
     }
     if (permissionOK || granted === PermissionsAndroid.RESULTS.GRANTED) {
-      this.watchID = navigator.geolocation.watchPosition(
+      navigator.geolocation.getCurrentPosition(
         position => {
           this.setState(
             {
@@ -219,7 +219,7 @@ export default class MapGiver extends Component {
           );
         },
         error => console.log(error),
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        { enableHighAccuracy: false, timeout: 50000 }
       );
     }
     firebaseApp
@@ -245,7 +245,7 @@ export default class MapGiver extends Component {
     longitudeDelta: LONGITUDE_DELTA
   });
   componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.watchID);
+    // navigator.geolocation.clearWatch(this.watchID);
   }
 
   setMapRegion = location => {
@@ -279,6 +279,15 @@ export default class MapGiver extends Component {
             ref={ref => {
               this.mapRef = ref;
             }}
+            onRegionChangeComplete={data => {
+              this.setState({
+                latitude: data.latitude,
+                longitude: data.longitude,
+                LATITUDE_DELTA: data.latitude_delta,
+                LONGITUDE_DELTA: data.longitude_delta
+              });
+              this.mapRef.animateToRegion(this.getMapRegion(), 200);
+            }}
             moveOnMarkerPress={true}
             showsUserLocation={true}
             style={styles.map}
@@ -288,6 +297,7 @@ export default class MapGiver extends Component {
             loadingEnabled={false}
             customMapStyle={mapStyle}
             provider={MapView.PROVIDER_GOOGLE}
+            initialRegion={this.getMapRegion()}
             region={this.getMapRegion()}
           >
             {this.state.markers.map(x => {

@@ -36,7 +36,7 @@ class LocationStep extends Component {
     validDate: true
   };
 
-  getCurrentLocation() {
+  async getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(
       position => {
         this.setLocation(position.coords, () => {
@@ -76,6 +76,7 @@ class LocationStep extends Component {
           this.GooglePlacesRef.setAddressText(
             json.results[0].formatted_address
           );
+          // this.mapRef.animateToRegion(this.state.initialRegion, 100);
           //this.userMarker.animateMarkerToCoordinate(this.state.marker, 2000);
         });
       });
@@ -194,12 +195,22 @@ class LocationStep extends Component {
               style={styles.map}
               region={this.state.initialRegion}
               followUserLocation={true}
-              ref={ref => (this.mapView = ref)}
+              onRegionChangeComplete={data => {
+                this.setState({
+                  initialRegion: {
+                    latitude: data.latitude,
+                    longitude: data.longitude,
+                    latitudeDelta: data.latitudeDelta,
+                    longitudeDelta: data.longitudeDelta
+                  }
+                });
+              }}
               zoomEnabled={true}
               showsUserLocation={true}
               onMapReady={() => {
                 this.setState({ mapReady: true });
               }}
+              initialRegion={this.state.initialRegion}
             >
               {this.state.mapReady &&
               this.state.marker.latitude !== null &&
@@ -215,10 +226,10 @@ class LocationStep extends Component {
                   }}
                   onDragEnd={e => {
                     this.setLocation(e.nativeEvent.coordinate, () => {
-                      this.mapView.animateToRegion(
-                        this.state.initialRegion,
-                        2000
-                      );
+                      // this.mapRef.animateToRegion(
+                      //   this.state.initialRegion,
+                      //   2000
+                      // );
                       Geocoder.from({
                         latitude: this.state.initialRegion.latitude,
                         longitude: this.state.initialRegion.longitude
