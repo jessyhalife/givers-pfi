@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, View, StyleSheet } from "react-native";
+import { Image, View, StyleSheet,StatusBar } from "react-native";
 import { Container, Button, Body, Text, Content, H1 } from "native-base";
 import { THEMECOLOR } from "../const";
 export default class Main extends Component {
@@ -9,6 +9,7 @@ export default class Main extends Component {
   render() {
     return (
       <Container>
+        <StatusBar backgroundColor={THEMECOLOR} barStyle="dark-content" />
         <Content padder>
           <View style={styles.header}>
             <Image
@@ -18,12 +19,7 @@ export default class Main extends Component {
           </View>
           <View style={styles.content}>
             <H1>Ayudandote a ayudar!</H1>
-            <Text>
-              Phasellus ac augue sed tellus malesuada maximus at mollis nisl.
-              Proin rutrum ipsum vitae Phasellus ac augue sed tellus malesuada
-              maximus at mollis nisl. Dui euismod pretium. Nunc sed eros nec
-              ligula ultrices pulvinar. Vestibulum tristique erat quis augue.
-            </Text>
+            <Text>¡Entre todos podemos dar una mano!</Text>
           </View>
           <View style={styles.buttons}>
             <Button

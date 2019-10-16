@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
-import { Input, Item, Button, H1 } from "native-base";
+import { Input, Item, Button, H1, Separator } from "native-base";
 import { THEMECOLOR } from "../../const.js";
 import Header from "../../components/header";
 import ButtonsWizard from "../../components/buttons_wizard";
@@ -76,6 +76,7 @@ class QtyComponent extends Component {
               />
             </Item>
           </View>
+          
           <View style={{ flex: 4, marginTop: 20, marginLeft: 20 }}>
             <H1 style={{ fontWeight: "bold" }}>Y sus edades?</H1>
             <View

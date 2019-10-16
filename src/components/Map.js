@@ -13,16 +13,7 @@ const { height, width } = Dimensions.get("window");
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
 import { PermissionsAndroid } from "react-native";
-import {
-  Fab,
-  Container,
-  Button,
-  Root,
-  Toast,
-  Header,
-  Body,
-  Spinner
-} from "native-base";
+import { Fab, Button, Root, Spinner } from "native-base";
 import SlidingUpPanel from "rn-sliding-up-panel";
 import PeopleView from "./PeopleView";
 import Geocoder from "react-native-geocoding";
@@ -179,16 +170,17 @@ export default class MapGiver extends Component {
             pers.address = add.results[0].formatted_address;
 
             this.setState({ activeMarker: pers }, () => {
-              this._panel.show(200, 10);
+              this._panel.show(200, 0);
               this.setState({ activePanel: true });
             });
-
             this.setState(
               {
                 latitude: pers.location.latitude,
                 longitude: pers.location.longitude
               },
-              () => {}
+              () => {
+                this.mapRef.animateToRegion(this.getMapRegion(), 1);
+              }
             );
           })
           .catch(err => alert(err));
@@ -214,7 +206,7 @@ export default class MapGiver extends Component {
               longitude: position.coords.longitude
             },
             () => {
-              this.mapRef.animateToRegion(this.getMapRegion(), 200);
+              // this.mapRef.animateToRegion(this.getMapRegion(), 200);
             }
           );
         },
@@ -255,7 +247,7 @@ export default class MapGiver extends Component {
         longitude: location.lng
       },
       () => {
-        this.mapRef.animateToRegion(this.getMapRegion());
+        // this.mapRef.animateToRegion(this.getMapRegion());
       }
     );
   };
@@ -279,25 +271,26 @@ export default class MapGiver extends Component {
             ref={ref => {
               this.mapRef = ref;
             }}
-            onRegionChangeComplete={data => {
-              this.setState({
-                latitude: data.latitude,
-                longitude: data.longitude,
-                LATITUDE_DELTA: data.latitude_delta,
-                LONGITUDE_DELTA: data.longitude_delta
-              });
-              this.mapRef.animateToRegion(this.getMapRegion(), 200);
-            }}
+            // onRegionChangeComplete={data => {
+            //   console.log(data);
+            //   this.setState({
+            //     latitude: data.latitude,
+            //     longitude: data.longitude,
+            //     LATITUDE_DELTA: data.latitude_delta,
+            //     LONGITUDE_DELTA: data.longitude_delta
+            //   });
+            //   // this.mapRef.animateToRegion(this.getMapRegion(), 200);
+            // }}
             moveOnMarkerPress={true}
             showsUserLocation={true}
             style={styles.map}
             followUserLocation
-            zoomEnabled
+            zoomEnabled={true}
             showsMyLocationButton={true}
             loadingEnabled={false}
             customMapStyle={mapStyle}
             provider={MapView.PROVIDER_GOOGLE}
-            initialRegion={this.getMapRegion()}
+            // initialRegion={this.getMapRegion()}
             region={this.getMapRegion()}
           >
             {this.state.markers.map(x => {
@@ -323,6 +316,7 @@ export default class MapGiver extends Component {
                   pinColor="green"
                   title={x.data.title}
                   description={x.data.description}
+                  onPress={() => {}}
                 ></Marker.Animated>
               );
             })}

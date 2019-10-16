@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import { THEMECOLOR } from "../const";
 import firebaseApp from "../config";
-import { Image, View, ActivityIndicator, Text, StyleSheet } from "react-native";
+import {
+  Image,
+  View,
+  ActivityIndicator,
+  Text,
+  StyleSheet,
+  StatusBar
+} from "react-native";
 
 export default class Welcome extends Component {
   constructor(props) {
@@ -28,6 +35,7 @@ export default class Welcome extends Component {
   render() {
     return (
       <View style={{ backgroundColor: THEMECOLOR, flex: 1 }}>
+        <StatusBar backgroundColor={THEMECOLOR} barStyle="dark-content" />
         <Image
           style={{
             height: 100,

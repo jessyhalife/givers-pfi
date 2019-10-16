@@ -52,7 +52,7 @@ export default {
   badgePadding: 0,
 
   // Button
-  buttonFontFamily: 'cabifycircularweb_book',
+  buttonFontFamily: 'Roboto',
   buttonDisabledBg: '#b5b5b5',
   buttonPadding: 6,
   get buttonPrimaryBg() {
@@ -126,7 +126,7 @@ export default {
   brandPrimary: '#ff6347',
   brandInfo: '#62B1F6',
   brandSuccess: '#5cb85c',
-  brandDanger: '#ff6347',
+  brandDanger: '#d9534f',
   brandWarning: '#f0ad4e',
   brandDark: '#000',
   brandLight: '#f4f4f4',
@@ -143,7 +143,7 @@ export default {
 
   // Font
   DefaultFontSize: 16,
-  fontFamily: 'cabifycircularweb_book',
+  fontFamily: 'Roboto',
   fontSizeBase: 15,
   get fontSizeH1() {
     return this.fontSizeBase * 1.8;
@@ -269,7 +269,7 @@ export default {
   },
 
   // Title
-  titleFontfamily: 'cabifycircularweb_book',
+  titleFontfamily: 'Roboto',
   titleFontSize: 19,
   subTitleFontSize: 14,
   subtitleColor: '#FFF',

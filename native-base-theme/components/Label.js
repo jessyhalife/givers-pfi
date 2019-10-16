@@ -2,11 +2,10 @@
 
 export default () => {
   const labelTheme = {
-    ".focused": {
+    '.focused': {
       width: 0
     },
-    fontSize: 17,
-    fontfamily: "cabifycircularweb_book"
+    fontSize: 17
   };
 
   return labelTheme;
