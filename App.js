@@ -18,6 +18,7 @@ import NewPeople from "./src/views/map/NewPeople";
 import NewPoint from "./src/views/map/NewPoint";
 import Activity from "./src/views/Activity";
 import Profile from "./src/views/Profile";
+import Filters from "./src/components/filters";
 import HelpModal from "./src/components/HelpModal.js";
 // import { Icon } from "native-base";
 import { THEMECOLOR, THEMECOLORLIGHT } from "./src/const";
@@ -28,16 +29,6 @@ const MapStackNavigator = createStackNavigator(
   {
     MapScreen: {
       screen: MapScreen
-
-      // navigationOptions: {
-      //   title: "Givers",
-      //   headerTitleStyle: {
-      //     textAlign: "center"
-      //   },
-      //   headerStyle: {
-      //     backgroundColor: "#f3f3f3"
-      //   }
-      // }
     },
     NewPeopleScreen: {
       screen: NewPeople,
@@ -52,7 +43,16 @@ const MapStackNavigator = createStackNavigator(
       }
     },
     HelpScreen: {
-      screen: HelpModal
+      screen: HelpModal,
+      navigationOptions: {
+        tabBarVisible: false
+      }
+    },
+    FilterScreen: {
+      screen: Filters,
+      navigationOptions: {
+        tabBarVisible: false
+      }
     }
   },
   {
@@ -60,7 +60,16 @@ const MapStackNavigator = createStackNavigator(
     headerMode: "none"
   }
 );
+MapStackNavigator.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
 
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarVisible
+  };
+};
 const MapTabNavigator = createBottomTabNavigator(
   {
     Explore: {

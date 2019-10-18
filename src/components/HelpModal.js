@@ -14,8 +14,11 @@ import { THEMECOLOR } from "../const.js";
 import firebaseApp from "../config/config";
 import Header from "./header";
 export default class HelpModal extends Component {
+
+
   state = {
-    needs: []
+    needs: [],
+    comments: ""
   };
 
   save() {
@@ -26,7 +29,8 @@ export default class HelpModal extends Component {
         })
         .map(x => {
           return { id: x.id };
-        })
+        }),
+      comments: this.state.comments
     };
     console.log(body);
     firebaseApp
@@ -34,7 +38,7 @@ export default class HelpModal extends Component {
       .currentUser.getIdToken(true)
       .then(idToken => {
         fetch(
-          `http://10.0.2.2:5001/givers-229af/us-central1/webApi/people/${this.props.navigation.state.params.people_id}/help`,
+          `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/${this.props.navigation.state.params.people_id}/help`,
           {
             method: "POST",
             body: JSON.stringify(body),
@@ -145,6 +149,8 @@ export default class HelpModal extends Component {
             ¿Algún comentario?
           </Text>
           <TextInput
+            value={this.state.comments}
+            onChange={ev => this.setState({ comments: ev.nativeEvent.value })}
             multiline={true}
             style={{
               height: 100,

@@ -9,6 +9,7 @@ import DetailsComponent from "../crud/details.js";
 import NeedsComponent from "../crud/needs.js";
 import PointTypeComponent from "../crud/point.type.js";
 import MultiStep from "react-native-multistep-wizard";
+import firebaseApp from "../../config/config";
 
 class NewPoint extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -74,7 +75,6 @@ class NewPoint extends Component {
   }
 
   _submit(prop) {
-    alert("Bye");
     var body = {
       people: {
         location: {
@@ -87,17 +87,31 @@ class NewPoint extends Component {
         details: this.state.details
       }
     };
-    console.log(JSON.stringify(body));
-    fetch("https://us-central1-givers-229af.cloudfunctions.net/webApi/people", {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: { "Content-Type": "application/json" }
-    })
-      .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(error => console.log("Error!!: ", error));
+    firebaseApp
+      .auth()
+      .currentUser.getIdToken(false)
+      .then(idToken => {
+        fetch(
+          "https://us-central1-givers-229af.cloudfunctions.net/webApi/people",
+          {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: idToken
+            }
+          }
+        )
+          .then(res => res.json())
+          .then(data => console.log(data))
+          .catch(error => console.log("Error!!: ", error));
 
-    this.props.navigation.goBack();
+        this.props.navigation.goBack();
+      })
+      .catch(err => {
+        alert(err);
+        this.props.navigation.goBack();
+      });
   }
   render() {
     const steps = [

@@ -1,61 +1,27 @@
-export function create(person) {
-  fetch(`https://us-central1-givers-229af.cloudfunctions.net/webApi/people`)
-    .then(response => response.json())
-    .then(json => {
-      return json;
-    });
-}
+import firebaseApp from "../config/config";
 
-export function getById(id) {
-  fetch(
-    `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/${key}`
-  )
-    .then(response => response.json())
-    .then(json => {
-      return json;
+export default postHelp = (people_id, body) => {
+  firebaseApp
+    .auth()
+    .currentUser.getIdToken(true)
+    .then(idToken => {
+      fetch(
+        `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/${this.props.navigation.state.params.people_id}/help`,
+        {
+          method: "POST",
+          body: JSON.stringify(body),
+          headers: new Headers({
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: idToken
+          })
+        }
+      )
+        .then(res => {
+          console.log(res);
+          return res.json();
+        })
+        .then(data => data)
+        .catch(error => console.log(error));
     });
-}
-
-/* POST*/
-export function seen() {
-  fetch(
-    `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/${key}/seen`
-  )
-    .then(response => response.json())
-    .then(json => {
-      return json;
-    });
-}
-
-/* POST*/
-export function notSeen() {
-  fetch(
-    `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/${key}/notseen`
-  )
-    .then(response => response.json())
-    .then(json => {
-      return json;
-    });
-}
-
-/* POST*/
-export function help() {
-  fetch(
-    `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/${key}/help`
-  )
-    .then(response => response.json())
-    .then(json => {
-      return json;
-    });
-}
-
-/* GET */
-export function getByUserId(userId) {
-  fetch(
-    `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/${key}/byuser`
-  )
-    .then(response => response.json())
-    .then(json => {
-      return json;
-    });
-}
+};

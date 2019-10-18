@@ -16,7 +16,6 @@ import {
   Label,
   Toast,
   Text,
-  Content,
   Button,
   CheckBox,
   ListItem,
@@ -32,7 +31,6 @@ export default class Register extends Component {
     email: null,
     username: null,
     password: null,
-    rePassword: null,
     formOK: false,
     loading: false,
     terms: false,
@@ -83,16 +81,19 @@ export default class Register extends Component {
     return (
       <Root>
         <Container>
-          <ScrollView>
-            <Content>
-              <Header
-                showBack={true}
-                title="Crear nueva cuenta"
-                back={() => {
-                  this.props.navigation.navigate("Main");
-                }}
-              />
-
+          <View style={{ marginTop: 30 }}>
+            <Header title="Crear nueva cuenta" />
+            <View
+              style={{
+                backgroundColor: "white",
+                borderRadius: 60,
+                marginLeft: 30,
+                marginRight: 30,
+                elevation: 3,
+                padding: 10,
+                marginTop: 40
+              }}
+            >
               <View style={styles.content}>
                 <Form>
                   <Item error={this.state.error}>
@@ -147,9 +148,13 @@ export default class Register extends Component {
               </View>
               <View style={styles.buttons}>
                 <Button
+                  disabled={!this.state.terms}
                   rounded
                   onPress={this._handleRegister}
-                  style={{ padding: 20, backgroundColor: THEMECOLOR }}
+                  style={{
+                    padding: 20,
+                    backgroundColor: this.state.terms ? THEMECOLOR : "lightgray"
+                  }}
                 >
                   {this.state.loading ? (
                     <ActivityIndicator size="small" color="white" />
@@ -166,8 +171,8 @@ export default class Register extends Component {
                   <Text style={{ color: THEMECOLOR }}>Iniciar sesión</Text>
                 </Button>
               </View>
-            </Content>
-          </ScrollView>
+            </View>
+          </View>
         </Container>
       </Root>
     );

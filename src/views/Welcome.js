@@ -16,17 +16,12 @@ export default class Welcome extends Component {
     this._checkAuth = this._checkAuth.bind(this);
   }
   componentDidMount() {
-    setTimeout(() => {
-      this._checkAuth();
-    }, 2000);
+    this._checkAuth();
   }
   _checkAuth = () => {
     firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
-        this.props.navigation.navigate("MapScreen", {
-          toast: true,
-          toastMessage: `Hola ${user.displayName} hoy es un gran día para dar una mano!`
-        });
+        this.props.navigation.navigate("MapScreen");
       } else {
         this.props.navigation.navigate("Main");
       }

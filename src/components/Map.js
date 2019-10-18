@@ -168,9 +168,9 @@ export default class MapGiver extends Component {
         })
           .then(add => {
             pers.address = add.results[0].formatted_address;
-
+            pers.loadingHelp = true;
             this.setState({ activeMarker: pers }, () => {
-              this._panel.show(200, 0);
+              this._panel.show(350, 0);
               this.setState({ activePanel: true });
             });
             this.setState(
@@ -180,13 +180,45 @@ export default class MapGiver extends Component {
               },
               () => {
                 this.mapRef.animateToRegion(this.getMapRegion(), 1);
+                this.getHelpToPeople(key, this.state.idToken);
               }
             );
           })
           .catch(err => alert(err));
       });
   }
-
+  getHelpToPeople = (people_id, idToken) => {
+    fetch(
+      `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/${people_id}/help`,
+      {
+        method: "GET",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: idToken
+        })
+      }
+    )
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        let prev = this.state.activeMarker;
+        prev.loadingHelp = false;
+        prev.help = json;
+        this.setState({
+          activeMarker: prev
+        });
+      })
+      .catch(error => {
+        let prev = this.state.activeMarker;
+        prev.loadingHelp = false;
+        prev.help = [];
+        this.setState({
+          activeMarker: prev
+        });
+      });
+  };
   async componentDidMount() {
     this.setState({ loading: true });
     const permissionOK = await PermissionsAndroid.check(
@@ -253,12 +285,16 @@ export default class MapGiver extends Component {
   };
 
   filter = (markers, evMarkers) => {
-    this.setState({ markers, evMarkers });
+    this.setState({
+      markers: markers ? markers : [],
+      evMarkers: evMarkers ? evMarkers : []
+    });
   };
   render() {
     return (
       <Root>
         <Search
+          navigation={this.props.navigation}
           filtrar={this.filter}
           needs={this.state.needs}
           ages={this.state.ages}
@@ -340,17 +376,20 @@ export default class MapGiver extends Component {
                     })
                   }
                 >
-                  <Icon name="adduser" size={18} style={{ color: "#000" }} />
+                  <Icon name="adduser" size={20} style={{ color: "#000" }} />
                 </Button>
                 <Button
-                  style={{ backgroundColor: "#fff", borderColor: "#eee" }}
+                  style={{
+                    backgroundColor: "#fff",
+                    borderColor: "#eee"
+                  }}
                   onPress={() =>
                     this.props.navigation.navigate("NewPointScreen", {
                       needs: this.state.needs
                     })
                   }
                 >
-                  <Icon name="pushpin" size={18} style={{ color: "#000" }} />
+                  <Icon name="pushpin" size={20} style={{ color: "#000" }} />
                 </Button>
               </Fab>
             ) : (
@@ -396,6 +435,8 @@ export default class MapGiver extends Component {
                     giveHelp={this.giveHelp}
                     saveHelp={this.saveHelp}
                     data={this.state.activeMarker}
+                    help={undefined}
+                    loadingHelp={true}
                     ages={this.state.ages}
                     needs={this.state.needs}
                     seen={this.seen}

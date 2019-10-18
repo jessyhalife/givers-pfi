@@ -15,7 +15,8 @@ import {
   Button,
   Badge,
   Root,
-  Toast
+  Toast,
+  Icon
 } from "native-base";
 import Header from "../components/header";
 
@@ -66,16 +67,25 @@ export default class Main extends Component {
   render() {
     return (
       <Root>
-        <Container>
-          <ScrollView>
-            <Content>
-              <View style={{ padding: 30, marginTop: 100 }}>
-                <H1>Iniciar sesión</H1>
-              </View>
-              <View style={styles.content}>
+        <Container style={{ backgroundColor: "#fcfcfc" }}>
+          <View style={{ marginTop: 30 }}>
+            <Header title="Iniciar sesión"></Header>
+            <View
+              style={{
+                backgroundColor: "white",
+                borderRadius: 60,
+                marginLeft: 30,
+                marginRight: 30,
+                elevation: 3,
+                padding: 20,
+                marginTop: 100
+              }}
+            >
+              <View style={{ ...styles.content }}>
                 <Form>
                   <Item error={this.state.error}>
-                    <Label>Email</Label>
+                    {/* <Icon></Icon><Label>Email</Label> */}
+                    <Icon name="person" style={{ color: "gray" }}></Icon>
                     <Input
                       onChange={e => {
                         this.setState({ email: e.nativeEvent.text });
@@ -85,7 +95,7 @@ export default class Main extends Component {
                     />
                   </Item>
                   <Item last error={this.state.error}>
-                    <Label>Contraseña</Label>
+                    <Icon name="lock" style={{ color: "gray" }}></Icon>
                     <Input
                       shake={true}
                       onChange={e => {
@@ -144,8 +154,23 @@ export default class Main extends Component {
                   </Text>
                 </Button>
               </View>
-            </Content>
-          </ScrollView>
+            </View>
+          </View>
+          <View
+            style={{
+              marginTop: 10,
+              flexDirection: "column",
+              alignItems: "center"
+            }}
+          >
+            <Text style={{ color: "gray" }}>Todavía no tenés una cuenta?</Text>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate("Register")}
+            >
+              <Text style={{ color: "black" }}>Registrate</Text>
+            </Button>
+          </View>
         </Container>
       </Root>
     );

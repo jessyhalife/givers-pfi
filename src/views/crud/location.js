@@ -76,7 +76,7 @@ class LocationStep extends Component {
           this.GooglePlacesRef.setAddressText(
             json.results[0].formatted_address
           );
-          // this.mapRef.animateToRegion(this.state.initialRegion, 100);
+          this.mapRef.animateToRegion(this.state.initialRegion, 100);
           //this.userMarker.animateMarkerToCoordinate(this.state.marker, 2000);
         });
       });
@@ -206,11 +206,9 @@ class LocationStep extends Component {
                 });
               }}
               zoomEnabled={true}
-              showsUserLocation={true}
               onMapReady={() => {
                 this.setState({ mapReady: true });
               }}
-              initialRegion={this.state.initialRegion}
             >
               {this.state.mapReady &&
               this.state.marker.latitude !== null &&

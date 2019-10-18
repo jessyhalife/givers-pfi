@@ -14,32 +14,41 @@ const Header = props => {
         marginBottom: 20
       }}
     >
-      {props.showBack ? (
-        <TouchableOpacity onPress={() => props.back()}>
-          <View
+      <View>
+        {props.showBack ? (
+          <TouchableOpacity
             style={{
-              flexDirection: "row",
-              marginBottom: 20,
-              alignItems: "center"
+              backgroundColor: "#fdfdfd",
+              borderRadius: 50,
+              padding: 10
             }}
+            onPress={() => props.back()}
           >
-            <Icon name="arrowleft" size={15} color="black" />
-            <Text
+            <View
               style={{
-                marginLeft: 2,
-                fontSize: 15,
-                alignSelf: "center",
-                color: "black"
+                flexDirection: "row",
+                marginBottom: 20,
+                alignItems: "center"
               }}
             >
-              Atrás
-            </Text>
-          </View>
-        </TouchableOpacity>
-      ) : (
-        undefined
-      )}
-      <H1 style={{ fontWeight: "bold", color: "black" }}>{props.title}</H1>
+              <Icon name="arrowleft" size={15} color="black" />
+              <Text
+                style={{
+                  marginLeft: 2,
+                  fontSize: 15,
+                  alignSelf: "center",
+                  color: "black"
+                }}
+              >
+                ATRÁS
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ) : (
+          undefined
+        )}
+        <H1 style={{ fontWeight: "bold", color: "black" }}>{props.title}</H1>
+      </View>
     </View>
   );
 };

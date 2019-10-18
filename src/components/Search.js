@@ -16,43 +16,32 @@ import Modal from "react-native-modal";
 import { THEMECOLOR, THEMECOLORLIGHT } from "../const.js";
 Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 class Search extends Component {
-  state = {
-    modal: false,
-    filters: 0,
-    needs: [],
-    ages: [],
-    showNeeds: false,
-    showAges: false,
-    types: {
-      personas: true,
-      eventos: true,
-      points: true
-    }
-  };
-
-  filter = () => {
-    var { people, events } = this.props;
-    if (!this.state.types.personas) {
-      people = [];
-    } else {
-      if (this.state.needs.length > 0) {
-        people = people.filter(x => {
-          return this._containsAll(x.needs, this.state.needs);
-        });
+  constructor(props) {
+    super(props);
+    this.state = {
+      modal: false,
+      filters: 0,
+      needs: [],
+      ages: [],
+      showNeeds: false,
+      showAges: false,
+      types: {
+        personas: true,
+        eventos: true,
+        points: true
       }
-    }
-    console.log(events);
-    if (!this.state.types.events) {
-      events = [];
-    } else {
-      if (this.state.needs.length > 0) {
-        events = events.filter(x => {
-          return this._containsAll(x.needs, this.state.needs);
-        });
-      }
-    }
+    };
+    this.filter = this.filter.bind(this);
+  }
 
-    this.props.filtrar(people, events);
+  filter = (people, events, filters) => {
+    alert("TEST");
+    var { showNeeds, showAges, types, needs, ages } = filters;
+    alert(filters);
+    alert(types.personas);
+    this.setState({ showNeeds, showAges, types, needs, ages }, () => {
+      this.props.filtrar(people, events);
+    });
   };
   _containsAll(array, array2) {
     var exists = true;
@@ -80,8 +69,7 @@ class Search extends Component {
     this.setState({ needs: prev });
   }
   componentDidMount() {
-    console.log("monto");
-    console.log(this.state.needs);
+    
   }
   render() {
     return (
@@ -164,18 +152,27 @@ class Search extends Component {
                 flexDirection: "row",
                 marginRight: 10
               }}
-              onPress={() => this.setState({ modal: true })}
+              onPress={() => {
+                this.props.navigation.navigate("FilterScreen", {
+                  needs: this.props.needs,
+                  filter: this.filter,
+                  alert: () => {
+                    alert("hola");
+                  }
+                });
+                this.setState({ modal: true });
+              }}
             >
               <Text
                 style={{
-                  fontSize: 14,
+                  fontSize: 16,
                   fontWeight: "bold",
                   marginRight: 3,
                   color: "#3175f6",
                   alignSelf: "center"
                 }}
               >
-                Filtrar
+                FILTROS
               </Text>
               <Icon
                 size={14}
@@ -185,7 +182,7 @@ class Search extends Component {
               ></Icon>
             </TouchableOpacity>
           </View>
-          <View>
+          {/* <View>
             <Modal
               backdropOpacity={0.3}
               isVisible={this.state.modal}
@@ -373,7 +370,7 @@ class Search extends Component {
                 </View>
               </View>
             </Modal>
-          </View>
+          </View> */}
         </View>
       </View>
     );

@@ -1,9 +1,36 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
-import { Icon, Button, Separator, ListItem } from "native-base";
+import { Icon, Button, Separator, ListItem, Spinner } from "native-base";
 import { THEMECOLOR } from "../const.js";
 export default PeopleView = props => {
   const { data, ages, needs } = props;
+  renderHelp = () => {
+    if (data.loadingHelp) {
+      return <Spinner color={THEMECOLOR}></Spinner>;
+    }
+    if (data.help) {
+      console.log(data.help);
+      return <Text>Encontre ayuda jeje</Text>;
+    } else {
+      return (
+        <View>
+          <Image
+            style={{
+              height: 150,
+              width: 150,
+              marginTop: 10,
+              resizeMode: "contain",
+              alignSelf: "center"
+            }}
+            source={require("../assets/img/empty.png")}
+          />
+          <Text style={{ alignSelf: "center" }}>
+            No hay ayuda registrada aún
+          </Text>
+        </View>
+      );
+    }
+  };
   return (
     <View style={{ flexDirection: "column", justifyContent: "space-between" }}>
       <View style={{ flexDirection: "row" }}>
@@ -159,7 +186,8 @@ export default PeopleView = props => {
       <Separator style={{ marginTop: 40 }} bordered></Separator>
       <View style={{ margin: 15 }}>
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>Ayuda recibida</Text>
-        {!data.help ? (
+        {renderHelp()}
+        {/* {!help ? (
           <View>
             <Image
               style={{
@@ -177,9 +205,9 @@ export default PeopleView = props => {
           </View>
         ) : (
           <ListItem>
-            <Text>Caroline Aaron</Text>
+            <Text></Text>
           </ListItem>
-        )}
+        )} */}
       </View>
     </View>
   );

@@ -54,11 +54,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingLeft: 30,
     paddingRight: 30,
-    fontFamily: "cabifycircularweb_book"
+    
+    alignItems: "center",
   },
   buttons: {
     alignItems: "center",
     marginTop: 30,
-    fontFamily: "cabifycircularweb_book"
+    
   }
 });
