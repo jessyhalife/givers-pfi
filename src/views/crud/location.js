@@ -36,7 +36,7 @@ class LocationStep extends Component {
     validDate: true
   };
 
-  async getCurrentLocation() {
+  getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(
       position => {
         this.setLocation(position.coords, () => {

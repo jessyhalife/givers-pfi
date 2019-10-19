@@ -16,7 +16,10 @@ export default class Welcome extends Component {
     this._checkAuth = this._checkAuth.bind(this);
   }
   componentDidMount() {
-    this._checkAuth();
+    alert("hola");
+    setTimeout(() => {
+      this._checkAuth();
+    }, 1000);
   }
   _checkAuth = () => {
     firebaseApp.auth().onAuthStateChanged(user => {

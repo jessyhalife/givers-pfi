@@ -36,6 +36,8 @@ export default class MapGiver extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      real_markers: [],
+      real_events: [],
       markers: [],
       evMarkers: [],
       latitude: -34.6037389,
@@ -62,7 +64,17 @@ export default class MapGiver extends Component {
   }
 
   componentWillReceiveProps(props) {
-    this.setState({ markers: props.people, evMarkers: props.events }, () => {});
+    this.setState(
+      {
+        markers: props.people,
+        real_events: props.events,
+        real_people: props.people,
+        evMarkers: props.events
+      },
+      () => {
+        console.log(this.state.real_events.length);
+      }
+    );
   }
 
   seen = id => {
@@ -285,11 +297,13 @@ export default class MapGiver extends Component {
   };
 
   filter = (markers, evMarkers) => {
+    console.log(evMarkers);
     this.setState({
       markers: markers ? markers : [],
       evMarkers: evMarkers ? evMarkers : []
     });
   };
+
   render() {
     return (
       <Root>
@@ -298,8 +312,8 @@ export default class MapGiver extends Component {
           filtrar={this.filter}
           needs={this.state.needs}
           ages={this.state.ages}
-          people={this.props.people}
-          events={this.props.events}
+          people={this.state.real_people}
+          events={this.state.real_events}
           setMapRegion={this.setMapRegion}
         ></Search>
         <View style={styles.container}>
@@ -349,7 +363,7 @@ export default class MapGiver extends Component {
                     latitude: Number(x.data.location.latitude),
                     longitude: Number(x.data.location.longitude)
                   }}
-                  pinColor="green"
+                  pinColor="#0083ff"
                   title={x.data.title}
                   description={x.data.description}
                   onPress={() => {}}
@@ -467,15 +481,6 @@ export default class MapGiver extends Component {
             </View>
           </View>
         </Modal>
-        {/* <HelpModal
-          saveHelp={() => {
-            this.props.navigation.goBack();
-            this.setState({ helpModal: false });
-          }}
-          show={this.state.helpModal}
-          needs={this.state.needs}
-          people_id={this.state.selected_id}
-        ></HelpModal> */}
       </Root>
     );
   }

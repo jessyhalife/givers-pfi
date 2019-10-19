@@ -142,6 +142,7 @@ class NeedsComponent extends Component {
             ></FlatList>
           </View>
           <ButtonsWizard
+            titleSiguiente={this.props.event ? "GUARDAR" : "SIGUIENTE"}
             showAnterior={true}
             siguiente={() => {
               this.props.saveState(this.props.index, {
@@ -151,6 +152,7 @@ class NeedsComponent extends Component {
                     return { id: y.id };
                   })
               });
+
               this.props.next({
                 needs: this.state.needs
                   .filter(x => x.active)

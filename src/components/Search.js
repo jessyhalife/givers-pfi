@@ -35,10 +35,7 @@ class Search extends Component {
   }
 
   filter = (people, events, filters) => {
-    alert("TEST");
     var { showNeeds, showAges, types, needs, ages } = filters;
-    alert(filters);
-    alert(types.personas);
     this.setState({ showNeeds, showAges, types, needs, ages }, () => {
       this.props.filtrar(people, events);
     });
@@ -57,20 +54,18 @@ class Search extends Component {
     return exists;
   }
 
-  changeNeed(id) {
-    let prev = this.state.needs ? this.state.needs : [];
+  // changeNeed(id) {
+  //   let prev = this.state.needs ? this.state.needs : [];
 
-    if (!prev.some(x => x === id)) {
-      prev.push(id);
-    } else {
-      prev = prev.filter(x => x !== id);
-    }
+  //   if (!prev.some(x => x === id)) {
+  //     prev.push(id);
+  //   } else {
+  //     prev = prev.filter(x => x !== id);
+  //   }
 
-    this.setState({ needs: prev });
-  }
-  componentDidMount() {
-    
-  }
+  //   this.setState({ needs: prev });
+  // }
+  componentDidMount() {}
   render() {
     return (
       <View>
@@ -154,11 +149,14 @@ class Search extends Component {
               }}
               onPress={() => {
                 this.props.navigation.navigate("FilterScreen", {
+                  events: this.props.events,
+                  people: this.props.people,
                   needs: this.props.needs,
                   filter: this.filter,
-                  alert: () => {
-                    alert("hola");
-                  }
+                  ages: this.props.ages,
+                  showNeeds: this.state.showNeeds,
+                  showAges: this.state.showAges,
+                  types: this.state.types
                 });
                 this.setState({ modal: true });
               }}
@@ -182,195 +180,6 @@ class Search extends Component {
               ></Icon>
             </TouchableOpacity>
           </View>
-          {/* <View>
-            <Modal
-              backdropOpacity={0.3}
-              isVisible={this.state.modal}
-              animationIn="slideInUp"
-              style={{ margin: 50 }}
-              // customBackdrop={<View style={{ flex: 1 }} />}
-            >
-              <View style={{ elevation: 4 }}>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    backgroundColor: "white",
-                    padding: 20
-                  }}
-                >
-                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                    Filtrar por:
-                  </Text>
-
-                  <View
-                    style={{
-                      marginTop: 20,
-                      flexDirection: "row",
-                      justifyContent: "space-between"
-                    }}
-                  >
-                    <Text>Personas</Text>
-                    <Switch
-                      trackColor={{ true: THEMECOLORLIGHT }}
-                      thumbColor={THEMECOLOR}
-                      onValueChange={() =>
-                        this.setState({
-                          types: {
-                            ...this.state.types,
-                            personas: !this.state.types.personas
-                          }
-                        })
-                      }
-                      value={this.state.types.personas}
-                    ></Switch>
-                  </View>
-                  <View
-                    style={{
-                      marginTop: 20,
-                      flexDirection: "row",
-                      justifyContent: "space-between"
-                    }}
-                  >
-                    <Text>Eventos</Text>
-                    <Switch
-                      trackColor={{ true: THEMECOLORLIGHT }}
-                      thumbColor={THEMECOLOR}
-                      onValueChange={() =>
-                        this.setState({
-                          types: {
-                            ...this.state.types,
-                            eventos: !this.state.types.eventos
-                          }
-                        })
-                      }
-                      value={this.state.types.eventos}
-                    ></Switch>
-                  </View>
-                  <View
-                    style={{
-                      marginTop: 20,
-                      flexDirection: "row",
-                      justifyContent: "space-between"
-                    }}
-                  >
-                    <Text>Puntos de ayuda</Text>
-                    <Switch
-                      trackColor={{ true: THEMECOLORLIGHT }}
-                      thumbColor={THEMECOLOR}
-                      onValueChange={() =>
-                        this.setState({
-                          types: {
-                            ...this.state.types,
-                            points: !this.state.types.points
-                          }
-                        })
-                      }
-                      value={this.state.types.points}
-                    ></Switch>
-                  </View>
-                  <View
-                    style={{
-                      borderColor: "#eee",
-                      marginTop: 15,
-                      marginBottom: 10,
-                      borderBottomWidth: 1
-                    }}
-                  />
-                  <View
-                    style={
-                      this.state.showNeeds ? { height: 100 } : { undefined }
-                    }
-                  >
-                    <TouchableOpacity
-                      style={{ flexDirection: "row" }}
-                      onPress={() =>
-                        this.setState({ showNeeds: !this.state.showNeeds })
-                      }
-                    >
-                      <Text
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: 16,
-                          marginRight: 10
-                        }}
-                      >
-                        Tipo de ayuda
-                      </Text>
-                      <Icon
-                        style={{ alignSelf: "center" }}
-                        name="arrowdown"
-                      ></Icon>
-                    </TouchableOpacity>
-                    {this.state.showNeeds ? (
-                      <ScrollView>
-                        {this.props.needs.map(n => {
-                          return (
-                            <ListItem last key={n.id}>
-                              <CheckBox
-                                onPress={() => {
-                                  this.changeNeed(n.id);
-                                }}
-                                checked={
-                                  this.state.needs.filter(x => x === n.id)
-                                    .length == 1
-                                }
-                                style={{ marginRight: 10 }}
-                              ></CheckBox>
-                              <Text style={{ marginLeft: 10 }}>
-                                {n.data.description}
-                              </Text>
-                            </ListItem>
-                          );
-                        })}
-                      </ScrollView>
-                    ) : (
-                      undefined
-                    )}
-                  </View>
-                  <View style={{ marginTop: 6 }}>
-                    <TouchableOpacity
-                      style={{ flexDirection: "row" }}
-                      onPress={() =>
-                        this.setState({ showAges: !this.state.showAges })
-                      }
-                    >
-                      <Text
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: 16,
-                          marginRight: 10
-                        }}
-                      >
-                        Edades
-                      </Text>
-                      <Icon
-                        style={{ alignSelf: "center" }}
-                        name="arrowdown"
-                      ></Icon>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <View style={{ textAlign: "center" }}>
-                  <Button
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      backgroundColor: THEMECOLOR,
-                      width: "100%"
-                    }}
-                    onPress={() => {
-                      this.filter();
-                      this.setState({ modal: false });
-                    }}
-                  >
-                    <Text style={{ color: "white", fontWeight: "bold" }}>
-                      Aplicar
-                    </Text>
-                  </Button>
-                </View>
-              </View>
-            </Modal>
-          </View> */}
         </View>
       </View>
     );

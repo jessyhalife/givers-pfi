@@ -44,10 +44,7 @@ export default class WhenComponent extends Component {
           timeStart,
           timeEnd
         },
-        () => {
-          alert(this.state.dateStart);
-          alert(this.state.dateEnd);
-        }
+        () => {}
       );
     }
     this.getHours();
@@ -293,6 +290,8 @@ export default class WhenComponent extends Component {
                 timeStart: this.state.timeStart,
                 timeEnd: this.state.timeEnd
               });
+              console.log(this.state.dateStart);
+              console.log(this.state.dateEnd);
               this.props.next({
                 title: this.state.title,
                 description: this.state.description,

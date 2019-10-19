@@ -45,7 +45,13 @@ class NewPoint extends Component {
     longitude: 0,
     type: "",
     needs: [],
-    details: ""
+    details: "",
+    title: "",
+    description: "",
+    dateStart: new Date(),
+    dateEnd: new Date(),
+    timeStart: "00:00",
+    timeEnd: "00:00"
   };
   componentDidMount() {
     this.props.navigation.setParams({
@@ -76,23 +82,29 @@ class NewPoint extends Component {
 
   _submit(prop) {
     var body = {
-      people: {
+      event: {
         location: {
           latitude: this.state.latitude,
           longitude: this.state.longitude
         },
-        qty: this.state.qty,
-        needs: this.state.needs,
-        ages: this.state.ages,
-        details: this.state.details
+        title: this.state.title,
+        description: this.state.description,
+        needs: prop.needs,
+        type: this.state.type,
+        startDate: this.state.dateStart,
+        endDate: this.state.dateEnd,
+        startTime: this.state.timeStart,
+        endTime: this.state.timeEnd
       }
     };
+    console.log(JSON.stringify(body));
     firebaseApp
       .auth()
       .currentUser.getIdToken(false)
       .then(idToken => {
+        console.log(idToken);
         fetch(
-          "https://us-central1-givers-229af.cloudfunctions.net/webApi/people",
+          "https://us-central1-givers-229af.cloudfunctions.net/webApi/events/",
           {
             method: "POST",
             body: JSON.stringify(body),
@@ -153,7 +165,7 @@ class NewPoint extends Component {
         component: (
           <NeedsComponent
             index={3}
-            next={this._next}
+            next={this._submit}
             prev={this._prev}
             needs={this.props.navigation.state.params.needs}
             title="¿Cómo se puede colaborar?"

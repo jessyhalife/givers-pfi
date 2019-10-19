@@ -12,22 +12,32 @@ import { THEMECOLOR, THEMECOLORLIGHT } from "../const.js";
 import Icon from "react-native-vector-icons/AntDesign";
 
 export default class Filters extends Component {
-  state = {
-    modal: false,
-    filters: 0,
-    needs: [],
-    ages: [],
-    showNeeds: false,
-    showAges: false,
-    types: {
-      personas: true,
-      eventos: true,
-      points: true
-    }
-  };
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      modal: false,
+      filters: 0,
+      needs: [],
+      ages: [],
+      showNeeds: false,
+      showAges: false,
+      types: {
+        personas: true,
+        eventos: true,
+        points: true
+      }
+    };
+    this.filtrar = this.filtrar.bind(this);
+    this.changeNeed = this.changeNeed.bind(this);
+  }
+  componentDidMount() {
+    var { showNeeds, types, showAges } = this.props.navigation.state.params;
+    //TODO: load needs and ages
+    this.setState({ showNeeds, showAges, types });
+  }
   filtrar = () => {
-    var { people, events } = this.props;
+    var { people, events } = this.props.navigation.state.params;
+
     if (!this.state.types.personas) {
       people = [];
     } else {
@@ -37,16 +47,16 @@ export default class Filters extends Component {
         });
       }
     }
-    if (!this.state.types.events) {
+    if (!this.state.types.eventos) {
       events = [];
     } else {
+      console.log("EVENTS!!");
       if (this.state.needs.length > 0) {
         events = events.filter(x => {
-          return this._containsAll(x.needs, this.state.needs);
+          return this._containsAll(x.data.needs, this.state.needs);
         });
       }
     }
-
     this.props.navigation.state.params.filter(people, events, {
       showNeeds: this.state.showNeeds,
       showAges: this.state.showAges,
@@ -56,8 +66,22 @@ export default class Filters extends Component {
     });
     this.props.navigation.goBack();
   };
+  changeNeed(id) {
+    let prev = this.state.needs ? this.state.needs : [];
 
+    if (!prev.some(x => x === id)) {
+      prev.push(id);
+    } else {
+      prev = prev.filter(x => x !== id);
+    }
+
+    this.setState({ needs: prev });
+  }
   _containsAll(array, array2) {
+    console.log("1");
+    console.log(array);
+    console.log("2");
+    console.log(array2);
     var exists = true;
     if (array === undefined) {
       exists = false;
@@ -70,7 +94,7 @@ export default class Filters extends Component {
     }
     return exists;
   }
-  componentDidMount() {}
+
   render() {
     return (
       <View>
@@ -87,6 +111,7 @@ export default class Filters extends Component {
               borderRadius: 50,
               padding: 10
             }}
+            onPress={() => this.props.navigation.goBack()}
           >
             <Text style={{ fontWeight: "bold", color: "gray" }}>ATRÁS</Text>
           </TouchableOpacity>
@@ -95,6 +120,9 @@ export default class Filters extends Component {
               backgroundColor: "#fdfdfd",
               borderRadius: 50,
               padding: 10
+            }}
+            onPress={() => {
+              this.filtrar();
             }}
           >
             <Text style={{ fontWeight: "bold", color: "#3175f6" }}>
@@ -195,14 +223,6 @@ export default class Filters extends Component {
                 style={{ marginTop: 10, marginBottom: 10 }}
                 bordered
               ></Separator>
-              {/* <View
-              style={{
-                borderColor: "#eee",
-                marginTop: 0,
-                marginBottom: 10,
-                borderBottomWidth: 1
-              }}
-            /> */}
               <View
                 style={
                   (this.state.showNeeds ? { height: 300 } : { undefined },
@@ -256,7 +276,12 @@ export default class Filters extends Component {
                 style={{ marginTop: 10, marginBottom: 10 }}
                 bordered
               ></Separator>
-              <View>
+              <View
+                style={
+                  (this.state.showAges ? { height: 300 } : { undefined },
+                  { marginLeft: 20, marginRight: 10 })
+                }
+              >
                 <TouchableOpacity
                   style={{ flexDirection: "row" }}
                   onPress={() =>
@@ -266,7 +291,7 @@ export default class Filters extends Component {
                   <Text
                     style={{
                       fontWeight: "bold",
-                      fontSize: 16,
+                      fontSize: 18,
                       marginRight: 10
                     }}
                   >
@@ -274,9 +299,35 @@ export default class Filters extends Component {
                   </Text>
                   <Icon style={{ alignSelf: "center" }} name="arrowdown"></Icon>
                 </TouchableOpacity>
+                {this.state.showAges ? (
+                  <ScrollView style={{ marginTop: 10 }}>
+                    {this.props.navigation.state.params.ages.map(n => {
+                      return (
+                        <ListItem last key={n.id}>
+                          <CheckBox
+                            onPress={() => {
+                              this.changeNeed(n.id);
+                            }}
+                            checked={
+                              this.state.ages.filter(x => x === n.id).length ==
+                              1
+                            }
+                            style={{ marginRight: 10 }}
+                          ></CheckBox>
+                          <Text style={{ marginLeft: 10 }}>
+                            {n.data.description}
+                          </Text>
+                        </ListItem>
+                      );
+                    })}
+                  </ScrollView>
+                ) : (
+                  undefined
+                )}
               </View>
             </View>
-            <View style={{ textAlign: "center" }}>
+
+            <View style={{ textAlign: "center", marginTop: 20 }}>
               <Button
                 style={{
                   justifyContent: "center",

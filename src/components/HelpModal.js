@@ -14,8 +14,6 @@ import { THEMECOLOR } from "../const.js";
 import firebaseApp from "../config/config";
 import Header from "./header";
 export default class HelpModal extends Component {
-
-
   state = {
     needs: [],
     comments: ""
@@ -32,7 +30,7 @@ export default class HelpModal extends Component {
         }),
       comments: this.state.comments
     };
-    console.log(body);
+
     firebaseApp
       .auth()
       .currentUser.getIdToken(true)
