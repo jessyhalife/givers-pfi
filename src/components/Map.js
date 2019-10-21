@@ -149,6 +149,7 @@ export default class MapGiver extends Component {
       .catch(error => {});
   }
   saveHelp() {
+    this.seen(this.state.selected_id);
     this.props.navigation.goBack();
   }
   giveHelp() {
@@ -160,6 +161,7 @@ export default class MapGiver extends Component {
   }
   _markerInfo(key) {
     this.setState({ selected_id: key });
+
     fetch(
       `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/${key}`,
       {
