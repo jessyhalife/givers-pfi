@@ -1,128 +1,238 @@
 import React from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { Icon, Button } from "native-base";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView
+} from "react-native";
+import { Icon, Button, Separator, ListItem, Spinner } from "native-base";
 import { THEMECOLOR } from "../const.js";
-
-export default PointView = props => {
+export default PeopleView = props => {
   const { data, ages, needs } = props;
-  return (
-    <View style={{ flexDirection: "column", justifyContent: "space-between" }}>
-      <View style={{ flexDirection: "row" }}>
-        <View style={{ margin: 10 }}>
-          <Text style={{ fontWeight: "bold", fontSize: 19, color: "black" }}>
-            {data.address.split(",")[0].toUpperCase()}
+  renderHelp = () => {
+    if (data.loadingHelp) {
+      return <Spinner color={THEMECOLOR}></Spinner>;
+    }
+
+    if (data.help && data.help.length > 0) {
+      var help = data.help;
+
+      return help.map(x => {
+        return (
+          <ListItem key={x.id}>
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ marginRight: 15 }}>
+                <Text style={{ fontSize: 14, fontWeight: "bold" }}>
+                  {new Date(x.data.date._seconds * 1000).toLocaleString(
+                    "es-ES"
+                  )}
+                </Text>
+              </View>
+              <View>
+                {x.data.help.map(y => {
+                  return (
+                    <Text>
+                      {
+                        needs.find(z => {
+                          return z.id == y.id;
+                        }).data.description
+                      }
+                    </Text>
+                  );
+                })}
+              </View>
+            </View>
+          </ListItem>
+        );
+      });
+    } else {
+      return (
+        <View>
+          <Image
+            style={{
+              height: 150,
+              width: 150,
+              marginTop: 10,
+              resizeMode: "contain",
+              alignSelf: "center"
+            }}
+            source={require("../assets/img/empty.png")}
+          />
+          <Text style={{ alignSelf: "center" }}>
+            No hay ayuda registrada aún
           </Text>
         </View>
-      </View>
-
-      <View style={{ flexDirection: "row", marginLeft: 10 }}>
-        <Icon
-          name="contacts"
-          style={{ fontSize: 19, color: "gray", marginRight: 10 }}
-        ></Icon>
-        <Text style={{}}>
-          {ages
-            .filter(x => {
-              return data.ages.indexOf(x.id) >= 0;
-            })
-            .map(x => {
-              return x.data.tipo.toLowerCase();
-            })
-            .join(" | ")}
-        </Text>
-      </View>
+      );
+    }
+  };
+  return (
+    <ScrollView>
       <View
-        style={{
-          margin: 20,
-          flexDirection: "row"
-        }}
+        style={{ flexDirection: "column", justifyContent: "space-between" }}
       >
         <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 60,
-              marginRight: 10,
-              backgroundColor: "#f8f8f8",
-              justifyContent: "center",
-              alignItems: "center",
-              elevation: 5
-            }}
-            onPress={() => props.seen(data.id)}
-          >
-            <Icon style={{ color: "gray", fontSize: 15 }} name="eye"></Icon>
-          </TouchableOpacity>
-          <Text
-            style={{
-              marginRight: 7,
-              fontSize: 15,
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 4
-            }}
-          >
-            {data.seen}
-          </Text>
-        </View>
-        <View style={{ marginLeft: 10, flexDirection: "row" }}>
-          <TouchableOpacity
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 60,
-              marginRight: 10,
-              backgroundColor: "#f8f8f8",
-              justifyContent: "center",
-              alignItems: "center",
-              elevation: 5
-            }}
-            onPress={() => props.notseen(data.id)}
-          >
-            <Icon style={{ color: "gray", fontSize: 15 }} name="eye-off"></Icon>
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: 15,
-              marginRight: 7,
-              marginTop: 4
-            }}
-          >
-            {data.not_seen}
-          </Text>
-        </View>
-        <View style={{ right: 0, position: "absolute" }}>
-          <Button
-            style={{
-              padding: 20,
-              borderRadius: 10,
-              backgroundColor: THEMECOLOR,
-              elevation: 5
-            }}
-          >
-            <Text style={{ fontSize: 18, color: "#f8f8f8", fontWeight: "bold" }}>
-              Ayudé
+          <View style={{ margin: 10 }}>
+            <Text style={{ fontSize: 19, color: "black" }}>
+              {data.address.split(",")[0].toUpperCase()}
             </Text>
-          </Button>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", marginLeft: 14 }}>
+          <Icon
+            name="contacts"
+            style={{ fontSize: 19, color: "gray", marginRight: 10 }}
+          ></Icon>
+          <Text style={{}}>
+            {ages
+              .filter(x => {
+                return data.ages.indexOf(x.id) >= 0;
+              })
+              .map(x => {
+                return x.data.tipo.toLowerCase();
+              })
+              .join(" | ")}
+          </Text>
+          {data.qty > 0 ? (
+            <Text style={{ marginLeft: 5 }}>({data.qty})</Text>
+          ) : (
+            undefined
+          )}
+        </View>
+        {needs !== undefined && needs.length > 0 ? (
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: 5,
+              flexWrap: "wrap",
+              marginLeft: 14,
+              marginBottom: 10,
+              marginRight: 20
+            }}
+          >
+            <Text>
+              <Icon
+                name="information-circle-outline"
+                style={{ fontSize: 19, color: "gray" }}
+              ></Icon>
+              {"  "}
+              {needs
+                .filter(x => {
+                  return data.needs.indexOf(x.id) >= 0;
+                })
+                .map(x => {
+                  return x.data.description;
+                })
+                .join(", ")}
+            </Text>
+          </View>
+        ) : (
+          undefined
+        )}
+
+        <View
+          style={{
+            marginLeft: 20,
+            marginRight: 20,
+            flexDirection: "row"
+          }}
+        >
+          <View style={{ flexDirection: "row", marginTop: 10 }}>
+            <TouchableOpacity
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 60,
+                marginRight: 10,
+                backgroundColor: data.seen > 0 ? "#00d171" : "#f8f8f8",
+                justifyContent: "center",
+                alignItems: "center",
+                elevation: 5
+              }}
+              onPress={() => props.seen(data.id)}
+            >
+              <Icon
+                style={{
+                  color: data.seen > 0 ? "white" : "gray",
+                  fontSize: 15
+                }}
+                name="eye"
+              ></Icon>
+            </TouchableOpacity>
+            <Text
+              style={{
+                marginRight: 7,
+                fontSize: 15,
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 4,
+                fontWeight: "bold"
+              }}
+            >
+              {data.seen}
+            </Text>
+          </View>
+          <View style={{ marginLeft: 10, flexDirection: "row", marginTop: 10 }}>
+            <TouchableOpacity
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 60,
+                marginRight: 10,
+                backgroundColor: data.not_seen > 0 ? "#ff5a47" : "#f8f8f8",
+                justifyContent: "center",
+                alignItems: "center",
+                elevation: 5
+              }}
+              onPress={() => props.notseen(data.id)}
+            >
+              <Icon
+                style={{
+                  color: data.not_seen > 0 ? "white" : "gray",
+                  fontSize: 15
+                }}
+                name="eye-off"
+              ></Icon>
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 15,
+                marginRight: 7,
+                marginTop: 4,
+                fontWeight: "bold"
+              }}
+            >
+              {data.not_seen}
+            </Text>
+          </View>
+          <View style={{ right: 0, position: "absolute" }}>
+            <Button
+              style={{
+                padding: 20,
+                borderRadius: 10,
+                backgroundColor: THEMECOLOR,
+                elevation: 1
+              }}
+              onPress={() => props.giveHelp()}
+            >
+              <Text
+                style={{ fontSize: 18, color: "#f8f8f8", fontWeight: "bold" }}
+              >
+                Ayudé
+              </Text>
+            </Button>
+          </View>
+        </View>
+        <Separator style={{ marginTop: 40 }} bordered></Separator>
+        <View style={{ margin: 15 }}>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+            Ayuda recibida
+          </Text>
+          {renderHelp()}
         </View>
       </View>
-      {/* <View style={{ flexDirection: "row", marginLeft: 10 }}>
-          {needs
-            .filter(x => {
-              return data.needs.indexOf(x.id) >= 0;
-            })
-            .map(x => {
-              return (
-                <View style={{ flexDirection: "row" }}>
-                  <Icon
-                    style={{ margin: 5, color: "black", fontSize: 18 }}
-                    name={x.data.icon}
-                  ></Icon>
-                  <Text style={{fontSize: 18}}>{x.data.description}</Text>
-                </View>
-              );
-            })}
-        </View> */}
-    </View>
+    </ScrollView>
   );
 };

@@ -16,6 +16,7 @@ import { PermissionsAndroid } from "react-native";
 import { Fab, Button, Root, Spinner } from "native-base";
 import SlidingUpPanel from "rn-sliding-up-panel";
 import PeopleView from "./PeopleView";
+import EventView from "./EventView";
 import Geocoder from "react-native-geocoding";
 import mapStyle from "../assets/mapStyle";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -44,6 +45,7 @@ export default class MapGiver extends Component {
       longitude: -58.3815704,
       active: false,
       activeMarker: null,
+      activeMarkerEvent: null,
       ages: [],
       needs: [],
       activePanel: false,
@@ -52,7 +54,9 @@ export default class MapGiver extends Component {
       idToken: "",
       loading: false,
       helpModal: false,
-      selected_id: ""
+      selected_id: "",
+      users: [],
+      clickPanel: ""
     };
     this.mapRef = null;
     this.getAges = this.getAges.bind(this);
@@ -61,6 +65,7 @@ export default class MapGiver extends Component {
     this.setMapRegion = this.setMapRegion.bind(this);
     this.giveHelp = this.giveHelp.bind(this);
     this.saveHelp = this.saveHelp.bind(this);
+    this.asistire = this.asistire.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -76,7 +81,33 @@ export default class MapGiver extends Component {
       }
     );
   }
-
+  asistire = id => {
+    console.log("test");
+    fetch(  
+      `https://us-central1-givers-229af.cloudfunctions.net/webApi/events/attending/${id}`,
+      {
+        method: "PATCH",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: this.state.idToken
+        })
+      }
+    )
+      .then(res => {
+        let last = this.state.activeMarkerEvent;
+        alert("BYE");
+        if (last.attendees.indexOf(firebaseApp.auth().currentUser.uid) <= -1) {
+          last.data.attendees.push(firebaseApp.auth().currentUser.uid);
+          this.setState({ activeMarkerEvent: last });
+        }
+        return res.response.status;
+      })
+      .catch(error => {
+        console.log("Error: ", error);
+        return res.response.status;
+      });
+  };
   seen = id => {
     fetch(
       `https://us-central1-givers-229af.cloudfunctions.net/webApi/people/seen/${id}`,
@@ -200,6 +231,32 @@ export default class MapGiver extends Component {
           })
           .catch(err => alert(err));
       });
+  }
+  _eventInfo(x) {
+    this.setState({ selected_id: x.Id });
+    var event = x;
+    Geocoder.from({
+      latitude: event.data.location.latitude,
+      longitude: event.data.location.longitude
+    })
+      .then(add => {
+        event.address = add.results[0].formatted_address;
+        event.loadingHelp = true;
+        this.setState({ activeMarkerEvent: event }, () => {
+          this._panel.show(300, 0);
+          this.setState({ activePanel: true });
+        });
+        this.setState(
+          {
+            latitude: event.data.location.latitude,
+            longitude: event.data.location.longitude
+          },
+          () => {
+            this.mapRef.animateToRegion(this.getMapRegion(), 1);
+          }
+        );
+      })
+      .catch(err => alert(err));
   }
   getHelpToPeople = (people_id, idToken) => {
     fetch(
@@ -353,7 +410,11 @@ export default class MapGiver extends Component {
                     latitude: Number(x.location.latitude),
                     longitude: Number(x.location.longitude)
                   }}
-                  onPress={() => this._markerInfo(x.id)}
+                  onPress={() => {
+                    this.setState({ clickPanel: "P" }, () => {
+                      this._markerInfo(x.id);
+                    });
+                  }}
                 ></Marker.Animated>
               );
             })}
@@ -366,9 +427,11 @@ export default class MapGiver extends Component {
                     longitude: Number(x.data.location.longitude)
                   }}
                   pinColor="#0083ff"
-                  title={x.data.title}
-                  description={x.data.description}
-                  onPress={() => {}}
+                  onPress={() => {
+                    this.setState({ clickPanel: "E" }, () => {
+                      this._eventInfo(x);
+                    });
+                  }}
                 ></Marker.Animated>
               );
             })}
@@ -413,7 +476,11 @@ export default class MapGiver extends Component {
             )}
             <SlidingUpPanel
               onHideCallback={() =>
-                this.setState({ activePanel: false, active: false })
+                this.setState({
+                  activePanel: false,
+                  activeMarker: undefined,
+                  active: false
+                })
               }
               ref={c => (this._panel = c)}
               backdropOpacity={1}
@@ -446,19 +513,29 @@ export default class MapGiver extends Component {
                     fontSize: 30
                   }}
                 ></Icon>
-                {this.state.activeMarker && (
-                  <PeopleView
-                    giveHelp={this.giveHelp}
-                    saveHelp={this.saveHelp}
-                    data={this.state.activeMarker}
-                    help={undefined}
-                    loadingHelp={true}
-                    ages={this.state.ages}
-                    needs={this.state.needs}
-                    seen={this.seen}
-                    notseen={this.notSeen}
-                  />
-                )}
+                {this.state.clickPanel == "P"
+                  ? this.state.activeMarker && (
+                      <PeopleView
+                        giveHelp={this.giveHelp}
+                        saveHelp={this.saveHelp}
+                        data={this.state.activeMarker}
+                        help={undefined}
+                        loadingHelp={true}
+                        ages={this.state.ages}
+                        needs={this.state.needs}
+                        seen={this.seen}
+                        notseen={this.notSeen}
+                      />
+                    )
+                  : this.state.activeMarkerEvent && (
+                      <EventView
+                        data={this.state.activeMarkerEvent}
+                        loadingHelp={true}
+                        asistire={this.asistire}
+                        needs={this.state.needs}
+                        uid={firebaseApp.auth().currentUser.uid}
+                      />
+                    )}
               </View>
             </SlidingUpPanel>
           </View>
