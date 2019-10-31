@@ -24,6 +24,7 @@ import {
 } from "native-base";
 import Header from "../components/header";
 import { THEMECOLOR } from "../const.js";
+import userService from "../services/users";
 
 export default class Register extends Component {
   state = {
@@ -50,8 +51,14 @@ export default class Register extends Component {
           userCredentials.user
             .updateProfile({ displayName: username })
             .then(s => {
-              this.setState({ error: false, loading: false });
-              Toast.show({});
+              userCredentials.user.getIdToken().then(idToken => {
+                var fcm = firebase.messaging().getToken();
+                var user = { fcm_token: fcm };
+                userService.create(idToken, user).then(data => {
+                  this.setState({ error: false, loading: false });
+                  Toast.show({});
+                });
+              });
             });
         }
       })

@@ -90,6 +90,7 @@ class NeedsComponent extends Component {
                 needs: this.state.needs.filter(x => x.active)
               });
             }}
+            
           />
           <View
             style={{

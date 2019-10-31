@@ -19,7 +19,7 @@ class PointTypeComponent extends Component {
             title="¿Qué vas a registrar?"
             showBack={true}
             back={() => {
-              this.props.prev();
+              this.props.navigation.goBack();
             }}
           ></Header>
           <Text style={{ fontSize: 16, margin: 15 }}>
@@ -37,8 +37,13 @@ class PointTypeComponent extends Component {
           >
             <TouchableOpacity
               onPress={() => {
-                this.props.saveState(0, "E");
-                this.props.next();
+                this.props.navigation.navigate("PointScreen", {
+                  needs: this.props.navigation.state.params.needs,
+                  type: "E"
+                });
+                // this.props.setType("H");
+                // this.props.saveState(0, "E");
+                // this.props.next();
               }}
               style={{
                 ...styles.tile,
@@ -60,8 +65,13 @@ class PointTypeComponent extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                this.props.saveState(0, "H");
-                this.props.next();
+                this.props.navigation.navigate("PointScreen", {
+                  needs: this.props.navigation.state.params.needs,
+                  type: "H"
+                });
+                // this.props.setType("H");
+                // this.props.saveState(0, "H");
+                // this.props.next();
               }}
               style={{
                 ...styles.tile,

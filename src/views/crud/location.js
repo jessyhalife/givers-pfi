@@ -61,7 +61,9 @@ class LocationStep extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.getState().length);
     if (
+      this.props.getState().length == 0 ||
       this.props.getState().length == this.props.index ||
       (this.props.getState().length > this.props.index &&
         !this.props.getState()[this.props.index].hasOwnProperty("latitude"))
@@ -120,6 +122,7 @@ class LocationStep extends Component {
             back={() => {
               this.props.prev();
             }}
+            backTitle="Volver al mapa"
           />
           <View style={{ flex: 3 }}>
             <GooglePlacesAutocomplete

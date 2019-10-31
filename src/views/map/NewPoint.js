@@ -8,6 +8,9 @@ import LocationComponent from "../crud/location.js";
 import DetailsComponent from "../crud/details.js";
 import NeedsComponent from "../crud/needs.js";
 import PointTypeComponent from "../crud/point.type.js";
+import InfoComponent from "../crud/point.info";
+import TimeComponent from "../crud/point.time.contact";
+import ContactComponent from "../crud/contacts.js";
 import MultiStep from "react-native-multistep-wizard";
 import firebaseApp from "../../config/config";
 
@@ -51,8 +54,13 @@ class NewPoint extends Component {
     dateStart: new Date(),
     dateEnd: new Date(),
     timeStart: "00:00",
-    timeEnd: "00:00"
+    timeEnd: "00:00",
+    pointType: "E"
   };
+  componentWillMount() {
+    if (this.props.navigation.state.params.type)
+      this.setState({ pointType: this.props.navigation.state.params.type });
+  }
   componentDidMount() {
     this.props.navigation.setParams({
       currentIndex: this.state.currentIndex,
@@ -118,27 +126,15 @@ class NewPoint extends Component {
           .then(data => console.log(data))
           .catch(error => console.log("Error!!: ", error));
 
-        this.props.navigation.goBack();
+        this.props.navigation.navigate("MapScreen");
       })
       .catch(err => {
         alert(err);
-        this.props.navigation.goBack();
+        this.props.navigation.navigate("MapScreen");
       });
   }
   render() {
-    const steps = [
-      {
-        name: "PointTypeStep",
-        component: (
-          <PointTypeComponent
-            index={0}
-            next={this._next}
-            prev={() => {
-              this.props.navigation.goBack();
-            }}
-          />
-        )
-      },
+    const stepsPoints = [
       {
         name: "LocationStep",
         component: (
@@ -150,7 +146,79 @@ class NewPoint extends Component {
               latitude: this.state.latitude,
               longitude: this.state.longitude
             }}
+            prev={() => {
+              this.props.navigation.goBack();
+            }}
+          />
+        )
+      },
+      {
+        name: "InfoStep",
+        component: (
+          <InfoComponent next={this._next} prev={this._prev}></InfoComponent>
+        )
+      },
+      {
+        name: "NeedStep",
+        component: (
+          <NeedsComponent
+            index={3}
+            next={this._next}
+            needs={this.props.navigation.state.params.needs}
+            title="¿Cómo se puede colaborar?"
+            event={true}
             prev={this._prev}
+          />
+        )
+      },
+      {
+        name: "TimeStep",
+        component: (
+          <TimeComponent next={this._next} prev={this._prev}></TimeComponent>
+        )
+      },
+      {
+        name: "ContactStep",
+        component: (
+          <ContactComponent
+            next={this._submit}
+            prev={this._prev}
+          ></ContactComponent>
+        )
+      }
+    ];
+    const steps = [
+      // {
+      //   name: "PointTypeStep",
+      //   component: (
+      //     <PointTypeComponent
+      //       setType={val => {
+      //         this.setState({ pointType: val });
+      //       }}
+      //       navigation={this.props.navigation}
+      //       index={0}
+      //       next={this._next}
+      //       prev={() => {
+      //         this.props.navigation.goBack();
+      //       }}
+      //     />
+      //   )
+      // },
+      {
+        name: "LocationStep",
+        component: (
+          <LocationComponent
+            index={1}
+            showAnterior={true}
+            next={this._next}
+            location={{
+              latitude: this.state.latitude,
+              longitude: this.state.longitude
+            }}
+            prev={() => {
+              this.props.navigation.goBack();
+            }}
+            // prev={this._prev}
           />
         )
       },
@@ -179,7 +247,7 @@ class NewPoint extends Component {
       <View style={{ flex: 1 }}>
         <MultiStep
           ref={e => (this.wizard = e)}
-          steps={steps}
+          steps={this.state.pointType == "E" ? steps : stepsPoints}
           onFinish={this._submit}
         ></MultiStep>
       </View>
@@ -191,8 +259,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 60
-  },
-  nextButton: {}
+  }
 });
 
 export default NewPoint;

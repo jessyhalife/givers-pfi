@@ -20,18 +20,11 @@ export default class Welcome extends Component {
       this._checkAuth();
     }, 1000);
   }
-  _checkAuth = () => {
+
+  _checkAuth = async () => {
     firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
-        // firebaseApp
-        //   .messaging()
-        //   .getToken()
-        //   .then(fcmToken => {
-        //     if (fcmToken) {
-        //       console.log(fcmToken);
-        //     }
-            this.props.navigation.navigate("MapScreen");
-          // });
+        this.props.navigation.navigate("MapScreen");
       } else {
         this.props.navigation.navigate("Main");
       }

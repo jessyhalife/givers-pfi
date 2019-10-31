@@ -27,6 +27,7 @@ class DetailsComponent extends Component {
             back={() => {
               this.props.prev();
             }}
+            
           />
           <View>
             <Textarea

@@ -4,6 +4,7 @@ import MapGiver from "../../components/Map";
 import db from "../../db";
 import firebaseApp from "../../config/config";
 import { THEMECOLOR } from "../../const";
+
 let pplRef = firebaseApp.firestore().collection("people");
 let eventRef = firebaseApp.firestore().collection("events");
 
@@ -17,15 +18,17 @@ export default class Home extends Component {
     pplRef.onSnapshot(snapshots => {
       let gente = [];
       snapshots.docs.forEach(x => {
-        gente.push({
-          location: x.data().location,
-          id: x.id,
-          qty: x.data().qty,
-          seen: x.data().seen,
-          notSeen: x.data().not_seen,
-          ages: x.data().ages,
-          needs: x.data().needs
-        });
+        if (x.data().active) {
+          gente.push({
+            location: x.data().location,
+            id: x.id,
+            qty: x.data().qty,
+            seen: x.data().seen,
+            notSeen: x.data().not_seen,
+            ages: x.data().ages,
+            needs: x.data().needs
+          });
+        }
       });
 
       this.setState({ people: gente }, () => {});

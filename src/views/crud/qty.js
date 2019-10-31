@@ -64,6 +64,7 @@ class QtyComponent extends Component {
             back={() => {
               this.props.prev();
             }}
+            
           />
           <View>
             <Item regular style={{ margin: 20 }}>

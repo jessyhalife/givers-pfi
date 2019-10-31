@@ -1,27 +1,10 @@
 import React, { Component } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity
-} from "react-native";
-import {
-  Input,
-  Item,
-  Badge,
-  DatePicker,
-  Textarea,
-  Picker,
-  Button,
-  Switch,
-  Toast,
-  Root
-} from "native-base";
+import { Text, View, ScrollView } from "react-native";
+import { Button, Switch, Toast, Root } from "native-base";
 import Header from "../components/header";
-import Icon from "react-native-vector-icons/AntDesign";
 import firebaseApp from "../config";
 import { THEMECOLOR, THEMECOLORLIGHT } from "../const";
+import userService from "../services/users";
 
 export default class Profile extends Component {
   state = {
@@ -42,28 +25,19 @@ export default class Profile extends Component {
           .currentUser.getIdToken()
           .then(idToken => {
             this.setState({ idToken });
-            fetch(
-              `https://us-central1-givers-229af.cloudfunctions.net/webApi/users`,
-              {
-                method: "GET",
-                headers: new Headers({
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
-                  Authorization: idToken
-                })
-              }
-            )
+            userService
+              .getUser(idToken)
               .then(response => {
                 return response.json();
               })
               .then(json => {
+                console.log(json);
                 let { notify_events, notify_people, notify_points } = json;
                 this.setState({
-                  notify_events: notify_events == "true",
-                  notify_points: notify_points == "true",
-                  notify_people: notify_people == "true"
+                  notify_events: notify_events == "true" || notify_events,
+                  notify_points: notify_points == "true" || notify_points,
+                  notify_people: notify_people == "true" || notify_people
                 });
-
                 return;
               })
               .catch(error => {
@@ -80,18 +54,8 @@ export default class Profile extends Component {
       notify_points: this.state.notify_points,
       notify_events: this.state.notify_events
     };
-    fetch(
-      `https://us-central1-givers-229af.cloudfunctions.net/webApi/users/notifications`,
-      {
-        method: "PATCH",
-        body: JSON.stringify(body),
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: idToken
-        })
-      }
-    )
+    userService
+      .saveSettings(idToken, body)
       .then(response => {
         Toast.show({
           text: "¡Se guardaron tus cambios!",
