@@ -101,7 +101,7 @@ export default class MapGiver extends Component {
     )
       .then(res => {
         let last = this.state.activeMarkerEvent;
-        alert("BYE");
+
         if (last.attendees.indexOf(firebaseApp.auth().currentUser.uid) <= -1) {
           last.data.attendees.push(firebaseApp.auth().currentUser.uid);
           this.setState({ activeMarkerEvent: last });
@@ -144,7 +144,6 @@ export default class MapGiver extends Component {
       .catch(error => console.log("Error!!: ", error));
   };
   async getContacts() {
-    console.log("CONTACTS");
     fetch(
       "https://us-central1-givers-229af.cloudfunctions.net/webApi/points/contacts",
       {
@@ -157,7 +156,6 @@ export default class MapGiver extends Component {
     )
       .then(response => response.json())
       .then(json => {
-        console.log("CONTACTSJSON");
         this.setState({ contacts: json }, () => {
           return;
         });
@@ -273,7 +271,7 @@ export default class MapGiver extends Component {
         point.loadingHelp = true;
         this.setState({ activeMarkerPoint: point }, () => {
           this._panel.show(300, 0);
-          alert(this.state.clickPanel);
+
           this.setState({ activePanel: true });
         });
         this.setState(
@@ -426,6 +424,7 @@ export default class MapGiver extends Component {
           filtrar={this.filter}
           needs={this.state.needs}
           ages={this.state.ages}
+          ç
           people={this.state.real_people}
           events={this.state.real_events}
           setMapRegion={this.setMapRegion}

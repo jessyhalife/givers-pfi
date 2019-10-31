@@ -147,7 +147,15 @@ export default class Register extends Component {
                     }}
                   />
                   <Body>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() =>
+                        this.props.navigation.navigate("Terms", {
+                          back: () => {
+                            this.props.navigation.goBack();
+                          }
+                        })
+                      }
+                    >
                       <Text>Acepto términos y condiciones de uso</Text>
                     </TouchableOpacity>
                   </Body>

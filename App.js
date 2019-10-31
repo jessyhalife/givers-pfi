@@ -27,7 +27,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import firebase from "react-native-firebase";
 import { AsyncStorage, Alert } from "react-native";
 import userService from "./src/services/users.js";
-
+import Terms from "./src/views/terms.js";
 //#endregion
 const MapStackNavigator = createStackNavigator(
   {
@@ -158,6 +158,7 @@ const AppSwitchNavigator = createSwitchNavigator(
     Main: { screen: Main },
     Login: { screen: Login },
     Register: { screen: Register },
+    Terms: { screen: Terms },
     Map: { screen: MapDrawerNavigator }
   },
   {}

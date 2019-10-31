@@ -47,7 +47,7 @@ class QtyComponent extends Component {
     }).length;
     if (Number(act) > Number(qty)) {
       let nr = Number(act) - Number(qty);
-      console.log(`nro: ${nr}`);
+
       qty = Number(qty) + Number(nr);
 
       qty = qty.toString();
@@ -64,7 +64,6 @@ class QtyComponent extends Component {
             back={() => {
               this.props.prev();
             }}
-            
           />
           <View>
             <Item regular style={{ margin: 20 }}>
@@ -77,7 +76,7 @@ class QtyComponent extends Component {
               />
             </Item>
           </View>
-          
+
           <View style={{ flex: 4, marginTop: 20, marginLeft: 20 }}>
             <H1 style={{ fontWeight: "bold" }}>Y sus edades?</H1>
             <View

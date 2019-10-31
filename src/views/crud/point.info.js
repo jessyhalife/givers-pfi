@@ -22,7 +22,6 @@ export default class InfoComponent extends Component {
     idToken: ""
   };
   componentDidMount() {
-    console.table(this.state);
     // if (this.props.getState().length >= this.props.index + 1) {
     //   var {
     //     title,

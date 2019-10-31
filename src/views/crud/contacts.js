@@ -70,7 +70,7 @@ export default class ContactComponent extends Component {
         arr.forEach(x => {
           x.data.address = "";
         });
-        console.table(arr);
+
         this.setState({ contacts: arr }, () => {
           // if (this.props.getState().length >= this.props.index + 1) {
           //   let t = this.props.getState()[this.props.index].type;

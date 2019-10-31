@@ -91,7 +91,6 @@ export default class Filters extends Component {
   }
 
   render() {
-    console.table(props);
     return (
       <View>
         <View

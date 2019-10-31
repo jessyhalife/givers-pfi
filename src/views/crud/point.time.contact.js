@@ -81,14 +81,14 @@ export default class TimeComponent extends Component {
   manageDays(day) {
     console.log(day);
     var { days } = this.state;
-    console.table(days);
+
     days = days.map(d => {
       if (d.day == day.day) {
         d.active = !d.active;
       }
       return d;
     });
-    console.table(days);
+
     this.setState({ days });
   }
 
