@@ -1,7 +1,7 @@
 const pointService = {
   getTypes: idToken => {
-    fetch(
-      "https://us-central1-givers-229af.cloudfunctions.net/webApi/events/types",
+    return fetch(
+      "https://us-central1-givers-229af.cloudfunctions.net/webApi/points/types",
       {
         method: "GET",
         headers: new Headers({
@@ -10,16 +10,24 @@ const pointService = {
           Authorization: idToken
         })
       }
-    )
-      .then(response => response.json())
-      .catch(error => {
-        throw error;
-      });
+    );
   },
-
+  getContacts: idToken => {
+    return fetch(
+      "https://us-central1-givers-229af.cloudfunctions.net/webApi/points/contacts",
+      {
+        method: "GET",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: idToken
+        })
+      }
+    );
+  },
   create: (idToken, body) => {
-    fetch(
-      "https://us-central1-givers-229af.cloudfunctions.net/webApi/events/",
+    return fetch(
+      "https://us-central1-givers-229af.cloudfunctions.net/webApi/points/",
       {
         method: "POST",
         body: JSON.stringify(body),
@@ -28,11 +36,7 @@ const pointService = {
           Authorization: idToken
         }
       }
-    )
-      .then(res => res.json())
-      .catch(error => {
-        throw error;
-      });
+    );
   }
 };
 export default pointService;

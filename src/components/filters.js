@@ -50,7 +50,6 @@ export default class Filters extends Component {
     if (!this.state.types.eventos) {
       events = [];
     } else {
-      console.log("EVENTS!!");
       if (this.state.needs.length > 0) {
         events = events.filter(x => {
           return this._containsAll(x.data.needs, this.state.needs);
@@ -78,10 +77,6 @@ export default class Filters extends Component {
     this.setState({ needs: prev });
   }
   _containsAll(array, array2) {
-    console.log("1");
-    console.log(array);
-    console.log("2");
-    console.log(array2);
     var exists = true;
     if (array === undefined) {
       exists = false;
@@ -96,6 +91,7 @@ export default class Filters extends Component {
   }
 
   render() {
+    console.table(props);
     return (
       <View>
         <View

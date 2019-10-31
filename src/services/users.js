@@ -47,8 +47,6 @@ const userService = {
   },
 
   updateFCM: (idToken, fcmToken) => {
-    console.log("JESSY");
-    console.log(JSON.stringify(fcmToken));
     return fetch(
       `https://us-central1-givers-229af.cloudfunctions.net/webApi/users/fcmtoken`,
       {

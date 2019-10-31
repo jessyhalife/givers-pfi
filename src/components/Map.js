@@ -17,6 +17,7 @@ import { Fab, Button, Root, Spinner } from "native-base";
 import SlidingUpPanel from "rn-sliding-up-panel";
 import PeopleView from "./PeopleView";
 import EventView from "./EventView";
+import PointView from "./PointView";
 import Geocoder from "react-native-geocoding";
 import mapStyle from "../assets/mapStyle";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -24,14 +25,14 @@ import Search from "../components/Search";
 import HelpModal from "../components/HelpModal.js";
 import firebaseApp from "../config/config";
 import Modal from "react-native-modal";
+import pointService from "../services/point";
 
 Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 
 export default class MapGiver extends Component {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
-    console.log("paramsposta");
-    console.log(params);
+
     return params;
   };
   constructor(props) {
@@ -39,13 +40,16 @@ export default class MapGiver extends Component {
     this.state = {
       real_markers: [],
       real_events: [],
+      real_points: [],
       markers: [],
       evMarkers: [],
+      poMarkers: [],
       latitude: -34.6037389,
       longitude: -58.3815704,
       active: false,
       activeMarker: null,
       activeMarkerEvent: null,
+      activeMarkerPoint: null,
       ages: [],
       needs: [],
       activePanel: false,
@@ -56,10 +60,12 @@ export default class MapGiver extends Component {
       helpModal: false,
       selected_id: "",
       users: [],
-      clickPanel: ""
+      clickPanel: "",
+      contacts: []
     };
     this.mapRef = null;
     this.getAges = this.getAges.bind(this);
+    this.getContacts = this.getContacts.bind(this);
     this.getNeeds = this.getNeeds.bind(this);
     this.filter = this.filter.bind(this);
     this.setMapRegion = this.setMapRegion.bind(this);
@@ -74,16 +80,15 @@ export default class MapGiver extends Component {
         markers: props.people,
         real_events: props.events,
         real_people: props.people,
-        evMarkers: props.events
+        evMarkers: props.events,
+        real_points: props.points,
+        poMarkers: props.points
       },
-      () => {
-        console.log(this.state.real_events.length);
-      }
+      () => {}
     );
   }
   asistire = id => {
-    console.log("test");
-    fetch(  
+    fetch(
       `https://us-central1-givers-229af.cloudfunctions.net/webApi/events/attending/${id}`,
       {
         method: "PATCH",
@@ -138,6 +143,29 @@ export default class MapGiver extends Component {
       .then(res => this._markerInfo(id))
       .catch(error => console.log("Error!!: ", error));
   };
+  async getContacts() {
+    console.log("CONTACTS");
+    fetch(
+      "https://us-central1-givers-229af.cloudfunctions.net/webApi/points/contacts",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: this.state.idToken
+        }
+      }
+    )
+      .then(response => response.json())
+      .then(json => {
+        console.log("CONTACTSJSON");
+        this.setState({ contacts: json }, () => {
+          return;
+        });
+      })
+      .catch(error => {
+        throw error;
+      });
+  }
   getAges() {
     fetch(`https://us-central1-givers-229af.cloudfunctions.net/webApi/ages`, {
       method: "GET",
@@ -232,6 +260,35 @@ export default class MapGiver extends Component {
           .catch(err => alert(err));
       });
   }
+
+  _pointInfo(x) {
+    this.setState({ selected_id: x.Id });
+    var point = x;
+    Geocoder.from({
+      latitude: point.data.location.latitude,
+      longitude: point.data.location.longitude
+    })
+      .then(add => {
+        point.address = add.results[0].formatted_address;
+        point.loadingHelp = true;
+        this.setState({ activeMarkerPoint: point }, () => {
+          this._panel.show(300, 0);
+          alert(this.state.clickPanel);
+          this.setState({ activePanel: true });
+        });
+        this.setState(
+          {
+            latitude: point.data.location.latitude,
+            longitude: point.data.location.longitude
+          },
+          () => {
+            this.mapRef.animateToRegion(this.getMapRegion(), 1);
+          }
+        );
+      })
+      .catch(err => alert(err));
+  }
+
   _eventInfo(x) {
     this.setState({ selected_id: x.Id });
     var event = x;
@@ -321,9 +378,8 @@ export default class MapGiver extends Component {
       .auth()
       .currentUser.getIdToken(true)
       .then(idToken => {
-        console.log(idToken);
         this.setState({ idToken }, () => {
-          Promise.all([this.getAges(), this.getNeeds()])
+          Promise.all([this.getAges(), this.getNeeds(), this.getContacts()])
             .then(data => {
               this.setState({ loading: false });
             })
@@ -356,7 +412,6 @@ export default class MapGiver extends Component {
   };
 
   filter = (markers, evMarkers) => {
-    console.log(evMarkers);
     this.setState({
       markers: markers ? markers : [],
       evMarkers: evMarkers ? evMarkers : []
@@ -402,39 +457,59 @@ export default class MapGiver extends Component {
             // initialRegion={this.getMapRegion()}
             region={this.getMapRegion()}
           >
-            {this.state.markers.map(x => {
-              return (
-                <Marker.Animated
-                  key={x.id}
-                  coordinate={{
-                    latitude: Number(x.location.latitude),
-                    longitude: Number(x.location.longitude)
-                  }}
-                  onPress={() => {
-                    this.setState({ clickPanel: "P" }, () => {
-                      this._markerInfo(x.id);
-                    });
-                  }}
-                ></Marker.Animated>
-              );
-            })}
-            {this.state.evMarkers.map(x => {
-              return (
-                <Marker.Animated
-                  key={x.id}
-                  coordinate={{
-                    latitude: Number(x.data.location.latitude),
-                    longitude: Number(x.data.location.longitude)
-                  }}
-                  pinColor="#0083ff"
-                  onPress={() => {
-                    this.setState({ clickPanel: "E" }, () => {
-                      this._eventInfo(x);
-                    });
-                  }}
-                ></Marker.Animated>
-              );
-            })}
+            {this.state.markers &&
+              this.state.markers.map(x => {
+                return (
+                  <Marker.Animated
+                    key={x.id}
+                    coordinate={{
+                      latitude: Number(x.location.latitude),
+                      longitude: Number(x.location.longitude)
+                    }}
+                    onPress={() => {
+                      this.setState({ clickPanel: "P" }, () => {
+                        this._markerInfo(x.id);
+                      });
+                    }}
+                  ></Marker.Animated>
+                );
+              })}
+            {this.state.evMarkers &&
+              this.state.evMarkers.map(x => {
+                return (
+                  <Marker.Animated
+                    key={x.id}
+                    coordinate={{
+                      latitude: Number(x.data.location.latitude),
+                      longitude: Number(x.data.location.longitude)
+                    }}
+                    pinColor="#0083ff"
+                    onPress={() => {
+                      this.setState({ clickPanel: "E" }, () => {
+                        this._eventInfo(x);
+                      });
+                    }}
+                  ></Marker.Animated>
+                );
+              })}
+            {this.state.poMarkers &&
+              this.state.poMarkers.map(x => {
+                return (
+                  <Marker.Animated
+                    key={x.id}
+                    coordinate={{
+                      latitude: Number(x.data.location.latitude),
+                      longitude: Number(x.data.location.longitude)
+                    }}
+                    pinColor="#ffeb00"
+                    onPress={() => {
+                      this.setState({ clickPanel: "H" }, () => {
+                        this._pointInfo(x);
+                      });
+                    }}
+                  ></Marker.Animated>
+                );
+              })}
           </MapView>
           <View style={{ flex: 2, flexDirection: "column" }}>
             {!this.state.activePanel ? (
@@ -527,7 +602,8 @@ export default class MapGiver extends Component {
                         notseen={this.notSeen}
                       />
                     )
-                  : this.state.activeMarkerEvent && (
+                  : this.state.clickPanel == "E"
+                  ? this.state.activeMarkerEvent && (
                       <EventView
                         data={this.state.activeMarkerEvent}
                         loadingHelp={true}
@@ -535,6 +611,14 @@ export default class MapGiver extends Component {
                         needs={this.state.needs}
                         uid={firebaseApp.auth().currentUser.uid}
                       />
+                    )
+                  : this.state.activeMarkerPoint && (
+                      <PointView
+                        data={this.state.activeMarkerPoint}
+                        needs={this.state.needs}
+                        uid={firebaseApp.auth().currentUser.uid}
+                        contacts={this.state.contacts}
+                      ></PointView>
                     )}
               </View>
             </SlidingUpPanel>

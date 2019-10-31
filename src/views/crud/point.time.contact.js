@@ -10,7 +10,6 @@ import { Input, Item, Badge, DatePicker, Textarea, Picker } from "native-base";
 import { THEMECOLOR } from "../../const.js";
 import Header from "../../components/header";
 import ButtonsWizard from "../../components/buttons_wizard";
-import Icon from "react-native-vector-icons/AntDesign";
 import firebaseApp from "../../config/config";
 
 export default class TimeComponent extends Component {
@@ -205,22 +204,25 @@ export default class TimeComponent extends Component {
                   {this.getHours()}
                 </Picker>
               </Item>
-             
             </View>
           </View>
           <ButtonsWizard
             showAnterior={true}
             siguiente={() => {
               this.props.saveState(this.props.index, {
-                days: this.state.days.find(x => {
+                days: this.state.days.filter(x => {
                   return x.active;
                 }).day,
                 timeStart: this.state.timeStart,
                 timeEnd: this.state.timeEnd
               });
-
+              console.log(
+                this.state.days.filter(x => {
+                  return x.active;
+                })
+              );
               this.props.next({
-                days: this.state.days.find(x => {
+                days: this.state.days.filter(x => {
                   return x.active;
                 }),
                 timeStart: this.state.timeStart,
@@ -229,14 +231,14 @@ export default class TimeComponent extends Component {
             }}
             back={() => {
               this.props.saveState(this.props.index, {
-                days: this.state.days.find(x => {
+                days: this.state.days.filter(x => {
                   return x.active;
                 }),
                 timeStart: this.state.timeStart,
                 timeEnd: this.state.timeEnd
               });
               this.props.prev({
-                days: this.state.days.find(x => {
+                days: this.state.days.filter(x => {
                   return x.active;
                 }),
                 timeStart: this.state.timeStart,

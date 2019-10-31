@@ -55,7 +55,9 @@ class NewPoint extends Component {
     dateEnd: new Date(),
     timeStart: "00:00",
     timeEnd: "00:00",
-    pointType: "E"
+    pointType: "E",
+    days: [],
+    contacts: []
   };
   componentWillMount() {
     if (this.props.navigation.state.params.type)
@@ -69,6 +71,7 @@ class NewPoint extends Component {
   }
 
   handleChange(prop) {
+    console.log(prop);
     if (typeof prop == "object") {
       for (var p in prop) {
         this.setState({ [p]: prop[p] }, () => {});
@@ -89,22 +92,51 @@ class NewPoint extends Component {
   }
 
   _submit(prop) {
-    var body = {
-      event: {
-        location: {
-          latitude: this.state.latitude,
-          longitude: this.state.longitude
-        },
-        title: this.state.title,
-        description: this.state.description,
-        needs: prop.needs,
-        type: this.state.type,
-        startDate: this.state.dateStart,
-        endDate: this.state.dateEnd,
-        startTime: this.state.timeStart,
-        endTime: this.state.timeEnd
-      }
-    };
+    var body = {};
+    if (this.state.pointType == "E") {
+      body = {
+        event: {
+          location: {
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
+          },
+          title: this.state.title,
+          description: this.state.description,
+          needs: prop.needs,
+          type: this.state.type,
+          startDate: this.state.dateStart,
+          endDate: this.state.dateEnd,
+          startTime: this.state.timeStart,
+          endTime: this.state.timeEnd
+        }
+      };
+    } else {
+      console.log(this.state.days.length);
+      body = {
+        point: {
+          location: {
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
+          },
+          title: this.state.title,
+          description: this.state.description,
+          needs: prop.needs,
+          type: this.state.type,
+          startTime: this.state.timeStart,
+          endTime: this.state.timeEnd,
+          contacts: prop.contacts,
+          days:
+            this.state.days.length == 1
+              ? this.state.days.day
+              : this.state.days.map(x => x.day)
+        }
+      };
+    }
+    console.log(
+      `https://us-central1-givers-229af.cloudfunctions.net/webApi/${
+        this.state.pointType == "E" ? "events" : "points"
+      }/`
+    );
     console.log(JSON.stringify(body));
     firebaseApp
       .auth()
@@ -112,7 +144,9 @@ class NewPoint extends Component {
       .then(idToken => {
         console.log(idToken);
         fetch(
-          "https://us-central1-givers-229af.cloudfunctions.net/webApi/events/",
+          `https://us-central1-givers-229af.cloudfunctions.net/webApi/${
+            this.state.pointType == "E" ? "events" : "points"
+          }/`,
           {
             method: "POST",
             body: JSON.stringify(body),
@@ -166,7 +200,7 @@ class NewPoint extends Component {
             next={this._next}
             needs={this.props.navigation.state.params.needs}
             title="¿Cómo se puede colaborar?"
-            event={true}
+            event={false}
             prev={this._prev}
           />
         )

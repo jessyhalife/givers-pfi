@@ -95,7 +95,9 @@ export default class ContactComponent extends Component {
             }}
           />
 
-          <View style={{ flexDirection: "column", margin: 10, marginBottom: 40 }}>
+          <View
+            style={{ flexDirection: "column", margin: 10, marginBottom: 40 }}
+          >
             {this.state.contacts.map(c => {
               return (
                 <Card>
@@ -139,19 +141,27 @@ export default class ContactComponent extends Component {
             showAnterior={true}
             siguiente={() => {
               this.props.saveState(this.props.index, {
-                contacts: this.state.contacts
+                contacts: this.state.contacts.map(x => {
+                  return { id: x.id, address: x.data.address };
+                })
               });
 
               this.props.next({
-                contacts: this.state.contacts
+                contacts: this.state.contacts.map(x => {
+                  return { id: x.id, address: x.data.address };
+                })
               });
             }}
             back={() => {
               this.props.saveState(this.props.index, {
-                contacts: this.state.contacts
+                contacts: this.state.contacts.map(x => {
+                  return { id: x.id, address: x.data.address };
+                })
               });
               this.props.prev({
-                contacts: this.state.contacts
+                contacts: this.state.contacts.map(x => {
+                  return { id: x.id, address: x.data.address };
+                })
               });
             }}
           />

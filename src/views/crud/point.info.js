@@ -51,7 +51,6 @@ export default class InfoComponent extends Component {
       .then(idToken => {
         this.setState({ idToken });
         this._fetchTypes();
-        this._manageTypes(type);
       });
   }
 

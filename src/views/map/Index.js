@@ -7,11 +7,12 @@ import { THEMECOLOR } from "../../const";
 
 let pplRef = firebaseApp.firestore().collection("people");
 let eventRef = firebaseApp.firestore().collection("events");
+let pointRef = firebaseApp.firestore().collection("points");
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = { people: [], active: false, events: [] };
+    this.state = { people: [], active: false, events: [], points: [] };
   }
 
   componentDidMount() {
@@ -44,6 +45,17 @@ export default class Home extends Component {
       });
       this.setState({ events: events });
     });
+
+    pointRef.onSnapshot(snapshots => {
+      let points = [];
+      snapshots.docs.forEach(x => {
+        points.push({
+          id: x.id,
+          data: x.data()
+        });
+      });
+      this.setState({ points: points });
+    });
   }
 
   render() {
@@ -54,6 +66,7 @@ export default class Home extends Component {
             people={this.state.people}
             navigation={this.props.navigation}
             events={this.state.events}
+            points={this.state.points}
           />
         </View>
       </View>

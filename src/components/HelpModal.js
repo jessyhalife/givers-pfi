@@ -48,17 +48,13 @@ export default class HelpModal extends Component {
           }
         )
           .then(res => {
-            console.log(res);
             res.json();
           })
           .then(data => console.log(data))
           .catch(error => console.log(error));
       });
   }
-  componentWillReceiveProps(props) {
-    console.log(props);
-    console.log(props.navigation);
-  }
+  componentWillReceiveProps(props) {}
   componentDidMount() {
     let list = this.props.navigation.state.params.needs;
     list.forEach(x => {
