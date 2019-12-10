@@ -13,6 +13,9 @@ import TimeComponent from "../crud/point.time.contact";
 import ContactComponent from "../crud/contacts.js";
 import MultiStep from "react-native-multistep-wizard";
 import firebaseApp from "../../config/config";
+import Geocoder from "react-native-geocoding";
+
+Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 
 class NewPoint extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -92,80 +95,86 @@ class NewPoint extends Component {
   }
 
   _submit(prop) {
-    var body = {};
-    if (this.state.pointType == "E") {
-      body = {
-        event: {
-          location: {
-            latitude: this.state.latitude,
-            longitude: this.state.longitude
-          },
-          title: this.state.title,
-          description: this.state.description,
-          needs: prop.needs,
-          type: this.state.type,
-          startDate: this.state.dateStart,
-          endDate: this.state.dateEnd,
-          startTime: this.state.timeStart,
-          endTime: this.state.timeEnd
-        }
-      };
-    } else {
-      console.log(this.state.days.length);
-      body = {
-        point: {
-          location: {
-            latitude: this.state.latitude,
-            longitude: this.state.longitude
-          },
-          title: this.state.title,
-          description: this.state.description,
-          needs: prop.needs,
-          type: this.state.type,
-          startTime: this.state.timeStart,
-          endTime: this.state.timeEnd,
-          contacts: prop.contacts,
-          days:
-            this.state.days.length == 1
-              ? this.state.days.day
-              : this.state.days.map(x => x.day)
-        }
-      };
-    }
-    console.log(
-      `https://us-central1-givers-229af.cloudfunctions.net/webApi/${
-        this.state.pointType == "E" ? "events" : "points"
-      }/`
-    );
-    console.log(JSON.stringify(body));
-    firebaseApp
-      .auth()
-      .currentUser.getIdToken(false)
-      .then(idToken => {
-        console.log(idToken);
-        fetch(
-          `https://us-central1-givers-229af.cloudfunctions.net/webApi/${
-            this.state.pointType == "E" ? "events" : "points"
-          }/`,
-          {
-            method: "POST",
-            body: JSON.stringify(body),
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: idToken
-            }
+    Geocoder.from({
+      latitude: this.state.latitude,
+      longitude: this.state.longitude
+    }).then(json => {
+      var body = {};
+      if (this.state.pointType == "E") {
+        body = {
+          event: {
+            location: {
+              latitude: this.state.latitude,
+              longitude: this.state.longitude
+            },
+            title: this.state.title,
+            description: this.state.description,
+            needs: prop.needs,
+            type: this.state.type,
+            startDate: this.state.dateStart,
+            endDate: this.state.dateEnd,
+            startTime: this.state.timeStart,
+            endTime: this.state.timeEnd,
+            address: json.results[0].formatted_address
           }
-        )
-          .then(res => res.json())
-          .then(data => console.log(data))
-          .catch(error => console.log("Error!!: ", error));
+        };
+      } else {
+        console.log(this.state.days.length);
+        body = {
+          point: {
+            location: {
+              latitude: this.state.latitude,
+              longitude: this.state.longitude
+            },
+            title: this.state.title,
+            description: this.state.description,
+            needs: prop.needs,
+            type: this.state.type,
+            startTime: this.state.timeStart,
+            endTime: this.state.timeEnd,
+            contacts: prop.contacts,
+            days:
+              this.state.days.length == 1
+                ? this.state.days.day
+                : this.state.days.map(x => x.day)
+          }
+        };
+      }
+      console.log(
+        `https://us-central1-givers-229af.cloudfunctions.net/webApi/${
+          this.state.pointType == "E" ? "events" : "points"
+        }/`
+      );
+      console.log(JSON.stringify(body));
+      firebaseApp
+        .auth()
+        .currentUser.getIdToken(false)
+        .then(idToken => {
+          console.log(idToken);
+          fetch(
+            `https://us-central1-givers-229af.cloudfunctions.net/webApi/${
+              this.state.pointType == "E" ? "events" : "points"
+            }/`,
+            {
+              method: "POST",
+              body: JSON.stringify(body),
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: idToken
+              }
+            }
+          )
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(error => console.log("Error!!: ", error));
 
-        this.props.navigation.navigate("MapScreen");
-      })
-      .catch(err => {
-        alert(err);
-        this.props.navigation.navigate("MapScreen");
-      });
+          this.props.navigation.navigate("MapScreen");
+        })
+        .catch(err => {
+          alert(err);
+          this.props.navigation.navigate("MapScreen");
+        });
+    });
   }
   render() {
     const stepsPoints = [

@@ -201,42 +201,54 @@ export default class InfoComponent extends Component {
               this.props.saveState(this.props.index, {
                 title: this.state.title,
                 description: this.state.description,
-                type: this.state.types.find(x => {
-                  return x.active;
-                }).id
+                type:
+                  this.state.types !== undefined
+                    ? this.state.types.find(x => {
+                        return x.active;
+                      }) !== undefined
+                      ? this.state.types.find(x => {
+                          return x.active;
+                        }).id
+                      : ""
+                    : ""
               });
               console.log(this.state.dateStart);
               console.log(this.state.dateEnd);
               this.props.next({
                 title: this.state.title,
                 description: this.state.description,
-                type: this.state.types.find(x => {
-                  return x.active;
-                }).id
+                type:
+                  this.state.types !== undefined
+                    ? this.state.types.find(x => {
+                        return x.active;
+                      }) !== undefined
+                      ? this.state.types.find(x => {
+                          return x.active;
+                        }).id
+                      : ""
+                    : ""
               });
             }}
             back={() => {
               this.props.saveState(this.props.index, {
                 title: this.state.title,
                 description: this.state.description,
-                type: this.state.types
-                  .find(x => {
-                    return x.active;
-                  })
-                  .map(y => {
-                    return y.id;
-                  })
+                type:
+                  this.state.types !== undefined
+                    ? this.state.types.find(x => {
+                        return x.active;
+                      })
+                    : ""
               });
               this.props.prev({
                 title: this.state.title,
                 description: this.state.description,
-                type: this.state.types
-                  .find(x => {
-                    return x.active;
-                  })
-                  .map(y => {
-                    return y.id;
-                  })
+                type:
+                  this.state.types !== undefined
+                    ? this.state.types.find(x => {
+                        return x.active;
+                      })
+                    : ""
               });
             }}
           />

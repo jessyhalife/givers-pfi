@@ -21,6 +21,7 @@ Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 
 class LocationStep extends Component {
   state = {
+    address: "",
     currentLocation: {},
     initialRegion: {
       latitude: 35,
@@ -36,7 +37,7 @@ class LocationStep extends Component {
     validDate: true
   };
 
-  getCurrentLocation() {
+  async getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(
       position => {
         this.setLocation(position.coords, () => {
@@ -44,9 +45,15 @@ class LocationStep extends Component {
             latitude: this.state.initialRegion.latitude,
             longitude: this.state.initialRegion.longitude
           }).then(json => {
-            this.GooglePlacesRef.setAddressText(
-              json.results[0].formatted_address
+            this.setState(
+              { address: json.results[0].formatted_address },
+              () => {
+                this.GooglePlacesRef.setAddressText(
+                  json.results[0].formatted_address
+                );
+              }
             );
+
             //this.userMarker.animateMarkerToCoordinate(this.state.marker, 2000);
           });
         });
@@ -60,8 +67,8 @@ class LocationStep extends Component {
     );
   }
 
-  componentDidMount() {
-    console.log(this.props.getState().length);
+  async componentDidMount() {
+    await this.getCurrentLocation();
     if (
       this.props.getState().length == 0 ||
       this.props.getState().length == this.props.index ||
@@ -75,6 +82,7 @@ class LocationStep extends Component {
           latitude: this.state.initialRegion.latitude,
           longitude: this.state.initialRegion.longitude
         }).then(json => {
+          this.setState({ address: json.results[0].formatted_address });
           this.GooglePlacesRef.setAddressText(
             json.results[0].formatted_address
           );
@@ -190,6 +198,7 @@ class LocationStep extends Component {
           </View>
           <View style={{ flex: 3 }}>
             <MapView
+              showsUserLocation={true}
               customMapStyle={mapStyle}
               provider={PROVIDER_GOOGLE}
               ref={ref => {
@@ -235,6 +244,9 @@ class LocationStep extends Component {
                         latitude: this.state.initialRegion.latitude,
                         longitude: this.state.initialRegion.longitude
                       }).then(json => {
+                        this.setState({
+                          address: json.results[0].formatted_address
+                        });
                         this.GooglePlacesRef.setAddressText(
                           json.results[0].formatted_address
                         );
@@ -249,7 +261,7 @@ class LocationStep extends Component {
           </View>
         </ScrollView>
         <ButtonsWizard
-          showAnterior={this.props.showAnterior}
+          showAnterior={false}
           disabled={!this.state.validDate}
           titleSiguiente={
             this.state.validDate ? undefined : "Debes estar a menos de 5km"

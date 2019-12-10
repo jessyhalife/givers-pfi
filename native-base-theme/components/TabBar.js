@@ -1,56 +1,56 @@
 // @flow
 
-import variable from './../variables/platform';
+import variable from "./../variables/platform";
 
 export default (variables /* : * */ = variable) => {
   const tabBarTheme = {
-    '.tabIcon': {
+    ".tabIcon": {
       height: undefined
     },
-    '.vertical': {
+    ".vertical": {
       height: 60
     },
-    'NativeBase.Button': {
-      '.transparent': {
-        'NativeBase.Text': {
+    "NativeBase.Button": {
+      ".transparent": {
+        "NativeBase.Text": {
           fontSize: variables.tabFontSize,
           color: variables.sTabBarActiveTextColor,
-          fontWeight: '400'
+          fontWeight: "400"
         },
-        'NativeBase.IconNB': {
+        "NativeBase.IconNB": {
           color: variables.sTabBarActiveTextColor
         }
       },
-      'NativeBase.IconNB': {
+      "NativeBase.IconNB": {
         color: variables.sTabBarActiveTextColor
       },
-      'NativeBase.Text': {
+      "NativeBase.Text": {
         fontSize: variables.tabFontSize,
         color: variables.sTabBarActiveTextColor,
-        fontWeight: '400'
+        fontWeight: "400"
       },
-      '.isTabActive': {
-        'NativeBase.Text': {
-          fontWeight: '900'
+      ".isTabActive": {
+        "NativeBase.Text": {
+          fontWeight: "900"
         }
       },
       flex: 1,
-      alignSelf: 'stretch',
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignSelf: "stretch",
+      alignItems: "center",
+      justifyContent: "center",
       borderRadius: null,
-      borderBottomColor: 'transparent',
-      backgroundColor: variables.tabBgColor
+      borderBottomColor: "transparent",
+      backgroundColor: "#ff6347"
     },
     height: 45,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     borderWidth: 1,
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    borderBottomColor: '#ccc',
-    backgroundColor: variables.tabBgColor
+    borderBottomColor: "#ccc",
+    backgroundColor: "#ff6347"
   };
 
   return tabBarTheme;

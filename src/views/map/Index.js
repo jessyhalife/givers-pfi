@@ -27,7 +27,8 @@ export default class Home extends Component {
             seen: x.data().seen,
             notSeen: x.data().not_seen,
             ages: x.data().ages,
-            needs: x.data().needs
+            needs: x.data().needs,
+            address: x.data().address ? x.data().address : ""
           });
         }
       });

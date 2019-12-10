@@ -10,6 +10,9 @@ import NeedsComponent from "../crud/needs.js";
 import Wizard from "react-native-wizard";
 import MultiStep from "react-native-multistep-wizard";
 import firebaseApp from "../../config/config";
+import Geocoder from "react-native-geocoding";
+
+Geocoder.init("AIzaSyBZac8n4qvU063aXqkGnYshZX3OQcBJwJc");
 
 class NewPeople extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -43,6 +46,7 @@ class NewPeople extends Component {
     currentIndex: 0,
     latitude: 0,
     longitude: 0,
+    address: "",
     ages: [],
     needs: [],
     qty: "",
@@ -78,47 +82,53 @@ class NewPeople extends Component {
   }
 
   _submit(prop) {
-    var body = {
-      people: {
-        location: {
-          latitude: this.state.latitude,
-          longitude: this.state.longitude
-        },
-        qty: Number(this.state.qty),
-        needs: this.state.needs,
-        ages: this.state.ages,
-        details: this.state.details
-      }
-    };
-    console.log(JSON.stringify(body));
-    firebaseApp
-      .auth()
-      .currentUser.getIdToken(true)
-      .then(idToken => {
-        fetch(
-          "https://us-central1-givers-229af.cloudfunctions.net/webApi/people",
-          {
-            method: "POST",
-            body: JSON.stringify(body),
-            headers: new Headers({
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: idToken
+    Geocoder.from({
+      latitude: this.state.latitude,
+      longitude: this.state.longitude
+    }).then(json => {
+      var body = {
+        people: {
+          address: json.results[0].formatted_address,
+          location: {
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
+          },
+          qty: Number(this.state.qty),
+          needs: this.state.needs,
+          ages: this.state.ages,
+          details: this.state.details
+        }
+      };
+      console.log(JSON.stringify(body));
+      firebaseApp
+        .auth()
+        .currentUser.getIdToken(true)
+        .then(idToken => {
+          fetch(
+            "https://us-central1-givers-229af.cloudfunctions.net/webApi/people",
+            {
+              method: "POST",
+              body: JSON.stringify(body),
+              headers: new Headers({
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: idToken
+              })
+            }
+          )
+            .then(res => {
+              console.log(res);
+              res.json();
             })
-          }
-        )
-          .then(res => {
-            console.log(res);
-            res.json();
-          })
-          .then(data => console.log(data))
-          .catch(error => console.log(error));
+            .then(data => console.log(data))
+            .catch(error => console.log(error));
 
-        this.props.navigation.navigate("MapScreen", {
-          toast: true,
-          toastMessage: "¡Gracias! ahora alguien más va a poder dar una mano."
+          this.props.navigation.navigate("MapScreen", {
+            toast: true,
+            toastMessage: "¡Gracias! ahora alguien más va a poder dar una mano."
+          });
         });
-      });
+    });
   }
   render() {
     const steps = [

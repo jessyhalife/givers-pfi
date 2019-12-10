@@ -38,7 +38,7 @@ export default PointView = props => {
                   alignItems: "center",
                   elevation: 5
                 }}
-                onPress={() => props.seen(data.id)}
+                onPress={() => props.trust(data.id)}
               >
                 <Icon
                   style={{

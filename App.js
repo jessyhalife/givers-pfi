@@ -52,6 +52,12 @@ const MapStackNavigator = createStackNavigator(
         title: "Nuevo punto de ayuda"
       }
     },
+    HelpScreen: {
+      screen: HelpModal,
+      navigationOptions: {
+        title: "Brindar ayuda"
+      }
+    },
     FilterScreen: {
       screen: Filters,
       navigationOptions: {

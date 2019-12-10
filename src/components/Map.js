@@ -72,6 +72,7 @@ export default class MapGiver extends Component {
     this.giveHelp = this.giveHelp.bind(this);
     this.saveHelp = this.saveHelp.bind(this);
     this.asistire = this.asistire.bind(this);
+    this.trust = this.trust.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -141,6 +142,22 @@ export default class MapGiver extends Component {
       }
     )
       .then(res => this._markerInfo(id))
+      .catch(error => console.log("Error!!: ", error));
+  };
+
+  trust = id => {
+    fetch(
+      `https://us-central1-givers-229af.cloudfunctions.net/webApi/points/trust/${id}`,
+      {
+        method: "PATCH",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: this.state.idToken
+        })
+      }
+    )
+      .then(res => {})
       .catch(error => console.log("Error!!: ", error));
   };
   async getContacts() {
@@ -424,7 +441,6 @@ export default class MapGiver extends Component {
           filtrar={this.filter}
           needs={this.state.needs}
           ages={this.state.ages}
-          ç
           people={this.state.real_people}
           events={this.state.real_events}
           setMapRegion={this.setMapRegion}
@@ -520,6 +536,7 @@ export default class MapGiver extends Component {
                 onPress={() => this.setState({ active: !this.state.active })}
               >
                 <Icon name="plus" />
+
                 <Button
                   style={{ backgroundColor: "#fff", borderColor: "#eee" }}
                   onPress={() =>
@@ -531,6 +548,7 @@ export default class MapGiver extends Component {
                 >
                   <Icon name="adduser" size={20} style={{ color: "#000" }} />
                 </Button>
+
                 <Button
                   style={{
                     backgroundColor: "#fff",
@@ -617,6 +635,8 @@ export default class MapGiver extends Component {
                         needs={this.state.needs}
                         uid={firebaseApp.auth().currentUser.uid}
                         contacts={this.state.contacts}
+                        trust={this.trust}
+                        untrust={this.untrust}
                       ></PointView>
                     )}
               </View>
