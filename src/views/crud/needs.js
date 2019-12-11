@@ -90,7 +90,6 @@ class NeedsComponent extends Component {
                 needs: this.state.needs.filter(x => x.active)
               });
             }}
-            
           />
           <View
             style={{
@@ -146,6 +145,7 @@ class NeedsComponent extends Component {
             titleSiguiente={this.props.event ? "GUARDAR" : "SIGUIENTE"}
             showAnterior={true}
             siguiente={() => {
+              console.log(this.state.needs);
               this.props.saveState(this.props.index, {
                 needs: this.state.needs
                   .filter(x => x.active)

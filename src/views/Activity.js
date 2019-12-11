@@ -114,6 +114,9 @@ export default class Activity extends Component {
               {this.state.people ? (
                 <ScrollView>
                   <List>
+                    <ListItem itemDivider>
+                      <Text>Personas registradas por mi</Text>
+                    </ListItem>
                     {this.state.people
                       .sort(function(x, y) {
                         // true values first
@@ -174,8 +177,16 @@ export default class Activity extends Component {
                   </List>
                 </ScrollView>
               ) : (
-                <View>
-                  <Text>No registraste ninguna persona aún</Text>
+                <View
+                  style={{
+                    alignItems: "center",
+                    alignSelf: "center",
+                    marginTop: 200
+                  }}
+                >
+                  <Text style={{ fontSize: 16 }}>
+                    ¡No encontramos nada tuyo aún!
+                  </Text>
                 </View>
               )}
             </Tab>
@@ -185,21 +196,17 @@ export default class Activity extends Component {
               textStyle={{ color: "#fff" }}
               activeTabStyle={{ backgroundColor: THEMECOLORLIGHT }}
             >
-              {this.state.points ? (
-                <List>
-                  {this.state.people.map(x => {
-                    return (
-                      <ListItem>
-                        <View>
-                          <Text>{typeof x}</Text>
-                        </View>
-                      </ListItem>
-                    );
-                  })}
-                </List>
-              ) : (
-                undefined
-              )}
+              <View
+                style={{
+                  alignItems: "center",
+                  alignSelf: "center",
+                  marginTop: 200
+                }}
+              >
+                <Text style={{ fontSize: 16 }}>
+                  ¡No encontramos nada tuyo aún!
+                </Text>
+              </View>
             </Tab>
             <Tab
               heading="Eventos"
@@ -298,8 +305,26 @@ export default class Activity extends Component {
                   </List>
                 </ScrollView>
               ) : (
-                <View>
-                  <Text>No registraste ninguna persona aún</Text>
+                <View
+                  style={{
+                    alignItems: "center",
+                    alignSelf: "center",
+                    marginTop: 200
+                  }}
+                >
+                  <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                    ¡No encontramos nada tuyo aún!
+                  </Text>
+                  <Text
+                    style={{
+                      paddingLeft: 100,
+                      paddingRight: 100,
+                      paddingTop: 10
+                    }}
+                  >
+                    Navegá por el mapa y encontrá el evento solidario que más
+                    vaya con vos! 😉
+                  </Text>
                 </View>
               )}
             </Tab>

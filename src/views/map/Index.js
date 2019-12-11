@@ -55,6 +55,7 @@ export default class Home extends Component {
           data: x.data()
         });
       });
+
       this.setState({ points: points });
     });
   }

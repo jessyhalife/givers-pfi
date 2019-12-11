@@ -73,6 +73,7 @@ export default class MapGiver extends Component {
     this.saveHelp = this.saveHelp.bind(this);
     this.asistire = this.asistire.bind(this);
     this.trust = this.trust.bind(this);
+    this.untrust = this.untrust.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -144,7 +145,25 @@ export default class MapGiver extends Component {
       .then(res => this._markerInfo(id))
       .catch(error => console.log("Error!!: ", error));
   };
-
+  untrust = id => {
+    fetch(
+      `https://us-central1-givers-229af.cloudfunctions.net/webApi/points/untrust/${id}`,
+      {
+        method: "PATCH",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: this.state.idToken
+        })
+      }
+    )
+      .then(res => {
+        var point = this.state.poMarkers.find(x => x.id == id);
+        console.log(point);
+        if (point) _pointInfo(point);
+      })
+      .catch(error => console.log("Error!!: ", error));
+  };
   trust = id => {
     fetch(
       `https://us-central1-givers-229af.cloudfunctions.net/webApi/points/trust/${id}`,
@@ -157,7 +176,12 @@ export default class MapGiver extends Component {
         })
       }
     )
-      .then(res => {})
+      .then(res => {
+        var point = this.state.poMarkers.find(x => x.id == id);
+        console.log("point");
+        console.log(point);
+        if (point) _pointInfo(point);
+      })
       .catch(error => console.log("Error!!: ", error));
   };
   async getContacts() {
@@ -267,7 +291,7 @@ export default class MapGiver extends Component {
                 longitude: pers.location.longitude
               },
               () => {
-                this.mapRef.animateToRegion(this.getMapRegion(), 1);
+                // this.mapRef.animateToRegion(this.getMapRegion(), 1);
                 this.getHelpToPeople(key, this.state.idToken);
               }
             );
@@ -297,7 +321,7 @@ export default class MapGiver extends Component {
             longitude: point.data.location.longitude
           },
           () => {
-            this.mapRef.animateToRegion(this.getMapRegion(), 1);
+            // this.mapRef.animateToRegion(this.getMapRegion(), 1);
           }
         );
       })
@@ -324,7 +348,7 @@ export default class MapGiver extends Component {
             longitude: event.data.location.longitude
           },
           () => {
-            this.mapRef.animateToRegion(this.getMapRegion(), 1);
+            // this.mapRef.animateToRegion(this.getMapRegion(), 1);
           }
         );
       })

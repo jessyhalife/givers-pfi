@@ -12,7 +12,7 @@ import { THEMECOLOR } from "../const.js";
 export default PointView = props => {
   const { data } = props.data;
   const { needs, uid, contacts } = props;
-  console.log(contacts);
+
   return (
     <ScrollView>
       <View
@@ -23,10 +23,11 @@ export default PointView = props => {
             style={{
               marginLeft: 20,
               marginRight: 20,
-              flexDirection: "row", justifyContent: "flex-end"
+              flexDirection: "row",
+              justifyContent: "flex-end"
             }}
           >
-            <View style={{ flexDirection: "row", marginTop: 10 }}>
+            <View style={{ flexDirection: "row" }}>
               <TouchableOpacity
                 style={{
                   width: 30,
@@ -38,7 +39,10 @@ export default PointView = props => {
                   alignItems: "center",
                   elevation: 5
                 }}
-                onPress={() => props.trust(data.id)}
+                onPress={() => {
+                  props.trust(props.data.id);
+                  props.trust++;
+                }}
               >
                 <Icon
                   style={{
@@ -62,7 +66,7 @@ export default PointView = props => {
               </Text>
             </View>
             <View
-              style={{ marginLeft: 10, flexDirection: "row", marginTop: 10 }}
+              style={{ marginLeft: 10, flexDirection: "row", marginTop: 0 }}
             >
               <TouchableOpacity
                 style={{
@@ -75,7 +79,7 @@ export default PointView = props => {
                   alignItems: "center",
                   elevation: 5
                 }}
-                onPress={() => props.untrust(data.id)}
+                onPress={() => props.untrust(props.data.id)}
               >
                 <Icon
                   style={{
@@ -97,9 +101,19 @@ export default PointView = props => {
               </Text>
             </View>
           </View>
-          <View style={{ margin: 10 }}>
-            <Text style={{ fontSize: 19, color: "black" }}>{data.title}</Text>
+
+          <View style={{ marginLeft: 10 }}>
+            <Text style={{ fontSize: 19, color: "black", fontWeight: "bold" }}>
+              {data.title}
+            </Text>
+            <View style={{ flexDirection: "row", marginTop: 10 }}>
+              <Icon style={{ fontSize: 20, color: "gray" }} name="pin"></Icon>
+              <View style={{ margin: 5, alignItems: "center" }}>
+                <Text style={{ fontSize: 15 }}>{data.address}</Text>
+              </View>
+            </View>
           </View>
+
           {data.description !== undefined && data.description !== "" ? (
             <View style={{ margin: 10, marginTop: 0 }}>
               <Text style={{ fontSize: 18, fontWeight: "bold" }}>
@@ -110,7 +124,10 @@ export default PointView = props => {
             undefined
           )}
           <View style={{ flexDirection: "row", margin: 10 }}>
-            <Icon style={{ fontSize: 20 }} name="calendar"></Icon>
+            <Icon
+              style={{ fontSize: 20, color: "gray" }}
+              name="calendar"
+            ></Icon>
             {data.days &&
               data.days.map(x => {
                 return (
@@ -127,7 +144,7 @@ export default PointView = props => {
               })}
           </View>
           <View style={{ flexDirection: "row", marginLeft: 10 }}>
-            <Icon style={{ fontSize: 20 }} name="time"></Icon>
+            <Icon style={{ fontSize: 20, color: "gray" }} name="time"></Icon>
             <View>
               <Text
                 style={{ marginLeft: 10, alignSelf: "center", fontSize: 16 }}

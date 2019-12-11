@@ -74,7 +74,6 @@ class NewPoint extends Component {
   }
 
   handleChange(prop) {
-    console.log(prop);
     if (typeof prop == "object") {
       for (var p in prop) {
         this.setState({ [p]: prop[p] }, () => {});
@@ -119,7 +118,7 @@ class NewPoint extends Component {
           }
         };
       } else {
-        console.log(this.state.days.length);
+        console.log(prop);
         body = {
           point: {
             location: {
@@ -128,11 +127,12 @@ class NewPoint extends Component {
             },
             title: this.state.title,
             description: this.state.description,
-            needs: prop.needs,
+            needs: this.state.needs,
             type: this.state.type,
             startTime: this.state.timeStart,
             endTime: this.state.timeEnd,
             contacts: prop.contacts,
+            address: json.results[0].formatted_address,
             days:
               this.state.days.length == 1
                 ? this.state.days.day
@@ -140,11 +140,7 @@ class NewPoint extends Component {
           }
         };
       }
-      console.log(
-        `https://us-central1-givers-229af.cloudfunctions.net/webApi/${
-          this.state.pointType == "E" ? "events" : "points"
-        }/`
-      );
+
       console.log(JSON.stringify(body));
       firebaseApp
         .auth()
@@ -198,7 +194,11 @@ class NewPoint extends Component {
       {
         name: "InfoStep",
         component: (
-          <InfoComponent next={this._next} prev={this._prev}></InfoComponent>
+          <InfoComponent
+            index={2}
+            next={this._next}
+            prev={this._prev}
+          ></InfoComponent>
         )
       },
       {
@@ -217,7 +217,11 @@ class NewPoint extends Component {
       {
         name: "TimeStep",
         component: (
-          <TimeComponent next={this._next} prev={this._prev}></TimeComponent>
+          <TimeComponent
+            next={this._next}
+            index={4}
+            prev={this._prev}
+          ></TimeComponent>
         )
       },
       {
@@ -226,6 +230,7 @@ class NewPoint extends Component {
           <ContactComponent
             next={this._submit}
             prev={this._prev}
+            index={5}
           ></ContactComponent>
         )
       }
