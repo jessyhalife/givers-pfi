@@ -29,6 +29,7 @@ export default class Filters extends Component {
     };
     this.filtrar = this.filtrar.bind(this);
     this.changeNeed = this.changeNeed.bind(this);
+    this.changeAges = this.changeAges.bind(this);
   }
   componentDidMount() {
     var { showNeeds, types, showAges } = this.props.navigation.state.params;
@@ -75,6 +76,17 @@ export default class Filters extends Component {
     }
 
     this.setState({ needs: prev });
+  }
+  changeAges(id) {
+    let prev = this.state.ages ? this.state.ages : [];
+
+    if (!prev.some(x => x === id)) {
+      prev.push(id);
+    } else {
+      prev = prev.filter(x => x !== id);
+    }
+
+    this.setState({ ages: prev });
   }
   _containsAll(array, array2) {
     var exists = true;
@@ -301,7 +313,7 @@ export default class Filters extends Component {
                         <ListItem last key={n.id}>
                           <CheckBox
                             onPress={() => {
-                              this.changeNeed(n.id);
+                              this.changeAges(n.id);
                             }}
                             checked={
                               this.state.ages.filter(x => x === n.id).length ==
@@ -309,9 +321,7 @@ export default class Filters extends Component {
                             }
                             style={{ marginRight: 10 }}
                           ></CheckBox>
-                          <Text style={{ marginLeft: 10 }}>
-                            {n.data.description}
-                          </Text>
+                          <Text style={{ marginLeft: 10 }}>{n.data.tipo}</Text>
                         </ListItem>
                       );
                     })}

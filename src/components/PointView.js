@@ -7,7 +7,7 @@ import {
   Image,
   ScrollView
 } from "react-native";
-import { Icon, Button, Separator, ListItem, Spinner } from "native-base";
+import { Icon, Button, Separator, ListItem, Spinner, Badge } from "native-base";
 import { THEMECOLOR } from "../const.js";
 export default PointView = props => {
   const { data } = props.data;
@@ -207,7 +207,7 @@ export default PointView = props => {
             >
               {needs
                 .filter(x => {
-                  return data.needs ? data.needs.indexOf(x.id) >= 0 : false;
+                  return data.needs ? data.needs.filter(y => y.id == x.id) !== undefined : false;
                 })
                 .map(x => {
                   return (

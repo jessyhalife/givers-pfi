@@ -60,14 +60,30 @@ export default class Activity extends Component {
     eventRef.onSnapshot(snapshots => {
       let events = [];
       snapshots.docs.forEach(x => {
-        if (x.data().attendees.filter(x => x == uid).length > 0) {
+        console.log(
+          x.data().attendees.some(x => x == uid) || x.data().user_id == uid
+        );
+        if (x.data().attendees.some(x => x == uid) || x.data().user_id == uid) {
+          console.log("agrega");
           events.push({
             id: x.id,
             data: x.data()
           });
         }
       });
-      this.setState({ events: events });
+      this.setState({ events: events }, () => {
+        this.state.events
+          .sort((a, b) => {
+            return new Date(a.data.startDate) - new Date(b.data.startDate);
+          })
+          .filter(x => {
+            return new Date() <= new Date(x.data.startDate);
+          })
+          .map(x => {
+            console.log("esto!!!")
+            console.log(x);
+          });
+      });
     });
 
     pointRef.onSnapshot(snapshots => {
@@ -111,7 +127,7 @@ export default class Activity extends Component {
               textStyle={{ color: "#fff" }}
               activeTabStyle={{ backgroundColor: THEMECOLORLIGHT }}
             >
-              {this.state.people ? (
+              {this.state.people && this.state.people.length > 0 ? (
                 <ScrollView>
                   <List>
                     <ListItem itemDivider>
@@ -196,16 +212,78 @@ export default class Activity extends Component {
               textStyle={{ color: "#fff" }}
               activeTabStyle={{ backgroundColor: THEMECOLORLIGHT }}
             >
-              <View
-                style={{
-                  alignItems: "center",
-                  alignSelf: "center",
-                  marginTop: 200
-                }}
-              >
-                <Text style={{ fontSize: 16 }}>
-                  ¡No encontramos nada tuyo aún!
-                </Text>
+              <View style={{}}>
+                {this.state.points && this.state.points.length > 0 ? (
+                  <ScrollView>
+                    <List>
+                      <ListItem itemDivider>
+                        <Text>Puntos de ayuda registrados por mi</Text>
+                      </ListItem>
+                      {this.state.points.map(x => {
+                        return (
+                          <ListItem>
+                            <View>
+                              <Text
+                                style={{
+                                  alignItems: "flex-end",
+                                  fontSize: 15,
+                                  fontWeight: "bold"
+                                }}
+                              >
+                                {x.data.title}
+                              </Text>
+                              {x.data.description &&
+                              x.data.description !== "" ? (
+                                <Text
+                                  style={{
+                                    alignItems: "flex-end",
+                                    fontSize: 15
+                                  }}
+                                >
+                                  {x.data.description}
+                                </Text>
+                              ) : (
+                                undefined
+                              )}
+                              <Text>
+                                Abre:{" "}
+                                <Text style={{ fontWeight: "bold" }}>
+                                  {x.data.days.join(" - ").toString()}
+                                </Text>
+                              </Text>
+                              <Text>
+                                Horarios:{" "}
+                                <Text style={{ fontWeight: "bold" }}>
+                                  {x.data.open_time + " a " + x.data.close_time}
+                                </Text>
+                              </Text>
+                              <Text
+                                style={{
+                                  alignItems: "flex-end",
+                                  fontSize: 15
+                                }}
+                              >
+                                {x.data.address}
+                              </Text>
+                            </View>
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  </ScrollView>
+                ) : (
+                  <View
+                    style={{
+                      alignItems: "center",
+                      alignSelf: "center",
+                      marginTop: 200
+                    }}
+                  >
+                    <Text style={{ fontSize: 16 }}>
+                      ¡No encontramos nada tuyo aún!
+                    </Text>
+                  </View>
+                )}
               </View>
             </Tab>
             <Tab
@@ -214,7 +292,7 @@ export default class Activity extends Component {
               textStyle={{ color: "#fff" }}
               activeTabStyle={{ backgroundColor: THEMECOLORLIGHT }}
             >
-              {this.state.events ? (
+              {this.state.events && this.state.events.length > 0 ? (
                 <ScrollView>
                   <List>
                     <ListItem itemDivider>
@@ -228,7 +306,7 @@ export default class Activity extends Component {
                         );
                       })
                       .filter(x => {
-                        return new Date() < new Date(x.data.startDate);
+                        return new Date() <= new Date(x.data.startDate);
                       })
                       .map(x => {
                         return (

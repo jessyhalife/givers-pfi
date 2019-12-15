@@ -129,8 +129,8 @@ class NewPoint extends Component {
             description: this.state.description,
             needs: this.state.needs,
             type: this.state.type,
-            startTime: this.state.timeStart,
-            endTime: this.state.timeEnd,
+            open_time: this.state.timeStart,
+            close_time: this.state.timeEnd,
             contacts: prop.contacts,
             address: json.results[0].formatted_address,
             days:

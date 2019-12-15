@@ -90,6 +90,7 @@ export default class MapGiver extends Component {
     );
   }
   asistire = id => {
+    console.log(this.state.idToken);
     fetch(
       `https://us-central1-givers-229af.cloudfunctions.net/webApi/events/attending/${id}`,
       {
@@ -102,17 +103,22 @@ export default class MapGiver extends Component {
       }
     )
       .then(res => {
-        let last = this.state.activeMarkerEvent;
-
-        if (last.attendees.indexOf(firebaseApp.auth().currentUser.uid) <= -1) {
+        console.log(res);
+        let last = this.state.evMarkers.find(
+          x => x.id == this.state.activeMarkerEvent.id
+        );
+        if (
+          last.data.attendees &&
+          last.data.attendees.indexOf(firebaseApp.auth().currentUser.uid) == -1
+        )
           last.data.attendees.push(firebaseApp.auth().currentUser.uid);
-          this.setState({ activeMarkerEvent: last });
-        }
-        return res.response.status;
+        console.log(last);
+        this.setState({ activeMarkerEvent: last });
+        return;
       })
       .catch(error => {
         console.log("Error: ", error);
-        return res.response.status;
+        return;
       });
   };
   seen = id => {
@@ -159,8 +165,12 @@ export default class MapGiver extends Component {
     )
       .then(res => {
         var point = this.state.poMarkers.find(x => x.id == id);
-        console.log(point);
-        if (point) _pointInfo(point);
+
+        if (point) {
+          point.data.untrust += 1;
+          console.log(point.data);
+          this._pointInfo(point);
+        }
       })
       .catch(error => console.log("Error!!: ", error));
   };
@@ -179,8 +189,12 @@ export default class MapGiver extends Component {
       .then(res => {
         var point = this.state.poMarkers.find(x => x.id == id);
         console.log("point");
-        console.log(point);
-        if (point) _pointInfo(point);
+
+        if (point) {
+          point.data.trust += 1;
+          console.log(point.data);
+          this._pointInfo(point);
+        }
       })
       .catch(error => console.log("Error!!: ", error));
   };

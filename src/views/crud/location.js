@@ -24,8 +24,8 @@ class LocationStep extends Component {
     address: "",
     currentLocation: {},
     initialRegion: {
-      latitude: 35,
-      longitude: 45,
+      latitude: -34.617351,
+      longitude: -58.3839656,
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA
     },
@@ -54,16 +54,12 @@ class LocationStep extends Component {
               }
             );
 
-            //this.userMarker.animateMarkerToCoordinate(this.state.marker, 2000);
+            this.userMarker.animateMarkerToCoordinate(this.state.marker, 2000);
           });
         });
       },
       error => console.log(error),
-      {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 1000
-      }
+      { enableHighAccuracy: false, timeout: 50000 }
     );
   }
 
@@ -205,6 +201,7 @@ class LocationStep extends Component {
                 this.mapRef = ref;
               }}
               style={styles.map}
+              initialRegion={this.state.initialRegion}
               region={this.state.initialRegion}
               followUserLocation={true}
               onRegionChangeComplete={data => {

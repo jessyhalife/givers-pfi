@@ -15,7 +15,8 @@ export default PeopleView = props => {
     if (data.loadingHelp) {
       return <Spinner color={THEMECOLOR}></Spinner>;
     }
-
+    console.log(needs);
+    console.log(data.needs);
     if (data.help && data.help.length > 0) {
       var help = data.help;
 
@@ -120,7 +121,13 @@ export default PeopleView = props => {
               {"  "}
               {needs
                 .filter(x => {
-                  return data.needs.indexOf(x.id) >= 0;
+                  console.log("exists");
+
+                  return (
+                    data.needs.find(y => {
+                      return y.id === x.id;
+                    }) !== undefined
+                  );
                 })
                 .map(x => {
                   return x.data.description;

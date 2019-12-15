@@ -82,6 +82,7 @@ class Search extends Component {
             ref={instance => {
               this.GooglePlacesRef = instance;
             }}
+            showsUserLocation={true}
             placeholder="Buscar dirección"
             minLength={3} // minimum length of text to search
             returnKeyType={"search"} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype

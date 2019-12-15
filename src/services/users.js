@@ -1,3 +1,4 @@
+import firebaseApp from "../config/config";
 const userService = {
   create: (idToken, body) => {
     return fetch(
@@ -47,18 +48,13 @@ const userService = {
   },
 
   updateFCM: (idToken, fcmToken) => {
-    return fetch(
-      `https://us-central1-givers-229af.cloudfunctions.net/webApi/users/fcmtoken`,
-      {
-        method: "PATCH",
-        body: JSON.stringify(fcmToken),
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: idToken
-        })
-      }
-    );
+    var uid = firebaseApp.auth().currentUser.uid;
+    console.log(uid);
+    return firebaseApp
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .set({ fcm_token: fcmToken.fcm_token, user_id: uid }, { merge: true });
   }
 };
 
